@@ -6,16 +6,17 @@ const router = useRouter()
 const route = useRoute()
 import {
     onMounted,
-    ref
+    ref,watch
 } from "vue";
 
 const todoList = ref([])
+const input = ref('')
 
 onMounted(() => {
     getData()
 })
 const getData = () => {
-    $axios.get('/todo?include=status,user').then((data) => {
+    $axios.get('/todo?filter[name]=&include=status,user').then((data) => {
         todoList.value = data.data.data
     })
 }
@@ -25,17 +26,33 @@ const deleteobj = (todoId) => {
     })
 }
 
+watch(input, async (newInput, oldInput) => {
+    if (newInput.length > 0) {
+        $axios.get('/todo?filter[name]='+input.value+'&include=status,user').then((data) => {
+            todoList.value = data.data.data
+        })
+    }else {
+        $axios.get('/todo?filter[name]=&include=status,user').then((data) => {
+            todoList.value = data.data.data
+        })
+    }
+})
+
 </script>
 
 <template>
     <div>
-        <div>
+        <div class="m-lg-3">
             <button class="btn btn-danger">
                 <router-link to="/add-todo">AddTodo</router-link>
             </button>
         </div>
-        <h3 class="text-center">All todos</h3><br/>
 
+        <div class="m-lg-3">
+            <input type="text" v-model="input" placeholder="Search Todo ..." />
+        </div>
+
+        <h3 class="text-center">All todos</h3><br/>
         <table class="table table-bordered">
             <thead>
             <tr>

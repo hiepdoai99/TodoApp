@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 const $axios = axios.create({
+    // baseURL: 'http://todolist.local/api/v1',
     baseURL: 'http://localhost:8000/api/v1',
     timeout: 20000,
 });

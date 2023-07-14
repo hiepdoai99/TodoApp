@@ -1,6 +1,6 @@
 <template>
     <div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-dark">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
@@ -17,7 +17,7 @@
                             <a class="nav-link" href="#"><router-link to="/login">Login</router-link></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " href="#"><router-link to="/register">Register</router-link></a>
+                            <a class="nav-link" href="#"><router-link to="/register">Register</router-link></a>
                         </li>
                     </ul>
                 </div>

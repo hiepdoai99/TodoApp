@@ -60,7 +60,7 @@ const router = createCustomRouter();
 
 router.beforeEach(async (to, from, next) => {
     // set title
-    const appName = "todolist";
+    const appName = "TodoList";
     document.title = to.meta?.title ? to.meta.title + " - " + appName : appName;
 
     // if no token then redirect to login

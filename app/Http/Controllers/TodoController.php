@@ -11,7 +11,7 @@ class TodoController extends Controller
 {
     public function index(Request $request){
         $todo = QueryBuilder::for(TodoModel::class)
-                ->allowedFilters('name')
+                ->allowedFilters('name','description')
                 ->allowedIncludes(['user', 'status'])
                 ->paginate($request->per_page ?? 10)
                 ->appends($request->all());
