@@ -36,6 +36,11 @@ const routerCustom = [{
         name: 'add',
         component: AddTodo
     },
+    {
+        path:'/edit-todo/:id',
+        name: 'edit',
+        component: AddTodo
+    },
 ]
 
 const createCustomRouter = () =>

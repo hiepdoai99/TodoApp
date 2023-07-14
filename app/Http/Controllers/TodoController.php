@@ -17,6 +17,10 @@ class TodoController extends Controller
                 ->appends($request->all());
         return $this->respondSuccess($todo);
      }
+     public function show(Request $request,$id){
+        $todo = QueryBuilder::for(TodoModel::class)->find($id);
+        return $this->respondSuccess($todo);
+     }
 
      public function store(Request $request)
     {
@@ -46,7 +50,7 @@ class TodoController extends Controller
         $todo ->save();
 
         return $this->respondSuccess($todo);
-    
+
     }
 
     public function destroy($id, Request $request)

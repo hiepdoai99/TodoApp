@@ -28,6 +28,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::delete('/delete-status/{id}', [\App\Http\Controllers\StatusController::class, 'destroy']);
 
         Route::get('/todo', [\App\Http\Controllers\TodoController::class, 'index']);
+        Route::get('/todo/{id}', [\App\Http\Controllers\TodoController::class, 'show']);
         Route::post('/todo', [\App\Http\Controllers\TodoController::class, 'store']);
         Route::put('/todo/{id}', [\App\Http\Controllers\TodoController::class, 'edit']);
         Route::delete('/todo/{id}', [\App\Http\Controllers\TodoController::class, 'destroy']);

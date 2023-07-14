@@ -9,14 +9,16 @@ import {
 } from "vue";
 const users = ref([])
 const status = ref([])
-
+const id = route.params.id ?? null;
 onMounted(()=>{
     getUser()
     getStatus()
+    if (id){
+        getTodo(id)
+    }
 })
 const getUser = () => {
     $axios.get('/user').then((data)=>{
-        console.log(data.data.data)
         users.value = data.data.data
     })
 }
@@ -33,6 +35,7 @@ const formState = reactive({
     start_date:'',
     end_date:''
 })
+
 const addTodo = ()=> {
     $axios.post('/todo',{
         name:formState.name,
@@ -43,7 +46,33 @@ const addTodo = ()=> {
         end_date:formState.end_date}).then(
         (data) => {
             router.push('/todo')
-            console.log(' thanh cong')
+        }
+    )
+}
+const getTodo = (id) => {
+    $axios.get('/todo/'+id).then(
+        (res) => {
+            if (res){
+                 formState.name = res.data.data.name;
+                 formState.description = res.data.data.description;
+                 formState.status_id = res.data.data.status_id;
+                 formState.user_id = res.data.data.user_id;
+                 formState.start_date = res.data.data.start_date;
+                 formState.end_date = res.data.data.end_date;
+            }
+        }
+    )
+}
+const edit = ()=> {
+    $axios.put('/todo/'+ id ,{
+        name:formState.name,
+        description:formState.description,
+        status_id:formState.status_id,
+        user_id:formState.user_id,
+        start_date:formState.start_date,
+        end_date:formState.end_date}).then(
+        (data) => {
+            router.push('/todo')
         }
     )
 }
@@ -81,7 +110,8 @@ const addTodo = ()=> {
             <label for="exampleFormControlInput1" class="form-label m-lg-3 ">End date</label>
             <input type = "date" name = "date" v-model="formState.end_date">
 
-            <button @click="addTodo" class="w-100 btn btn-lg btn-primary mt-5" type="button">Submit</button>
+            <button v-if="id" @click="edit" class="w-100 btn btn-lg btn-primary mt-5" type="button">Update</button>
+            <button v-else @click="addTodo" class="w-100 btn btn-lg btn-primary mt-5" type="button">Submit</button>
 
         </form>
 
