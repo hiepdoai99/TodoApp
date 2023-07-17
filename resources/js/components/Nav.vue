@@ -32,6 +32,14 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+    .nav-item {
+        color: white !important;
+        .nav-link {
+            a {
+                color: white !important;
+                text-decoration: unset!important;
+            }
+        }
+    }
 </style>

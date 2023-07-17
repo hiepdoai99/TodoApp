@@ -15,7 +15,9 @@ $axios.interceptors.request.use(
             "Content-Type": "application/json",
         },
     }),
-    (error) => Promise.reject(error)
-);
+    (error) => {
+        console.log(error)
+    });
+;
 
 export { $axios };

@@ -26,7 +26,9 @@ const deleteobj = (todoId) => {
     })
 }
 
-watch(input, async (newInput, oldInput) => {
+watch(input,
+    async (newInput) => {
+        console.log(1)
     if (newInput.length > 0) {
         $axios.get('/todo?filter[name]='+input.value+'&include=status,user').then((data) => {
             todoList.value = data.data.data
