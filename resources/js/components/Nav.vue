@@ -5,7 +5,7 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#"><router-link  to="/">HOME</router-link></a>
+                            <a class="nav-link active" aria-current="page" href="#"><router-link  to="/">Home</router-link></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#"><router-link to="/todo">TodoList</router-link></a>

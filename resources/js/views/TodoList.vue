@@ -45,8 +45,8 @@ watch(input,
 <template>
     <div>
         <div class="m-lg-3">
-            <button class="btn btn-danger">
-                <router-link to="/add-todo">AddTodo</router-link>
+            <button class="btn btn-success">
+                <a href="/add-todo" class="btn">Add Todo</a>
             </button>
         </div>
 
@@ -55,7 +55,7 @@ watch(input,
         </div>
 
         <h3 class="text-center">All todos</h3><br/>
-        <table class="table table-bordered">
+        <table class="table table-bordered ">
             <thead>
             <tr>
                 <th>ID</th>
@@ -77,7 +77,7 @@ watch(input,
                 <td>{{ todo.status.name }}</td>
                 <td>
                     <div class="btn-group" role="group">
-                        <router-link :to="{name: 'details', params: { id: todo.id }}" class="btn btn-primary">Show
+                        <router-link  :to="{name: 'details', params: { id: todo.id }}" class="btn btn-primary">Show
                         </router-link>
                     </div>
                     <div class="btn-group" role="group">

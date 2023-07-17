@@ -81,7 +81,7 @@ const edit = ()=> {
 
 <template>
     <div class="container ">
-        <h3> Add Todo</h3>
+        <h3 class="mt-3 text-center"> Add Todo</h3>
         <form>
             <label for="exampleFormControlInput1" class="form-label">Name</label>
             <input v-model="formState.name" class="form-control form-control-lg" type="text"  aria-label=".form-control-lg example">
@@ -90,7 +90,7 @@ const edit = ()=> {
             <textarea v-model="formState.description" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
 
             <label for="exampleFormControlInput1" class="form-label">User</label>
-            <select class="form-select" v-model="formState.user_id">
+            <select class="form-select " v-model="formState.user_id">
                 <option v-for="user in users" :key="user.value" :value="user.id">
                     {{ user.name }}
                 </option>
