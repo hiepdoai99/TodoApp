@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserTypesEnum;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
@@ -15,7 +16,9 @@ class UserTableSeeder extends Seeder
     public function run(): void
     {
         User::query()->create([
-            'name' => 'nguyen xuan hiep',
+            'first_name' => 'nguyen xuan ',
+            'last_name' => ' hiep',
+            'user_type' => (string)UserTypesEnum::member(),
             'email' => 'nguyenxuanhiepk49@gmail.com',
             'password' => Hash::make('1968'),
         ]);

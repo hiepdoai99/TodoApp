@@ -10,15 +10,13 @@ class Status extends Model
 {
     use HasFactory;
 
+    protected $table = "status";
 
     protected $fillable = [
         'name'
     ];
 
-    public function todomodels()
-    {
-        return $this->hasMany(TodoModel::class);
-    }
-    
+
+
 
 }

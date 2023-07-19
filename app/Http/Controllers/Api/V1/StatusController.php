@@ -1,20 +1,23 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\Status;
+use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 
 
 class StatusController extends Controller
 {
     public function index(Request $request){
-       $status = QueryBuilder::for(Status::class)
-                ->allowedFilters('name','id')
-                ->paginate($request->per_page ?? 10)
-                ->appends($request->all());
-       return $this->respondSuccess($status);
+//       $status = QueryBuilder::for(Status::class)
+//                ->allowedFilters('name','id')
+//                ->paginate($request->per_page ?? 10)
+//                ->appends($request->all());
+//       return $this->respondSuccess($status)
+        $status = Status::all();
+        return $this->respondSuccess($status);
     }
 
 
@@ -29,8 +32,8 @@ class StatusController extends Controller
         return $this->respondSuccess($status);
     }
 
-    
-   
+
+
     public function edit(Request $request,$id)
     {
         $status = Status::find($id);
@@ -38,7 +41,7 @@ class StatusController extends Controller
         $status ->save();
 
         return $this->respondSuccess($status);
-    
+
     }
 
     public function destroy($id, Request $request)
@@ -50,5 +53,5 @@ class StatusController extends Controller
         }
         return $this->respondError(__('status.delete_fail',['resource',  'status '.$status->name]));
     }
-    
+
 }

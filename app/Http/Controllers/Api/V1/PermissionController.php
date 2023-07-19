@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\RolesEnum;
-use App\Models\Permission;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Artisan;
 use App\Http\Resources\PermissionResource;
-use Spatie\Permission\Traits\HasRoles;
+use App\Models\Permission;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 
 class PermissionController extends Controller
 {
