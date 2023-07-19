@@ -9,16 +9,46 @@
 
 ## Laravel version 10.15.0
 
+## PHP version 8.2.6
+
+## composer 2.5.7
+
+## Node version 16.15.1
+
 ## Vue version 3x
 
 ## Run project
 
-npm i
 
-composer i 
+```sh
+npm install
+```
 
-npm install vue-router
+```sh
+composer i
+```
 
-npm install vue bootstrap bootstrap-vue
+```sh
+php artisan migrate:fresh --seed
+```
 
-npm install vuex@next --save
+```sh
+php artisan key:generate
+```
+
+```sh
+php artisan jwt:secret
+```
+
+```sh
+npm run build
+```
+
+```sh
+php artisan serve
+```
+
+
+
+
+
