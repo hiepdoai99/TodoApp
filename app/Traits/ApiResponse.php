@@ -12,7 +12,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Validation\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
-trait HtqApiResponse
+trait ApiResponse
 {
     private ?array $_api_helpers_defaultSuccessData = ['payload' => ['success' => true]];
 

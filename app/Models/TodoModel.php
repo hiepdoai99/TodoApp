@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TodoModel extends Model
 {
-    use HasFactory; 
+    use HasFactory;
 
     protected $fillable = [
         'name', 'description', 'status_id', 'start_date', 'end_date', 'user_id'
@@ -20,7 +20,7 @@ class TodoModel extends Model
 
     public function status()
     {
-        return $this->belongsTo(Status::class);
+        return $this->belongsTo(Status::class  );
     }
     public function user()
     {

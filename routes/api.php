@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +20,9 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     Route::post('/register', [\App\Http\Controllers\UserController::class, 'store']);
 
     Route::group(['middleware' => ['auth:api']], function ($router) {
+
+        Route::apiResource('permissions', \App\Http\Controllers\PermissionController::class)->only('index');
+
         Route::post('/verify-token', [\App\Http\Controllers\AuthController::class, 'verifyToken']);
         Route::get('/status', [\App\Http\Controllers\StatusController::class, 'index']);
         Route::post('/create-status', [\App\Http\Controllers\StatusController::class, 'store']);

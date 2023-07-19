@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Filters\FilterBuilder;
-use App\Traits\HtqApiResponse;
+use App\Traits\ApiResponse;
 use App\Services\Core\BaseService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -27,8 +27,8 @@ class Controller extends BaseController
     protected $service;
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-    use HtqApiResponse;
- 
+    use ApiResponse;
+
 
     public function __construct()
     {

@@ -13,8 +13,9 @@ class TodoController extends Controller
         $todo = QueryBuilder::for(TodoModel::class)
                 ->allowedFilters('name','description')
                 ->allowedIncludes(['user', 'status'])
-                ->paginate($request->per_page ?? 10)
+                ->paginate($request->per_page ?? 2)
                 ->appends($request->all());
+
         return $this->respondSuccess($todo);
      }
      public function show(Request $request,$id){

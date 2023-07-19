@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Enums\RolesEnum;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable;
+    use Notifiable, HasRoles;
 
     protected $fillable = [
         'name',
@@ -44,11 +46,17 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+    public function hasRoleAdmin(): bool
+    {
+        return $this->hasAnyRole([(string)RolesEnum::root(), (string)RolesEnum::admin()]);
+    }
+
+
 
     public function todomodels()
     {
         return $this->hasMany(TodoModel::class);
     }
 
-    
+
 }
