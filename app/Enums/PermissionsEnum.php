@@ -11,7 +11,7 @@ use Spatie\Enum\Laravel\Enum;
  * @method static self user_update()
  * @method static self user_delete()
  *
- * *@method static self role_create()
+ * @method static self role_create()
  * @method static self role_read()
  * @method static self role_update()
  * @method static self role_delete()
@@ -32,9 +32,9 @@ use Spatie\Enum\Laravel\Enum;
  * @method static self team_delete()
  *
  * @method static self project_create()
- * @method static self projects_read()
- * @method static self projects_update()
- * @method static self projects_delete()
+ * @method static self project_read()
+ * @method static self project_update()
+ * @method static self project_delete()
  *
  * @method static self task_create()
  * @method static self task_read()

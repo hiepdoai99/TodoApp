@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ImageRequest;
 use App\Models\Image;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class ImageController extends Controller
 {
@@ -27,9 +30,15 @@ class ImageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ImageRequest $request)
     {
-        //
+
+        $validatedData = $request->validated();
+        $validatedData['image'] = $request->file('image')->store('image');
+        $data = Image::create($validatedData);
+
+        return response($data, Response::HTTP_CREATED);
+
     }
 
     /**

@@ -21,6 +21,15 @@ class UserTableSeeder extends Seeder
             'user_type' => (string)UserTypesEnum::member(),
             'email' => 'nguyenxuanhiepk49@gmail.com',
             'password' => Hash::make('1968'),
+            'status' => '1',
+        ]);
+        User::query()->create([
+            'first_name' => 'nguyen van ',
+            'last_name' => ' test',
+            'user_type' => (string)UserTypesEnum::member(),
+            'email' => 'test@gmail.com',
+            'password' => Hash::make('1968'),
+            'status' => '1',
         ]);
 
     }

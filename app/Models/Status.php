@@ -16,6 +16,11 @@ class Status extends Model
         'name'
     ];
 
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+
 
 
 

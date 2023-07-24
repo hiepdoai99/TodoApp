@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->longText('description');
-            $table->foreignId('team_id')->nullable();
+            $table->foreignId('user_id')->nullable();
+            $table->foreignId('assignee_id')->nullable();
+            $table->foreignId('project_id')->nullable();
             $table->foreignId('status_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
