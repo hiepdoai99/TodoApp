@@ -56,5 +56,14 @@ class RoleAndPermissionSeeder extends Seeder
 
         $rootUser->givePermissionTo($allPermissions);
 
+        // add permission to role member
+        $permissionMember = Permission::whereIn('id',[2,3,6,10,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36])->get();
+        Role::findByName((string)RolesEnum::member())
+            ->givePermissionTo($permissionMember);
+
+        $userMember = User::where('email', 'test@gmail.com')->first();
+        $userMember->assignRole((string)RolesEnum::member())
+            ->givePermissionTo($permissionMember);
+
     }
 }

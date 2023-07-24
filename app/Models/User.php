@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Enums\RolesEnum;
 use App\Enums\UserTypesEnum;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
@@ -12,14 +14,16 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable, HasRoles;
+    use Notifiable, HasRoles, SoftDeletes;
 
     protected $fillable = [
-        'name',
+        'last_name',
+        'first_name',
         'email',
         'password',
         'email_verified_at',
         'remember_token',
+        'user_type',
     ];
 
     protected $hidden = [
@@ -30,7 +34,7 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
         'status' => 'boolean',
-        'user_type' => UserTypesEnum::class,
+//        'user_type' => UserTypesEnum::class,
     ];
 
     public function getRules() : array
@@ -90,9 +94,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasAnyRole([(string)RolesEnum::root(), (string)RolesEnum::admin()]);
     }
 
-    public function todomodels()
+    public function tasks()
     {
-        return $this->hasMany(TodoModel::class);
+        return $this->hasMany(Task::class, 'id');
     }
 
 

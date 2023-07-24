@@ -2,52 +2,92 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\UserRegisterAction;
+use App\Actions\UserUpdateAction;
+use App\Enums\RolesEnum;
+use App\Enums\UserTypesEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UserRequest;
+use App\Http\Resources\TeamResource;
+use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserResource;
+use App\Models\Role;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
 
 
 class UserController extends Controller
 {
-    public function index(Request $request){
+    public function index(UserRequest $request)
+    {
         $user = QueryBuilder::for(User::class)
-                ->allowedFilters('name')
-                ->allowedIncludes([ 'todomodels'])
-                ->paginate($request->per_page ?? 10)
-                ->appends($request->all());
-        return $this->respondSuccess($user);
+            ->allowedFilters('name')
+            ->paginate($request->per_page ?? 10)
+            ->appends($request->all());
+
+
+        return $this->respondSuccess(
+            new UserCollection($user)
+        );
     }
 
-    public function store(Request $request)
+    public function store(RegisterRequest $request)
     {
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $password =  Hash::make($request->password);
-        $user->password = $password;
-        $user ->save();
 
-        return $this->respondSuccess($user);
+        if ($user = app(UserRegisterAction::class)->execute($request->all())) {
+            return $this->respondCreated(new UserResource($user));
+        }
+        return $this->respondError('Tao moi user that bai');
+//        $dataUser = $request->validated();
+//        $dataUser['password'] = Hash::make($dataUser['password']);
+//
+//        $user = new User();
+//
+//        if ($user->fill($dataUser)->save() && !empty($dataUser['roles'])) {
+//            $user->assignRole((string)RolesEnum::member());
+//            $role = Role::findByName((string)RolesEnum::member());
+//            $user->givePermissionTo($role->getAllPermissions());
+//        }
+//
+//
+//        return $this->respondCreated(new UserResource($user));
     }
-    public function update(Request $request, $id)
+
+    public function show(UserRequest $request, User $user)
     {
-        $user = User::find($id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user ->save();
-
-        return $this->respondSuccess($user);
+        $with = [];
+        if ($request->has('include')) {
+            $with = collect(explode(',', $request->include))->filter()->all();
+        }
+        return $this->respondSuccess(new UserResource($user->loadMissing($with)));
     }
-    public function destroy($id, Request $request)
+
+    public function update(UserRequest $request, User $user)
+    {
+        if ($user = app(UserUpdateAction::class)->execute($user, $request->validated())) {
+            return $this->respondSuccess(
+                new UserResource($user)
+            );
+        }
+        return $this->respondError('Loi cap nhat User');
+
+
+    }
+
+    public function destroy($id, UserRequest $request)
     {
 
         $todo = User::find($id);
         if ($todo->delete()) {
-            return $this->respondOk(__('user.delete_success', ['resource', 'user '.$todo->name]));
+            return $this->respondOk(__('user.delete_success', ['resource', 'user ' . $todo->name]));
         }
-        return $this->respondError(__('user.delete_fail',['resource',  'user '.$todo->name]));
+        return $this->respondError(__('user.delete_fail', ['resource', 'user ' . $todo->name]));
     }
 
 

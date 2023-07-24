@@ -3,64 +3,74 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TeamRequest;
+use App\Http\Resources\TeamCollection;
+use App\Http\Resources\TeamResource;
 use App\Models\Team;
-use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
+
+
 
 class TeamController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(TeamRequest $request)
     {
-        //
-    }
+        $teams = QueryBuilder::for(Team::class)
+            ->allowedFilters(['name'])
+            ->paginate($request->per_page ?? 10)
+            ->appends($request->all());
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return $this->respondSuccess(new TeamCollection($teams));
     }
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TeamRequest $request)
     {
-        //
+        return $this->respondCreated(
+            new TeamResource(Team::create($request->validated()))
+        );
     }
 
     /**
      * Display the specified resource.
+     *
+     * @param  \App\Models\Team  $team
+     * @return \Illuminate\Http\Response
      */
-    public function show(Team $team)
+    public function show(TeamRequest $request, Team $team)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Team $team)
-    {
-        //
+        return $this->respondSuccess(new TeamResource($team));
     }
 
     /**
      * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Team  $team
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Team $team)
+    public function update(TeamRequest $request, Team $team)
     {
-        //
+        $team->fill($request->validated())->save();
+        return $this->respondSuccess(new TeamResource($team));
     }
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Team  $team
+     * @return \Illuminate\Http\Response
      */
-    public function destroy(Team $team)
+    public function destroy(TeamRequest $request, Team $team)
     {
-        //
+        if ($team->delete()) {
+            return $this->respondOk(__('team.delete_success', ['resource', 'Team '.$team->name]));
+        }
+        return $this->respondError(__('team.delete_fail',['resource',  'Team '.$team->name]));
     }
 }

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->longText('content');
             $table->foreignId('task_id')->nullable();
             $table->foreignId('user_id')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

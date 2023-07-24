@@ -3,64 +3,74 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CommentRequest;
+use App\Http\Resources\CommentCollection;
+use App\Http\Resources\CommentResource;
 use App\Models\Comment;
-use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
+
+
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(CommentRequest $request)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $comments = QueryBuilder::for(Comment::class)
+            ->allowedIncludes(['user','task'])
+            ->allowedFilters(['name'])
+            ->paginate($request->per_page ?? 10)
+            ->appends($request->all());
+        return $this->respondSuccess(new CommentCollection($comments));
     }
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CommentRequest $request)
     {
-        //
+        return $this->respondCreated(
+            new CommentResource(Comment::create($request->validated()))
+        );
     }
 
     /**
      * Display the specified resource.
+     *
+     * @param  \App\Models\Comment  $Comment
+     * @return \Illuminate\Http\Response
      */
-    public function show(Comment $comment)
+    public function show(CommentRequest $request, Comment $Comment)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Comment $comment)
-    {
-        //
+        return $this->respondSuccess(new CommentResource($Comment));
     }
 
     /**
      * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Comment  $Comment
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Comment $comment)
+    public function update(CommentRequest $request, Comment $Comment)
     {
-        //
+        $Comment->fill($request->validated())->save();
+        return $this->respondSuccess(new CommentResource($Comment));
     }
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Comment  $Comment
+     * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $comment)
+    public function destroy(CommentRequest $request, Comment $Comment)
     {
-        //
+        if ($Comment->delete()) {
+            return $this->respondOk(__('Comment.delete_success', ['resource', 'Comment '.$Comment->name]));
+        }
+        return $this->respondError(__('Comment.delete_fail',['resource',  'Comment '.$Comment->name]));
     }
 }
