@@ -25,21 +25,23 @@ const handleLogin = ()=> {
 </script>
 
 <template>
-  <main class="form-signin">
-    <form>
-      <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-
-      <div class="form-floating">
-        <input v-model="formState.email" type="email" class="form-control" name="email" placeholder="name@example.com">
+  <main class="form-register">
+    <h1 class="form-header">Please log in</h1>
+    <form class="form-container">
+      <div class="form-item">
         <label>Email</label>
+        <input v-model="formState.email" type="email" class="form-control" name="email" placeholder="name@example.com">
       </div>
 
-      <div class="form-floating">
-        <input v-model="formState.password" type="password" class="form-control" name="password" placeholder="Password">
+      <div class="form-item">
         <label>Password</label>
+        <input v-model="formState.password" type="password" class="form-control" name="password" placeholder="Password">
       </div>
 
-      <button class="w-100 btn btn-lg btn-primary" @click="handleLogin" type="button">Submit</button>
+      <div class="form-item">
+        <button class="btn-main" @click="handleLogin" type="button">Submit</button>
+      </div>
+
     </form>
   </main>
 </template>

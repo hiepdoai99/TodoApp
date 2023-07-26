@@ -80,39 +80,54 @@ const edit = ()=> {
 </script>
 
 <template>
-    <div class="container ">
-        <h3 class="mt-3 text-center"> Add Todo</h3>
-        <form>
-            <label for="exampleFormControlInput1" class="form-label">Name</label>
-            <input v-model="formState.name" class="form-control form-control-lg" type="text"  aria-label=".form-control-lg example">
+    <div class="form-register">
+        <h3 class="form-header"> Add Todo</h3>
+        <form class="form-container">
 
-            <label for="exampleFormControlInput1" class="form-label">Description</label>
+					<div class="form-item">
+						<label for="exampleFormControlInput1">Name</label>
+            <input v-model="formState.name" class="form-control" type="text"  aria-label=".form-control-lg example">
+        	</div>
+
+					<div class="form-item">
+						<label for="exampleFormControlInput1">Description</label>
             <textarea v-model="formState.description" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+					</div>
 
-            <label for="exampleFormControlInput1" class="form-label">User</label>
+					<div class="form-item">
+						<label for="exampleFormControlInput1">User</label>
             <select class="form-select " v-model="formState.user_id">
                 <option v-for="user in users" :key="user.value" :value="user.id">
                     {{ user.name }}
                 </option>
             </select>
+					</div>
 
-            <label for="exampleFormControlInput1" class="form-label mt-3">Status</label>
+					<div class="form-item">
+						<label for="exampleFormControlInput1">Status</label>
             <select class="form-select" v-model="formState.status_id">
                 <option v-for="stt in status" :key="stt.value" :value="stt.id">
                     {{ stt.name }}
                 </option>
             </select>
-            <br>
+					</div>
 
-            <label for="exampleFormControlInput1" class="form-label m-lg-3 ">Start date</label>
-            <input type = "date" name = "date" v-model="formState.start_date">
+					<div class="date-container">
+						<div class="form-item">
+							<label for="exampleFormControlInput1">Start date</label>
+            	<input class="date-select" type = "date" name = "date" v-model="formState.start_date">
+						</div>
 
-            <label for="exampleFormControlInput1" class="form-label m-lg-3 ">End date</label>
-            <input type = "date" name = "date" v-model="formState.end_date">
-
-            <button v-if="id" @click="edit" class="w-100 btn btn-lg btn-primary mt-5" type="button">Update</button>
-            <button v-else @click="addTodo" class="w-100 btn btn-lg btn-primary mt-5" type="button">Submit</button>
-
+            <div class="form-item">
+							<label for="exampleFormControlInput1">End date</label>
+            	<input class="date-select" type = "date" name = "date" v-model="formState.end_date">
+						</div>
+					</div>
+            
+					<div class="form-item">
+						<button v-if="id" @click="edit" class="btn-main" type="button">Update</button>
+						<button v-else @click="addTodo" class="btn-main" type="button">Submit</button>
+					</div>
         </form>
 
     </div>
@@ -121,5 +136,31 @@ const edit = ()=> {
 
 
 <style scoped>
+/* Most  */
 
+.date-container{
+	display: flex;
+}
+
+.date-container .form-item:first-child{
+	margin-right: 20px;
+}
+.date-select{
+	background-color: #FDFDC9;
+	color: black;
+	font-size: 18px;
+	border: none;
+	outline: none;
+	border-radius: 5px;
+}
+.form-item textarea{
+    width: 70%;
+    border-radius: 0px 15px 15px 0px;
+    background-color: #FDFDC9;
+  }
+.form-item select{
+	width: 70%;
+	border-radius: 0px 15px 15px 0px;
+	background-color: #FDFDC9;
+}
 </style>
