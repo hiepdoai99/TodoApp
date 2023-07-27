@@ -15,6 +15,14 @@ class AuthController extends Controller
 
     protected function respondWithToken($token)
     {
+        if (auth()->user()->is_email_verified != 1){
+            return response()->json([
+                'code' => 400,
+                'message' => 'unconfirmed email'
+            ]);
+        }
+
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',

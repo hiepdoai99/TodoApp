@@ -44,19 +44,6 @@ class UserController extends Controller
             return $this->respondCreated(new UserResource($user));
         }
         return $this->respondError('Tao moi user that bai');
-//        $dataUser = $request->validated();
-//        $dataUser['password'] = Hash::make($dataUser['password']);
-//
-//        $user = new User();
-//
-//        if ($user->fill($dataUser)->save() && !empty($dataUser['roles'])) {
-//            $user->assignRole((string)RolesEnum::member());
-//            $role = Role::findByName((string)RolesEnum::member());
-//            $user->givePermissionTo($role->getAllPermissions());
-//        }
-//
-//
-//        return $this->respondCreated(new UserResource($user));
     }
 
     public function show(UserRequest $request, User $user)

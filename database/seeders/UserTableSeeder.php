@@ -22,6 +22,7 @@ class UserTableSeeder extends Seeder
             'email' => 'nguyenxuanhiepk49@gmail.com',
             'password' => Hash::make('1968'),
             'status' => '1',
+            'is_email_verified' => '1',
         ]);
         User::query()->create([
             'first_name' => 'nguyen van ',
@@ -30,6 +31,7 @@ class UserTableSeeder extends Seeder
             'email' => 'test@gmail.com',
             'password' => Hash::make('1968'),
             'status' => '1',
+            'is_email_verified' => '1',
         ]);
 
     }
