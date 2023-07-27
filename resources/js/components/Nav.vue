@@ -10,7 +10,6 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#"><router-link to="/todo">Tasks</router-link></a>
                         </li>
-
 												<li class="nav-item">
                             <a class="nav-link" href="#"><router-link to="/team">Team</router-link></a>
                         </li>
@@ -22,6 +21,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#"><router-link to="/register">Register</router-link></a>
+                        </li>
+												<li class="nav-item">
+                            <a class="nav-link" href="#"><router-link to="/admin">Admin</router-link></a>
                         </li>
                     </ul>
                 </div>
