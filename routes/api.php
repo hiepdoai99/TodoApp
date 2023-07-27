@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,11 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 Route::prefix('v1')->name('api.v1.')->group(function () {
+    Route::get('/verify-email/{token}', [RegisterController::class, 'verifyAccount'])->name('verification.verify');
+    Route::post('/login', [\App\Http\Controllers\Api\Auth\AuthController::class, 'login'])->name('login');
+    Route::post('/register', [\App\Http\Controllers\Api\Auth\RegisterController::class, 'register']);
+    Route::get('/send-mail', [App\Http\Controllers\MailController::class, 'index']);
 
-    Route::post('/login', [\App\Http\Controllers\Api\Auth\AuthController::class, 'login']);
-    Route::post('/register', [\App\Http\Controllers\Api\V1\UserController::class, 'store']);
 
     Route::group(['middleware' => ['auth:api']], function ($router) {
 
@@ -29,7 +31,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::apiResource('user', \App\Http\Controllers\Api\V1\UserController::class);
         Route::apiResource('team', \App\Http\Controllers\Api\V1\TeamController::class);
         Route::apiResource('project', \App\Http\Controllers\Api\V1\ProjectController::class);
-        Route::apiResource('task', \App\Http\Controllers\Api\V1\TaskController::class);
+        Route::apiResource('task', \App\Http\Controllers\Api\V1\TaskController::class)->middleware( 'is_verify_email');;
         Route::apiResource('comments', \App\Http\Controllers\Api\V1\CommentController::class);
 
         Route::post('/image', [\App\Http\Controllers\Api\V1\ImageController::class, 'store']);
