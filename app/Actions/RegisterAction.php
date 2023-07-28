@@ -2,10 +2,9 @@
 
 namespace App\Actions;
 
-use App\Enums\InvoiceStatusEnum;
 use App\Enums\RolesEnum;
 use App\Enums\UserTypesEnum;
-use App\Mail\MailNotify;
+use App\Jobs\SendEmail;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserVerify;
@@ -58,15 +57,17 @@ class RegisterAction
             ]);
             DB::commit();
 
-            Mail::send('emails.index', ['token' => $token, 'user' => $user], function($message) use($user){
-                $message->to($user->email);
-                $message->subject('Email Verification Mail');
-            });
+            SendEmail::dispatch($user,$token);
+
+//            Mail::send('emails.index', ['token' => $token, 'user' => $user], function($message) use($user){
+//                $message->to($user->email);
+//                $message->subject('Email Verification Mail');
+//            });
 
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             DB::rollBack();
         }
-        return $user ;
+        return $user;
     }
 }

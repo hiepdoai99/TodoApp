@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
+use App\Models\UserVerify;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Mail;
 
 class AuthController extends Controller
 {
@@ -15,10 +19,22 @@ class AuthController extends Controller
 
     protected function respondWithToken($token)
     {
-        if (auth()->user()->is_email_verified != 1){
+        $user = auth()->user();
+
+        if ($user->is_email_verified != 1){
+
+            $token = Str::random(10);
+            UserVerify::create([
+                'user_id' => $user->id,
+                'token' => $token
+            ]);
+
+            Mail::send('emails.index', ['token' => $token, 'user' => $user], function($message) use($user){
+                $message->to($user->email);
+                $message->subject('Email Verification Mail');
+            });
             return response()->json([
-                'code' => 400,
-                'message' => 'unconfirmed email'
+                'message' => 'Unconfirmed email. Please verify your email'
             ]);
         }
 

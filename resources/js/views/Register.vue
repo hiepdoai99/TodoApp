@@ -8,16 +8,21 @@ import {
   ref,reactive
 } from "vue";
 const formState = reactive({
-  name:'',
+  first_name:'',
+  last_name:'',
   email:'',
-  password:''
+  password:'',
+    password_confirmation:''
 })
 
 const handleRegister = ()=> {
   $axios.post('register',{
-    email:formState.email,
-    password:formState.password,
-    name:formState.name})
+      email:formState.email,
+      password:formState.password,
+      password_confirmation:formState.password_confirmation,
+      first_name:formState.first_name,
+      last_name:formState.last_name,
+  })
       .then(
       (data) => {
           router.push('/')
@@ -31,30 +36,30 @@ const handleRegister = ()=> {
       <h1 class="form-header">Registration</h1>
       <form class="form-container">
         <div class="form-item">
-          <label>First name</label> 
-          <input v-model="formState.name" class="form-control" name="first name" placeholder="First name">     
+          <label>First name</label>
+          <input v-model="formState.first_name" class="form-control" name="first_name" placeholder="First name">
         </div>
 
         <div class="form-item">
-          <label>Last name</label> 
+          <label>Last name</label>
           <!-- <input v-model="formState.name" class="form-control" name="name" placeholder="First name">      -->
-          <input class="form-control" name="last name" placeholder="Last name"> 
+          <input v-model="formState.last_name" class="form-control"  name="last_name" placeholder="Last name">
         </div>
 
         <div class="form-item">
           <label>Email</label>
-          <input v-model="formState.email" type="email" class="form-control" name="email" placeholder="Name@example.com">    
+          <input v-model="formState.email" type="email" class="form-control" name="email" placeholder="Name@example.com">
         </div>
 
         <div class="form-item">
           <label>Password</label>
-          <input v-model="formState.password" type="password" class="form-control" name="password" placeholder="Password">   
+          <input v-model="formState.password" type="password" class="form-control" name="password" placeholder="Password">
         </div>
 
         <div class="form-item">
           <label>Confirm Password</label>
           <!-- <input v-model="formState.password" type="password" class="form-control" name="password" placeholder="Password">    -->
-          <input type="password" class="form-control" name="confirm password" placeholder="Re-enter Password">
+          <input v-model="formState.password_confirmation"  type="password" class="form-control" name="password_confirmation" placeholder="Re-enter Password">
         </div>
 
         <div class="form-item">
@@ -99,7 +104,7 @@ const handleRegister = ()=> {
     margin-bottom: 10px;
     color: white;
     justify-content: center;
- 
+
   }
   .form-item label{
     background-color: #1D5D9B;
@@ -124,6 +129,6 @@ const handleRegister = ()=> {
     box-shadow: -30px 30px 20px rgba(0, 0, 0, 0.2);
     border-radius: 0px 0px 15px 15px;
   }
-  
-  
+
+
 </style>
