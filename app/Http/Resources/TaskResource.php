@@ -22,7 +22,7 @@ class TaskResource extends JsonResource
             'end_date' => $this->end_date,
             'assignor' => new UserResource($this->whenLoaded('user')),
             'assignee' => new UserResource($this->whenLoaded('assignee')),
-            'status' =>  new StatusResource($this->whenLoaded('status')),
+            'status' =>  $this->status,
             'project' => new ProjectResource($this->whenLoaded('project')),
         ];
     }
