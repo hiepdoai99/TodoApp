@@ -6,7 +6,7 @@ const router = useRouter()
 const route = useRoute()
 import {
     onMounted,
-    ref,watch
+    ref, watch
 } from "vue";
 
 const todoList = ref([])
@@ -16,12 +16,12 @@ onMounted(() => {
     getData()
 })
 const getData = () => {
-    $axios.get('/todo?filter[name]=&include=status,user').then((data) => {
+    $axios.get('/task?include=user,project,status,assignee').then((data) => {
         todoList.value = data.data.data
     })
 }
 const deleteobj = (todoId) => {
-    $axios.delete('/todo/' + todoId).then(res => {
+    $axios.delete('/task/' + todoId).then(res => {
         getData()
     })
 }
@@ -29,167 +29,76 @@ const deleteobj = (todoId) => {
 watch(input,
     async (newInput) => {
         console.log(1)
-    if (newInput.length > 0) {
-        $axios.get('/todo?filter[name]='+input.value+'&include=status,user').then((data) => {
-            todoList.value = data.data.data
-        })
-    }else {
-        $axios.get('/todo?filter[name]=&include=status,user').then((data) => {
-            todoList.value = data.data.data
-        })
-    }
-})
+        if (newInput.length > 0) {
+            $axios.get('/task?search=' + input.value + '&include=user,project,status,assignee').then((data) => {
+                todoList.value = data.data.data
+            })
+        } else {
+            $axios.get('/task?include=user,project,status,assignee').then((data) => {
+                todoList.value = data.data.data
+            })
+        }
+    })
 
 </script>
 
 <template>
-   <body>
-		<main>
-			<section class="table-header">
-				<h1 class="form-header">Tasks manager</h1>
-				<div class="table-search-and-add-box">
+    <body>
+    <main>
+        <section class="table-header">
+            <h1 class="form-header">Tasks manager</h1>
+            <div class="table-search-and-add-box">
 
-					<div class="input-group">
-						<input type="text" v-model="input" placeholder="Search Todo ..." />
-					</div>
+                <div class="input-group">
+                    <input type="text" v-model="input" placeholder="Search task ..."/>
+                </div>
 
-					<button class="addtask-btn">
-							<a href="/add-todo">Add Todo</a>
-					</button>
-				</div>
-      </section>
-    
-      <section class="table-body">
-				<table>
-            <thead>
-							<tr>
-									<th>ID</th>
-									<th>Name</th>
-									<th>Description</th>
-									<th>Start date</th>
-									<th>End date</th>
-									<th>Status</th>
-									<th>Actions</th>
-							</tr>
-            </thead>
+                <button class="addtask-btn">
+                    <a href="/add-todo">Add Todo</a>
+                </button>
+            </div>
+        </section>
 
-            <tbody>
-							<!-- <tr v-for="todo in todoList" :key="todo.id">
-								<td>{{ todo.id }}</td>
-								<td>{{ todo.name }}</td>
-								<td>{{ todo.description }}</td>
-								<td>{{ todo.start_date }}</td>
-								<td>{{ todo.end_date }}</td>
-								<td>{{ todo.status.name }}</td>
-								<td>
-										<div class="btn-group" role="group">
-												<router-link  :to="{name: 'details', params: { id: todo.id }}" class="btn btn-primary">Show
-												</router-link>
-										</div>
-										<div class="btn-group" role="group">
-												<button @click="deleteobj(todo.id)" class="btn btn-danger">Delete</button>
-										</div>
-										<div class="btn-group" role="group">
-												<router-link :to="{name: 'edit', params: { id: todo.id }}" class="btn btn-primary">Edit
-												</router-link>
-										</div>
-								</td>
-							</tr> -->
-							<tr>
-								<td> 1 </td>
-								<td> Zinzu  </td>
-								<td> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore </td>
-								<td> 27 july, 2023 </td>
-								<td> 27 Dec, 2023 </td>
-								<td>
-										<p class="status shipped">todo</p>
-								</td>
-								<td> 
-									<div class="task-setting">
-											<span class="edit-btn">
-												<font-awesome-icon :icon="['fas', 'pen-to-square']" />
-											</span>
-											<span class="view-btn">
-												<font-awesome-icon :icon="['fas', 'eye']" />
-											</span>
-											<span class="delete-btn">
-												<font-awesome-icon :icon="['fas', 'delete-left']" />
-											</span>
-										</div> 
-									</td>
-								</tr>
-								<tr>
-										<td> 2 </td>
-										<td> Chan Lee</td>
-										<td> sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam </td>
-										<td> 27 july, 2023 </td>
-										<td> 27 Dec, 2023 </td>
-										<td>
-												<p class="status delivered">Done</p>
-										</td>
-										<td> <div class="task-setting">
-												<span class="edit-btn">
-													<font-awesome-icon :icon="['fas', 'pen-to-square']" />
-												</span>
-												<span class="view-btn">
-													<font-awesome-icon :icon="['fas', 'eye']" />
-												</span>
-												<span class="delete-btn">
-													<font-awesome-icon :icon="['fas', 'delete-left']" />
-												</span>
-											</div> </td>
-								</tr>
-								<tr>
-										<td> 3 </td>
-										<td> Zinzu Lee</td>
-										<td> Lorem ipsum dolor sit amet, consectetur adipiscing elit </td>
-										<td> 27 july, 2023 </td>
-										<td> 27 Dec, 2023 </td>
-										<td>
-												<p class="status pending">ongoing</p>
-										</td>
-										<td>
-											<div class="task-setting">
-												<span class="edit-btn">
-													<font-awesome-icon :icon="['fas', 'pen-to-square']" />
-												</span>
-												<span class="view-btn">
-													<font-awesome-icon :icon="['fas', 'eye']" />
-												</span>
-												<span class="delete-btn">
-													<font-awesome-icon :icon="['fas', 'delete-left']" />
-												</span>
-											</div> 
-										</td>
-								</tr>
-								<tr>
-										<td> 4 </td>
-										<td> Zinzu Lee</td>
-										<td> Lorem ipsum dolor sit amet, consectetur adipiscing elit </td>
-										<td> 27 july, 2023 </td>
-										<td> 27 Dec, 2023 </td>
-										<td>
-												<p class="status cancelled">Abort</p>
-										</td>
-										<td> 
-											<div class="task-setting">
-												<span class="edit-btn">
-													<font-awesome-icon :icon="['fas', 'pen-to-square']" />
-												</span>
-												<span class="view-btn">
-													<font-awesome-icon :icon="['fas', 'eye']" />
-												</span>
-												<span class="delete-btn">
-													<font-awesome-icon :icon="['fas', 'delete-left']" />
-												</span>
-											</div> 
-										</td>
-								</tr>
-            </tbody>
-        </table>
-			</section>
-		</main>
-	 </body>
+        <section class="table-body">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Start date</th>
+                    <th>End date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="todo in todoList" :key="todo.id">
+                    <td>{{ todo.id }}</td>
+                    <td>{{ todo.name }}</td>
+                    <td>{{ todo.description }}</td>
+                    <td>{{ todo.start_date }}</td>
+                    <td>{{ todo.end_date }}</td>
+                    <td>{{ todo.status.name }}</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <router-link :to="{name: 'details', params: { id: todo.id }}" class="btn btn-primary">Show
+                            </router-link>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button @click="deleteobj(todo.id)" class="btn btn-danger">Delete</button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <router-link :to="{name: 'edit', params: { id: todo.id }}" class="btn btn-primary">Edit
+                            </router-link>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    </body>
 </template>
 
 
@@ -202,10 +111,10 @@ watch(input,
     font-family: sans-serif;
 }
 
-main{
-	margin-top: 5%;
-	background-color: #75C2F6;
-	border-radius: 0px 0px 15px 15px;
+main {
+    margin-top: 5%;
+    background-color: #75C2F6;
+    border-radius: 0px 0px 15px 15px;
 }
 
 body {
@@ -217,11 +126,12 @@ body {
 
 
 .table-header {
-	width: 100%;
-	height: 10%;
-	justify-content: space-between;
-	text-align: center;
+    width: 100%;
+    height: 10%;
+    justify-content: space-between;
+    text-align: center;
 }
+
 .input-group {
     width: 100%;
     height: 100%;
@@ -236,44 +146,46 @@ body {
     transition: .2s;
 }
 
-.task-setting{
-	width: 10vh;
-}
-.task-setting span{
-	margin-right: 5px;
-	cursor: pointer;
+.task-setting {
+    width: 10vh;
 }
 
-.table-search-and-add-box{
-	padding: 20px;
+.task-setting span {
+    margin-right: 5px;
+    cursor: pointer;
 }
 
-.view-btn{
-	color: green;
+.table-search-and-add-box {
+    padding: 20px;
 }
 
-.edit-btn{
-	color: #ebc474;
+.view-btn {
+    color: green;
 }
 
-.delete-btn{
-	color: red;
+.edit-btn {
+    color: #ebc474;
 }
-.addtask-btn{
-	background-color: #1D5D9B;
+
+.delete-btn {
+    color: red;
+}
+
+.addtask-btn {
+    background-color: #1D5D9B;
     padding: 10px 0px 10px 0px;
-		margin-top: 1%;
+    margin-top: 1%;
     height: 100%;
-		width: 10%;
+    width: 10%;
     border-radius: 20px;
     border: none;
     color: white;
     text-align: center;
 }
 
-.addtask-btn a{
-  color: white;
-	text-decoration: none;
+.addtask-btn a {
+    color: white;
+    text-decoration: none;
 }
 
 .table-header .input-group:hover {
@@ -301,18 +213,18 @@ body {
     overflow: overlay;
 }
 
-.table-body::-webkit-scrollbar{
+.table-body::-webkit-scrollbar {
     width: 0.5rem;
     height: 0.5rem;
 }
 
-.table-body::-webkit-scrollbar-thumb{
+.table-body::-webkit-scrollbar-thumb {
     border-radius: .5rem;
     background-color: #0004;
     visibility: hidden;
 }
 
-.table-body:hover::-webkit-scrollbar-thumb{ 
+.table-body:hover::-webkit-scrollbar-thumb {
     visibility: visible;
 }
 
@@ -331,7 +243,7 @@ thead th {
     top: 0;
     left: 0;
     background-color: #1D5D9B;
-		color: white;
+    color: white;
     cursor: pointer;
     text-transform: capitalize;
 }
@@ -373,12 +285,12 @@ tbody tr td p {
 
 .status.pending {
     background-color: #ebc474;
-		color: white;
+    color: white;
 }
 
 .status.shipped {
     background-color: #6fcaea;
-		color: white;
+    color: white;
 }
 
 @media (max-width: 1000px) {
