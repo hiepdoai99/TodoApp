@@ -4,16 +4,12 @@
 
 <template>
 	<section class="table-header">
-		<h1 class="form-header">All users table</h1>
 		<div class="table-search-and-add-box">
 
 			<div class="input-group">
-				<input type="text" v-model="input" placeholder="Search Todo ..." />
+				<input type="text" v-model="input" placeholder="Search for team(s)" />
 			</div>
 
-			<button class="addtask-btn">
-					<a href="/add-todo">Add Todo</a>
-			</button>
 		</div>
 	</section>
 
@@ -146,22 +142,6 @@
 .delete-btn{
 	color: red;
 }
-.addtask-btn{
-	background-color: #1D5D9B;
-    padding: 10px 0px 10px 0px;
-		margin-top: 1%;
-    height: 100%;
-		width: 10%;
-    border-radius: 20px;
-    border: none;
-    color: white;
-    text-align: center;
-}
-
-.addtask-btn a{
-  color: white;
-	text-decoration: none;
-}
 
 .table-header .input-group:hover {
     background-color: #FDFDC9;
@@ -240,12 +220,6 @@ tbody tr:hover {
 tbody tr td,
 tbody tr td p {
     transition: .2s ease-in-out;
-}
-
-.status {
-    padding: .4rem 0.8rem;
-    border-radius: 2rem;
-    text-align: center;
 }
 
 thead th:hover {
