@@ -19,6 +19,8 @@ class Task extends Model
         'status_id',
         'project_id',
         'assignee_id',
+        'start_date',
+        'end_date',
     ];
 
     public function toSearchableArray()
@@ -37,7 +39,9 @@ class Task extends Model
             'user_id' => ['nullable', 'integer', 'min:1', 'exists:users,id'],
             'assignee_id' => ['nullable', 'integer', 'min:1', 'exists:users,id'],
             'status_id' => ['nullable', 'integer', 'min:1', 'exists:status,id'],
-            'project_id' => ['nullable', 'integer', 'min:1', 'exists:projects,id']
+            'project_id' => ['nullable', 'integer', 'min:1', 'exists:projects,id'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date','after_or_equal:start_date']
         ];
     }
 
