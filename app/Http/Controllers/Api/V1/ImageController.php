@@ -32,9 +32,13 @@ class ImageController extends Controller
      */
     public function store(ImageRequest $request)
     {
+        $imageName = time().'.'.$request->image->extension();
 
         $validatedData = $request->validated();
-        $validatedData['image'] = $request->file('image')->store('image');
+//        $validatedData['image'] = $request->file('image')->store('image');
+        $validatedData['image'] = $request->file('image')->move('images', $imageName);
+
+
         $data = Image::create($validatedData);
 
         return response($data, Response::HTTP_CREATED);

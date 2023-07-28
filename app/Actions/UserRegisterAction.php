@@ -35,6 +35,7 @@ class UserRegisterAction
         $dataUser['password'] = Hash::make($dataUser['password']);
         $dataUser['user_type'] = (string)UserTypesEnum::member();
         $dataUser['roles'] = (string)RolesEnum::member();
+        $dataUser['is_email_verified'] = 1;
 
 
         $user = new User();
