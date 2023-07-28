@@ -1,44 +1,4 @@
 <script setup>
-import {$axios} from '../utils/request'
-import {useRouter, useRoute} from 'vue-router'
-
-const router = useRouter()
-const route = useRoute()
-import {
-    onMounted,
-    ref,watch
-} from "vue";
-
-const todoList = ref([])
-const input = ref('')
-
-onMounted(() => {
-    getData()
-})
-const getData = () => {
-    $axios.get('/todo?filter[name]=&include=status,user').then((data) => {
-        todoList.value = data.data.data
-    })
-}
-const deleteobj = (todoId) => {
-    $axios.delete('/todo/' + todoId).then(res => {
-        getData()
-    })
-}
-
-watch(input,
-    async (newInput) => {
-        console.log(1)
-    if (newInput.length > 0) {
-        $axios.get('/todo?filter[name]='+input.value+'&include=status,user').then((data) => {
-            todoList.value = data.data.data
-        })
-    }else {
-        $axios.get('/todo?filter[name]=&include=status,user').then((data) => {
-            todoList.value = data.data.data
-        })
-    }
-})
 
 </script>
 
@@ -46,15 +6,15 @@ watch(input,
    <body>
 		<main>
 			<section class="table-header">
-				<h1 class="form-header">Tasks manager</h1>
+				<h1 class="form-header">Team manager</h1>
 				<div class="table-search-and-add-box">
 
 					<div class="input-group">
-						<input type="text" v-model="input" placeholder="Search Todo ..." />
+						<input type="text" v-model="input" placeholder="Search a team ..." />
 					</div>
 
-					<button class="addtask-btn">
-							<a href="/add-todo">Add Todo</a>
+					<button class="addteam-btn">
+							<a href="/">Add Team</a>
 					</button>
 				</div>
       </section>
@@ -65,45 +25,15 @@ watch(input,
 							<tr>
 									<th>ID</th>
 									<th>Name</th>
-									<th>Description</th>
-									<th>Start date</th>
-									<th>End date</th>
-									<th>Status</th>
 									<th>Actions</th>
 							</tr>
             </thead>
 
             <tbody>
-							<!-- <tr v-for="todo in todoList" :key="todo.id">
-								<td>{{ todo.id }}</td>
-								<td>{{ todo.name }}</td>
-								<td>{{ todo.description }}</td>
-								<td>{{ todo.start_date }}</td>
-								<td>{{ todo.end_date }}</td>
-								<td>{{ todo.status.name }}</td>
-								<td>
-										<div class="btn-group" role="group">
-												<router-link  :to="{name: 'details', params: { id: todo.id }}" class="btn btn-primary">Show
-												</router-link>
-										</div>
-										<div class="btn-group" role="group">
-												<button @click="deleteobj(todo.id)" class="btn btn-danger">Delete</button>
-										</div>
-										<div class="btn-group" role="group">
-												<router-link :to="{name: 'edit', params: { id: todo.id }}" class="btn btn-primary">Edit
-												</router-link>
-										</div>
-								</td>
-							</tr> -->
+							
 							<tr>
 								<td> 1 </td>
-								<td> Zinzu  </td>
-								<td> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore </td>
-								<td> 27 july, 2023 </td>
-								<td> 27 Dec, 2023 </td>
-								<td>
-										<p class="status shipped">todo</p>
-								</td>
+								<td> team1  </td>
 								<td> 
 									<div class="task-setting">
 											<span class="edit-btn">
@@ -120,13 +50,7 @@ watch(input,
 								</tr>
 								<tr>
 										<td> 2 </td>
-										<td> Chan Lee</td>
-										<td> sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam </td>
-										<td> 27 july, 2023 </td>
-										<td> 27 Dec, 2023 </td>
-										<td>
-												<p class="status delivered">Done</p>
-										</td>
+										<td> team2</td>
 										<td> <div class="task-setting">
 												<span class="edit-btn">
 													<font-awesome-icon :icon="['fas', 'pen-to-square']" />
@@ -141,13 +65,7 @@ watch(input,
 								</tr>
 								<tr>
 										<td> 3 </td>
-										<td> Zinzu Lee</td>
-										<td> Lorem ipsum dolor sit amet, consectetur adipiscing elit </td>
-										<td> 27 july, 2023 </td>
-										<td> 27 Dec, 2023 </td>
-										<td>
-												<p class="status pending">ongoing</p>
-										</td>
+										<td> team3</td>
 										<td>
 											<div class="task-setting">
 												<span class="edit-btn">
@@ -164,13 +82,7 @@ watch(input,
 								</tr>
 								<tr>
 										<td> 4 </td>
-										<td> Zinzu Lee</td>
-										<td> Lorem ipsum dolor sit amet, consectetur adipiscing elit </td>
-										<td> 27 july, 2023 </td>
-										<td> 27 Dec, 2023 </td>
-										<td>
-												<p class="status cancelled">Abort</p>
-										</td>
+										<td> team4 </td>
 										<td> 
 											<div class="task-setting">
 												<span class="edit-btn">
@@ -204,6 +116,7 @@ watch(input,
 
 main{
 	margin-top: 5%;
+	min-width: 500px;
 	background-color: #75C2F6;
 	border-radius: 0px 0px 15px 15px;
 }
@@ -259,19 +172,19 @@ body {
 .delete-btn{
 	color: red;
 }
-.addtask-btn{
+.addteam-btn{
 	background-color: #1D5D9B;
     padding: 10px 0px 10px 0px;
 		margin-top: 1%;
     height: 100%;
-		width: 10%;
+		width: 25%;
     border-radius: 20px;
     border: none;
     color: white;
     text-align: center;
 }
 
-.addtask-btn a{
+.addteam-btn a{
   color: white;
 	text-decoration: none;
 }
@@ -335,16 +248,6 @@ thead th {
     cursor: pointer;
     text-transform: capitalize;
 }
-
-tbody tr:nth-child(even) {
-    background-color: #0000000b;
-}
-
-tbody tr {
-    --delay: .1s;
-    transition: .5s ease-in-out var(--delay), background-color 0s;
-}
-
 
 tbody tr:hover {
     background-color: #fff6 !important;

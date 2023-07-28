@@ -4,6 +4,8 @@ import Todo from   '../views/TodoList.vue'
 import Register from   '../views/Register.vue'
 import TodoDetails from "../views/TodoDetails.vue";
 import AddTodo from "../views/AddTodo.vue";
+import TeamList from "../views/TeamList.vue"
+import AdminPage from "../views/AdminPage.vue"
 
 import { createRouter, createWebHistory } from "vue-router";
 const routerCustom = [{
@@ -40,6 +42,16 @@ const routerCustom = [{
         path:'/edit-todo/:id',
         name: 'edit',
         component: AddTodo
+    },
+    {
+        path:'/team',
+        name: 'team',
+        component: TeamList
+    },
+    {
+        path:'/admin',
+        name: 'admin',
+        component: AdminPage
     },
 ]
 
