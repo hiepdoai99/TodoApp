@@ -1,14 +1,14 @@
 <script setup>
 import TabSection from '../components/TabSection.vue';
 import TabWrapper from '../components/TabWrapper.vue';
-import statisticComponent from '../components/statisticComponent.vue';
+import StatisticComponent from '../components/StatisticComponent.vue';
 import UserTableList from '../components/UserTablelist.vue';
 import TeamTableList from '../components/TeamTableList.vue'
 </script>
 
 <template>
  <section class="statistic-section">
-		<statisticComponent/>
+		<StatisticComponent/>
  </section>
 
  <section class="tab-section">
