@@ -12,12 +12,12 @@ import TeamTableList from '../components/TeamTableList.vue'
  </section>
 
  <section class="tab-section">
-		<TabWrapper class="tab-section">
-			<TabSection title="Tab 1">
+		<TabWrapper>
+			<TabSection title="Users table">
 				<UserTableList/>
 			</TabSection>
 
-			<TabSection title="Tab 2">
+			<TabSection title="Teams table">
 				<TeamTableList/>
 			</TabSection>
 		</TabWrapper>
