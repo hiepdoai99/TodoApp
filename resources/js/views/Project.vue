@@ -1,5 +1,4 @@
 <script setup>
-
 import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
 
@@ -9,22 +8,23 @@ import {
     onMounted,
     ref, watch
 } from "vue";
-const teams = ref([])
+
+const projects = ref([])
 
 onMounted(() => {
     getData()
 })
-
 const getData = () => {
-    $axios.get('/team').then((data) => {
-        teams.value = data.data.data
+    $axios.get('/project').then((data) => {
+        projects.value = data.data.data
     })
 }
-const deleteobj = (teamId) => {
-    $axios.delete('/team/' + teamId).then(res => {
+const deleteobj = (projectId) => {
+    $axios.delete('/project/' + projectId).then(res => {
         getData()
     })
 }
+
 
 </script>
 
@@ -32,11 +32,12 @@ const deleteobj = (teamId) => {
     <body>
     <main>
         <section class="table-header">
-            <h1 class="form-header">Team manager</h1>
+            <h1 class="form-header">Project manager</h1>
             <div class="table-search-and-add-box">
 
-                <button class="addteam-btn">
-                    <a href="/">Add Team</a>
+
+                <button class="addtask-btn">
+                    <a href="/add-project">Add project</a>
                 </button>
             </div>
         </section>
@@ -50,21 +51,20 @@ const deleteobj = (teamId) => {
                     <th>Actions</th>
                 </tr>
                 </thead>
-
                 <tbody>
-                <tr v-for="team in teams" :key="team.id">
-                    <td>{{ team.id }}</td>
-                    <td>{{ team.name }}</td>
+                <tr v-for="project in projects" :key="project.id">
+                    <td>{{ project.id }}</td>
+                    <td>{{ project.name }}</td>
                     <td>
                         <div class="btn-group" role="group">
-                            <router-link :to="{name: 'details', params: { id: team.id }}" class="btn btn-primary">Show
+                            <router-link :to="{name: 'details', params: { id: project.id }}" class="btn btn-primary">Show
                             </router-link>
                         </div>
                         <div class="btn-group" role="group">
-                            <button @click="deleteobj(team.id)" class="btn btn-danger">Delete</button>
+                            <button @click="deleteobj(project.id)" class="btn btn-danger">Delete</button>
                         </div>
                         <div class="btn-group" role="group">
-                            <router-link :to="{name: 'edit', params: { id: team.id }}" class="btn btn-primary">Edit
+                            <router-link :to="{name: 'edit', params: { id: project.id }}" class="btn btn-primary">Edit
                             </router-link>
                         </div>
                     </td>
@@ -88,7 +88,6 @@ const deleteobj = (teamId) => {
 
 main {
     margin-top: 5%;
-    min-width: 500px;
     background-color: #75C2F6;
     border-radius: 0px 0px 15px 15px;
 }
@@ -147,19 +146,19 @@ body {
     color: red;
 }
 
-.addteam-btn {
+.addtask-btn {
     background-color: #1D5D9B;
     padding: 10px 0px 10px 0px;
     margin-top: 1%;
     height: 100%;
-    width: 25%;
+    width: 10%;
     border-radius: 20px;
     border: none;
     color: white;
     text-align: center;
 }
 
-.addteam-btn a {
+.addtask-btn a {
     color: white;
     text-decoration: none;
 }
@@ -223,6 +222,16 @@ thead th {
     cursor: pointer;
     text-transform: capitalize;
 }
+
+tbody tr:nth-child(even) {
+    background-color: #0000000b;
+}
+
+tbody tr {
+    --delay: .1s;
+    transition: .5s ease-in-out var(--delay), background-color 0s;
+}
+
 
 tbody tr:hover {
     background-color: #fff6 !important;
