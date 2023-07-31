@@ -28,7 +28,6 @@ const deleteobj = (todoId) => {
 
 watch(input,
     async (newInput) => {
-        console.log(1)
         if (newInput.length > 0) {
             $axios.get('/task?search=' + input.value + '&include=user,project,status,assignee').then((data) => {
                 todoList.value = data.data.data
@@ -39,6 +38,7 @@ watch(input,
             })
         }
     })
+
 
 </script>
 

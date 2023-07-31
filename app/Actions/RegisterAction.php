@@ -59,10 +59,6 @@ class RegisterAction
 
             SendEmail::dispatch($user,$token);
 
-//            Mail::send('emails.index', ['token' => $token, 'user' => $user], function($message) use($user){
-//                $message->to($user->email);
-//                $message->subject('Email Verification Mail');
-//            });
 
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
