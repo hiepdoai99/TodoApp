@@ -146,7 +146,7 @@
                                 <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
                                     <table border="0" cellspacing="0" cellpadding="0">
                                         <tr>
-                                            <td align="center" style="border-radius: 3px;" bgcolor="#1d80c2"><a href="http://localhost:8000/api/v1/verify-email/{{ $token }}" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #1d80c2; display: inline-block;">Verify Email</a></td>
+                                            <td align="center" style="border-radius: 3px;" bgcolor="#1d80c2"><a href="http://localhost:8000/verify-mail/{{ $token }}" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #1d80c2; display: inline-block;"> Verify Email</a></td>
                                         </tr>
                                     </table>
                                 </td>
