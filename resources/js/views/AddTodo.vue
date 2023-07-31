@@ -9,6 +9,8 @@ import {
 } from "vue";
 const users = ref([])
 const status = ref([])
+
+
 const id = route.params.id ?? null;
 onMounted(()=>{
     getUser()
@@ -31,7 +33,9 @@ const formState = reactive({
     name:'',
     description:'',
     status_id:'',
+		assigner_id:'',
     user_id:'',
+		project_id:'',
     start_date:'',
     end_date:''
 })
@@ -41,7 +45,9 @@ const addTodo = ()=> {
         name:formState.name,
         description:formState.description,
         status_id:formState.status_id,
+				assigner_id:formState.assigner_id,
         user_id:formState.user_id,
+				project_id:formState.project_id,
         start_date:formState.start_date,
         end_date:formState.end_date}).then(
         (data) => {
@@ -56,7 +62,9 @@ const getTodo = (id) => {
                  formState.name = res.data.data.name;
                  formState.description = res.data.data.description;
                  formState.status_id = res.data.data.status_id;
+								 formState.assigner_id = res.data.data.assigner_id;
                  formState.user_id = res.data.data.user_id;
+								 formState.project_id = res.data.data.project_id;
                  formState.start_date = res.data.data.start_date;
                  formState.end_date = res.data.data.end_date;
             }
@@ -68,7 +76,9 @@ const edit = ()=> {
         name:formState.name,
         description:formState.description,
         status_id:formState.status_id,
+				assigner_id:formState.assigner_id,
         user_id:formState.user_id,
+				project_id:formState.project_id,
         start_date:formState.start_date,
         end_date:formState.end_date}).then(
         (data) => {
@@ -95,10 +105,28 @@ const edit = ()=> {
 					</div>
 
 					<div class="form-item">
-						<label for="exampleFormControlInput1">User</label>
+						<label for="exampleFormControlInput1">Assigner</label>
+            <select class="form-select " v-model="formState.assigner_id">
+                <option v-for="assigner in users" :key="assigner.value" :value="assigner.id">
+                    {{ assigner.name }}
+                </option>
+            </select>
+					</div>
+
+					<div class="form-item">
+						<label for="exampleFormControlInput1">Assignee</label>
             <select class="form-select " v-model="formState.user_id">
                 <option v-for="user in users" :key="user.value" :value="user.id">
                     {{ user.name }}
+                </option>
+            </select>
+					</div>
+
+					<div class="form-item">
+						<label for="exampleFormControlInput1">Project</label>
+            <select class="form-select " v-model="formState.project_id">
+                <option v-for="projects in users" :key="projects.value" :value="projects.id">
+                    {{ projects.name }}
                 </option>
             </select>
 					</div>
@@ -123,6 +151,11 @@ const edit = ()=> {
             	<input class="date-select" type = "date" name = "date" v-model="formState.end_date">
 						</div>
 					</div>
+
+					<div class="upload-form-item">
+							<label for="uploadbtn" class="uploadLabel" >Upload image</label>
+							<input id="uploadbtn" type="file" @input="pickFile">
+        	</div>
             
 					<div class="form-item">
 						<button v-if="id" @click="edit" class="btn-main" type="button">Update</button>
@@ -130,13 +163,14 @@ const edit = ()=> {
 					</div>
         </form>
 
+
     </div>
 </template>
 
 
 
 <style scoped>
-/* Most  */
+/* Most style are from register.vue  */
 
 .date-container{
 	display: flex;
@@ -162,5 +196,39 @@ const edit = ()=> {
 	width: 70%;
 	border-radius: 0px 15px 15px 0px;
 	background-color: #FDFDC9;
+}
+
+input[type='file'] {
+	display: none;
+}
+
+.upload-form-item{
+    width: 100%;
+    display: flex;
+    margin-bottom: 10px;
+    color: white;
+    justify-content: center;
+
+  }
+
+.uploadLabel{
+	display: inline-block;
+	text-transform: uppercase;
+	color: #fff;
+	background-color: #1D5D9B;
+	text-align: center;
+	padding: 15px 40px;
+	font-size: 18px;
+	letter-spacing: 1.5px;
+	user-select: none;
+	cursor: pointer;
+	border-radius: 15px;
+}
+
+.imagePreview{
+	width: 100px;
+	height: 100px;
+	background-size: cover;
+	background-position: center center;
 }
 </style>
