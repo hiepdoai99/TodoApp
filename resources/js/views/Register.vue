@@ -1,9 +1,11 @@
 <script setup>
 import {$axios} from '../utils/request'
+import { computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
-
+import userVuelidate from '@vuelidate/core'
+import {required, minLength, email, sameAs} from '@vuelidate/validators'
 import {
   ref,reactive
 } from "vue";
@@ -12,22 +14,41 @@ const formState = reactive({
   last_name:'',
   email:'',
   password:'',
-    password_confirmation:''
+  password_confirmation:''
 })
 
-const handleRegister = ()=> {
-  $axios.post('register',{
-      email:formState.email,
-      password:formState.password,
-      password_confirmation:formState.password_confirmation,
-      first_name:formState.first_name,
-      last_name:formState.last_name,
-  })
-      .then(
-      (data) => {
-          router.push('/')
-      }
-  )
+const rules = computed(()=>{
+  return {
+    first_name: { required, minLength: minLength(10) },
+    last_name: { required },
+    email: { required, email },
+    password: { required },
+    password_confirmation: { required, sameAs: sameAs(formState.password) },
+  }
+}
+)
+
+const v$ = userVuelidate(rules,formState)
+
+const handleRegister = async ()=> {
+
+  //validate first
+	const validateRes = await v$.value.$validate();
+	if(validateRes){
+      $axios.post('register',{
+        email:formState.email,
+        password:formState.password,
+        password_confirmation:formState.password_confirmation,
+        first_name:formState.first_name,
+        last_name:formState.last_name,
+    })
+        .then(
+        (data) => {
+            router.push('/')
+        }
+    )
+	}
+
 }
 </script>
 
@@ -40,27 +61,47 @@ const handleRegister = ()=> {
           <input v-model="formState.first_name" class="form-control" name="first_name" placeholder="First name">
         </div>
 
+        <div class="errtext" v-for="error in v$.first_name.$errors" :key="error.$uid">
+					{{ error.$message }}
+				</div>
+
         <div class="form-item">
           <label>Last name</label>
           <!-- <input v-model="formState.name" class="form-control" name="name" placeholder="First name">      -->
           <input v-model="formState.last_name" class="form-control"  name="last_name" placeholder="Last name">
         </div>
 
+        <div class="errtext" v-for="error in v$.last_name.$errors" :key="error.$uid">
+					{{ error.$message }}
+				</div>
+
         <div class="form-item">
           <label>Email</label>
           <input v-model="formState.email" type="email" class="form-control" name="email" placeholder="Name@example.com">
         </div>
+
+        <div class="errtext" v-for="error in v$.email.$errors" :key="error.$uid">
+					{{ error.$message }}
+				</div>
 
         <div class="form-item">
           <label>Password</label>
           <input v-model="formState.password" type="password" class="form-control" name="password" placeholder="Password">
         </div>
 
+        <div class="errtext" v-for="error in v$.password.$errors" :key="error.$uid">
+					{{ error.$message }}
+				</div>
+
         <div class="form-item">
           <label>Confirm Password</label>
           <!-- <input v-model="formState.password" type="password" class="form-control" name="password" placeholder="Password">    -->
           <input v-model="formState.password_confirmation"  type="password" class="form-control" name="password_confirmation" placeholder="Re-enter Password">
         </div>
+
+        <div class="errtext" v-for="error in v$.password_confirmation.$errors" :key="error.$uid">
+					{{ error.$message }}
+				</div>
 
         <div class="form-item">
           <button class="btn-main" @click="handleRegister" type="button">Register</button>
@@ -97,6 +138,16 @@ const handleRegister = ()=> {
     color: white;
     text-align: center;
   }
+
+  .errtext{
+	background-color: #ebeb39;
+	border-radius: 15px;
+	color: red;
+	width: 100%;
+	display: flex;
+	margin-bottom: 10px;
+	justify-content: center;
+}
 
   .form-item{
     width: 100%;
