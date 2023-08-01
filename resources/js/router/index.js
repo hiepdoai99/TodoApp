@@ -6,6 +6,9 @@ import TodoDetails from "../views/TodoDetails.vue";
 import AddTodo from "../views/AddTodo.vue";
 import TeamList from "../views/TeamList.vue"
 import AdminPage from "../views/AdminPage.vue"
+import Project from "../views/Project.vue"
+import VerifyEmail from "../views/ConfirmMail.vue"
+import ErrorMail from "../views/ErrorMail.vue"
 
 import { createRouter, createWebHistory } from "vue-router";
 const routerCustom = [{
@@ -53,6 +56,22 @@ const routerCustom = [{
         name: 'admin',
         component: AdminPage
     },
+    {
+        path:'/projects',
+        name: 'projects',
+        component: Project
+    },
+    {
+        path:'/verify-mail/:code',
+        name: 'verify-mail',
+        component: VerifyEmail
+    },
+    {
+        path:'/error-mail',
+        name: 'error-mail',
+        component: ErrorMail
+    },
+
 ]
 
 const createCustomRouter = () =>

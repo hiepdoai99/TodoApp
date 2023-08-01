@@ -1,5 +1,4 @@
 import axios from "axios";
-
 const $axios = axios.create({
     baseURL: "http://task.local/api/v1",
     //baseURL: 'http://localhost:8000/api/v1',

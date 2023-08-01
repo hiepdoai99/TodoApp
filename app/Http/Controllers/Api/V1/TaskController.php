@@ -25,7 +25,7 @@ class TaskController extends Controller
             $tasks = Task::search($request->search)
                 ->paginate($request->per_page ?? 10)
                 ->appends($request->all());
-            return response()->json($tasks);
+            return $this->respondSuccess(new TaskCollection($tasks));
         }
         return $this->respondSuccess(new TaskCollection($tasks));
     }
