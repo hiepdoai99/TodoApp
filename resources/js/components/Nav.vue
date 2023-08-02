@@ -1,19 +1,7 @@
 <script setup>
 
-import {$axios} from '../utils/request'
-// import {useRouter, useRoute} from 'vue-router'
-import {ref} from "vue";
-//
-// const router = useRouter()
-// const route = useRoute()
-if (localStorage.getItem("user")){
-    const info = localStorage.getItem("user")
-    const user = ref([])
-    user.value = JSON.parse(info)
-    console.log(user.value.last_name)
-}
-</script>
 
+</script>
 
 <template>
     <div>
@@ -47,12 +35,9 @@ if (localStorage.getItem("user")){
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a  class="nav-link" href="#">
+                            <a class="nav-link" href="#">
                                 <router-link to="/login">Login</router-link>
                             </a>
-<!--                            <a v-else class="nav-link" href="#">-->
-<!--                                <router-link to="/login">Login</router-link>-->
-<!--                            </a>-->
 
                         </li>
                         <li class="nav-item">
