@@ -11,6 +11,11 @@ import {
 
 const todoList = ref([])
 const input = ref('')
+const onClickHandler = (page) => {
+    console.log(page);
+  };
+
+  const currentPage = ref(1);
 
 onMounted(() => {
     getData()
@@ -18,6 +23,7 @@ onMounted(() => {
 const getData = () => {
     $axios.get('/task?include=user,project,status,assignee').then((data) => {
         todoList.value = data.data.data
+				//console.log('get data here ',todoList.value)
     })
 }
 const deleteobj = (todoId) => {
@@ -107,12 +113,28 @@ watch(input,
 									</tbody>
 							</table>
 					</section>
+					
+					<section class="pagination-body">
+						<vue-awesome-paginate
+						:total-items="50"
+						:items-per-page="1"
+						:max-pages-shown="5"
+						v-model="currentPage"
+						:on-click="onClickHandler"
+					/>
+					</section>
 			</main>
     </body>
 </template>
 
 
 <style scoped>
+
+
+.paginate-buttons{
+	background-color: red;
+	color: white;
+}
 
 * {
     margin: 0;
@@ -136,7 +158,9 @@ body {
     align-items: center;
 }
 
-
+.pagination-body{
+	text-align: center;
+}
 .table-header {
     width: 100%;
     justify-content: space-between;
@@ -341,6 +365,7 @@ tbody tr td p {
 thead th:hover {
     color: #FDFDC9;
 }
+
 
 
 </style>
