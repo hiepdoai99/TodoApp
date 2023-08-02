@@ -1,3 +1,20 @@
+<script setup>
+
+import {$axios} from '../utils/request'
+// import {useRouter, useRoute} from 'vue-router'
+import {ref} from "vue";
+//
+// const router = useRouter()
+// const route = useRoute()
+if (localStorage.getItem("user")){
+    const info = localStorage.getItem("user")
+    const user = ref([])
+    user.value = JSON.parse(info)
+    console.log(user.value.last_name)
+}
+</script>
+
+
 <template>
     <div>
         <nav class="navbar navbar-expand-lg ">
@@ -30,9 +47,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a  class="nav-link" href="#">
                                 <router-link to="/login">Login</router-link>
                             </a>
+<!--                            <a v-else class="nav-link" href="#">-->
+<!--                                <router-link to="/login">Login</router-link>-->
+<!--                            </a>-->
 
                         </li>
                         <li class="nav-item">
@@ -52,37 +72,6 @@
     </div>
 </template>
 
-<script setup>
-
-import {$axios} from '../utils/request'
-import {useRouter, useRoute} from 'vue-router'
-import {ref} from "vue";
-
-const router = useRouter()
-const route = useRoute()
-const user = ref([])
-
-
-const info = localStorage.getItem("user")
-
-user.value = JSON.parse(info)
-
-
-// const user = ref([])
-//
-//
-// const info = localStorage.getItem("user")
-//
-// user.value = JSON.parse(info)
-// console.log(user)
-// $axios.post('verify-token',{
-//     token:token}).then(
-//     (data) => {
-//         // user.value = data.data.last_name
-//         console.log(data.data.last_name)
-//     }
-// )
-</script>
 
 <style scoped lang="scss">
 
