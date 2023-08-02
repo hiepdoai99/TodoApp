@@ -9,7 +9,6 @@ import AdminPage from "../views/AdminPage.vue"
 import Project from "../views/Project.vue"
 import VerifyEmail from "../views/ConfirmMail.vue"
 import ErrorMail from "../views/ErrorMail.vue"
-import Test from "../views/Test.vue"
 
 import { createRouter, createWebHistory } from "vue-router";
 const routerCustom = [{
@@ -71,11 +70,6 @@ const routerCustom = [{
         path:'/error-mail',
         name: 'error-mail',
         component: ErrorMail
-    },
-    {
-        path:'/test',
-        name: 'test',
-        component: Test
     },
 
 ]
