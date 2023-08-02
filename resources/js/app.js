@@ -16,9 +16,13 @@ import { faUserSecret,faEye,faPenToSquare, faDeleteLeft } from '@fortawesome/fre
 library.add(faUserSecret,faEye,faPenToSquare,faDeleteLeft)
 
 import router from './router'
+import store from './store/store.js'
 
 import { createApp } from 'vue'
 import App from './App.vue'
 const app = createApp(App)
 
-app.use(router).component('font-awesome-icon', FontAwesomeIcon).mount('#app');
+app.use(router)
+    .use(store)
+    .component('font-awesome-icon', FontAwesomeIcon)
+    .mount('#app');
