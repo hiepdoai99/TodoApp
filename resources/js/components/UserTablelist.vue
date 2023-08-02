@@ -26,9 +26,9 @@
 
 				<tbody>
 					<tr>
-						<td> 1 </td>
-						<td> Zinzu  </td>
-						<td> 
+						<td data-cell="id"> 1 </td>
+						<td data-cell="name"> Zinzu  </td>
+						<td data-cell="actions"> 
 							<div class="task-setting">
 									<span class="edit-btn">
 										<font-awesome-icon :icon="['fas', 'pen-to-square']" />
@@ -43,9 +43,9 @@
 							</td>
 						</tr>
 						<tr>
-								<td> 2 </td>
-								<td> Chan Lee</td>
-								<td> <div class="task-setting">
+								<td data-cell="id"> 2 </td>
+								<td data-cell="name"> Chan Lee</td>
+								<td data-cell="actions"> <div class="task-setting">
 										<span class="edit-btn">
 											<font-awesome-icon :icon="['fas', 'pen-to-square']" />
 										</span>
@@ -57,40 +57,7 @@
 										</span>
 									</div> </td>
 						</tr>
-						<tr>
-								<td> 3 </td>
-								<td> Zinzu Lee</td>
-								<td>
-									<div class="task-setting">
-										<span class="edit-btn">
-											<font-awesome-icon :icon="['fas', 'pen-to-square']" />
-										</span>
-										<span class="view-btn">
-											<font-awesome-icon :icon="['fas', 'eye']" />
-										</span>
-										<span class="delete-btn">
-											<font-awesome-icon :icon="['fas', 'delete-left']" />
-										</span>
-									</div> 
-								</td>
-						</tr>
-						<tr>
-								<td> 4 </td>
-								<td> Zinzu Lee</td>
-								<td> 
-									<div class="task-setting">
-										<span class="edit-btn">
-											<font-awesome-icon :icon="['fas', 'pen-to-square']" />
-										</span>
-										<span class="view-btn">
-											<font-awesome-icon :icon="['fas', 'eye']" />
-										</span>
-										<span class="delete-btn">
-											<font-awesome-icon :icon="['fas', 'delete-left']" />
-										</span>
-									</div> 
-								</td>
-						</tr>
+
 				</tbody>
 		</table>
 	</section>
@@ -101,7 +68,6 @@
 
 .table-header {
 	width: 100%;
-	height: 10%;
 	justify-content: space-between;
 	text-align: center;
 }
@@ -158,7 +124,7 @@
 }
 
 .table-body {
-    width: 50%;
+		width: 80%;
     max-height: calc(89% - 1.6rem);
     background-color: #fffb;
 
@@ -225,6 +191,31 @@ tbody tr td p {
 thead th:hover {
     color: #FDFDC9;
 }
+@media (max-width: 1000px) {
+    th{
+			display: none;
+		}
 
+		td{
+			display: grid;
+			gap: 0.5rem;
+			grid-template-columns: 15ch auto;
+			padding: 0.5rem 1rem;
+		}
+
+		td:first-child{
+			padding-top: 2rem;
+		}
+
+		td:last-child{
+			padding-bottom: 2rem;
+		}
+
+		td::before{
+			content: attr(data-cell) ": ";
+			font-weight: 700;
+			text-transform: capitalize;
+		}
+}
 
 </style>
