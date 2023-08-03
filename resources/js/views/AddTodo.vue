@@ -222,7 +222,6 @@ const edit = ()=> {
 					</div>
         </form>
 
-
     </div>
 </template>
 
@@ -299,5 +298,14 @@ input[type='file'] {
 	height: 100px;
 	background-size: cover;
 	background-position: center center;
+}
+
+@media (min-width: 412px) {
+  .date-container{
+		display: grid;
+	}
+	.date-container div:first-child{
+		margin-right: 0px;
+	}		
 }
 </style>

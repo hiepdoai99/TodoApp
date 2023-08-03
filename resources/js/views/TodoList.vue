@@ -11,6 +11,11 @@ import {
 
 const todoList = ref([])
 const input = ref('')
+const onClickHandler = (page) => {
+    console.log(page);
+  };
+
+  const currentPage = ref(1);
 
 
 onMounted(() => {
@@ -19,6 +24,7 @@ onMounted(() => {
 const getData = () => {
     $axios.get('/task?include=user,project,status,assignee').then((data) => {
         todoList.value = data.data.data
+				//console.log('get data here ',todoList.value)
     })
 }
 const deleteobj = (todoId) => {
@@ -45,65 +51,91 @@ watch(input,
 
 <template>
     <body>
-    <main>
-        <section class="table-header">
-            <h1 class="form-header">Tasks manager</h1>
-            <div class="table-search-and-add-box">
+			<main>
+					<section class="table-header">
+							<h1 class="form-header">Tasks manager</h1>
+							<div class="table-search-and-add-box">
 
-                <div class="input-group">
-                    <input type="text" v-model="input" placeholder="Search task ..."/>
-                </div>
+									<div class="input-group">
+											<input type="text" v-model="input" placeholder="Search task ..."/>
+									</div>
 
-                <button class="addtask-btn">
-                    <a href="/add-todo">Add Todo</a>
-                </button>
-            </div>
-        </section>
+									<button class="addtask-btn">
+											<a href="/add-todo">Add Todo</a>
+									</button>
+							</div>
+					</section>
 
-        <section class="table-body">
-            <table>
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Start date</th>
-                    <th>End date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="todo in todoList" :key="todo.id">
-                    <td>{{ todo.id }}</td>
-                    <td>{{ todo.name }}</td>
-                    <td>{{ todo.description }}</td>
-                    <td>{{ todo.start_date }}</td>
-                    <td>{{ todo.end_date }}</td>
-                    <td>{{ todo.status.name }}</td>
-                    <td>
-                        <div class="btn-group" role="group">
-                            <router-link :to="{name: 'details', params: { id: todo.id }}" class="btn btn-primary">Show
-                            </router-link>
-                        </div>
-                        <div class="btn-group" role="group">
-                            <button @click="deleteobj(todo.id)" class="btn btn-danger">Delete</button>
-                        </div>
-                        <div class="btn-group" role="group">
-                            <router-link :to="{name: 'edit', params: { id: todo.id }}" class="btn btn-primary">Edit
-                            </router-link>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </section>
-    </main>
+					<section class="table-body">
+							<table>
+									<thead>
+									<tr>
+											<th>ID</th>
+											<th>Name</th>
+											<th>Description</th>
+											<th>Start date</th>
+											<th>End date</th>
+											<th>Status</th>
+											<th>Actions</th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr v-for="todo in todoList" :key="todo.id">
+											<td data-cell="id">{{ todo.id }}</td>
+											<td data-cell="name">{{ todo.name }}</td>
+											<td data-cell="description">{{ todo.description }}</td>
+											<td data-cell="start date">{{ todo.start_date }}</td>
+											<td data-cell="end date">{{ todo.end_date }}</td>
+											<td data-cell="action">
+												<span :class="todo.status.name === 'Todo' ? 'status shipped' : '' ">
+													{{ todo.status.name }}
+												</span>
+											</td>
+											<td data-cell="action">
+													<div class="actions-box">
+														<div>
+															<router-link :to="{name: 'details', params: { id: todo.id }}" class="btn view-btn">
+																<font-awesome-icon :icon="['fas', 'eye']" />
+															</router-link>
+														</div>
+														<div>
+																<router-link :to="{name: 'edit', params: { id: todo.id }}" class="btn edit-btn">
+																	<font-awesome-icon :icon="['fas', 'pen-to-square']" />
+																</router-link>
+														</div>
+														<div>
+																<button @click="deleteobj(todo.id)" class="btn delete-btn">
+																	<font-awesome-icon :icon="['fas', 'delete-left']" />
+																</button>
+														</div>
+													</div>
+											</td>
+									</tr>
+									</tbody>
+							</table>
+					</section>
+					
+					<section class="pagination-body">
+						<vue-awesome-paginate
+						:total-items="50"
+						:items-per-page="1"
+						:max-pages-shown="5"
+						v-model="currentPage"
+						:on-click="onClickHandler"
+					/>
+					</section>
+			</main>
     </body>
 </template>
 
 
 <style scoped>
+
+
+.paginate-buttons{
+	background-color: red;
+	color: white;
+}
 
 * {
     margin: 0;
@@ -116,19 +148,22 @@ main {
     margin-top: 5%;
     background-color: #75C2F6;
     border-radius: 0px 0px 15px 15px;
+		width: 90%;
 }
 
 body {
     /* min-height: 80vh; */
+		width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-
+.pagination-body{
+	text-align: center;
+}
 .table-header {
     width: 100%;
-    height: 10%;
     justify-content: space-between;
     text-align: center;
 }
@@ -160,6 +195,15 @@ body {
     padding: 20px;
 }
 
+.actions-box{
+	display: flex;
+	width: 100%;
+}
+
+.actions-box div{
+	width: 33.3%;
+	text-align: center;
+}
 .view-btn {
     color: green;
 }
@@ -177,7 +221,7 @@ body {
     padding: 10px 0px 10px 0px;
     margin-top: 1%;
     height: 100%;
-    width: 10%;
+    width: 25%;
     border-radius: 20px;
     border: none;
     color: white;
@@ -269,14 +313,18 @@ tbody tr td p {
 }
 
 .status {
-    padding: .4rem 0.8rem;
     border-radius: 2rem;
     text-align: center;
+		padding: .5rem 1.5rem;
+}
+.status.shipped {
+    background-color: #6fcaea;
+    color: white;
 }
 
 .status.delivered {
-    background-color: #86e49d;
-    color: white;
+	background-color: #86e49d;
+	color: white;
 }
 
 .status.cancelled {
@@ -288,21 +336,37 @@ tbody tr td p {
     background-color: #ebc474;
     color: white;
 }
-
-.status.shipped {
-    background-color: #6fcaea;
-    color: white;
-}
-
 @media (max-width: 1000px) {
-    /* td:not(:first-of-type) {
-        min-width: 12.1rem;
-    } */
+    th{
+			display: none;
+		}
+
+		td{
+			display: grid;
+			gap: 0.5rem;
+			grid-template-columns: 15ch auto;
+			padding: 0.5rem 1rem;
+		}
+
+		td:first-child{
+			padding-top: 2rem;
+		}
+
+		td:last-child{
+			padding-bottom: 2rem;
+		}
+
+		td::before{
+			content: attr(data-cell) ": ";
+			font-weight: 700;
+			text-transform: capitalize;
+		}
 }
 
 thead th:hover {
     color: #FDFDC9;
 }
+
 
 
 </style>

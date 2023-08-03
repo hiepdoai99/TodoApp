@@ -29,51 +29,57 @@ const deleteobj = (teamId) => {
 </script>
 
 <template>
-    <body>
-    <main>
-        <section class="table-header">
-            <h1 class="form-header">Team manager</h1>
-            <div class="table-search-and-add-box">
+	<body>
+		<main>
+			<section class="table-header">
+				<h1 class="form-header">Team manager</h1>
+				<div class="table-search-and-add-box">
 
-                <button class="addteam-btn">
-                    <a href="/">Add Team</a>
-                </button>
-            </div>
-        </section>
+						<button class="addteam-btn">
+								<a href="/">Add Team</a>
+						</button>
+				</div>
+			</section>
 
-        <section class="table-body">
-            <table>
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
+			<section class="table-body">
+				<table>
+						<thead>
+						<tr>
+								<th>ID</th>
+								<th>Name</th>
+								<th>Actions</th>
+						</tr>
+						</thead>
 
-                <tbody>
-                <tr v-for="team in teams" :key="team.id">
-                    <td>{{ team.id }}</td>
-                    <td>{{ team.name }}</td>
-                    <td>
-                        <div class="btn-group" role="group">
-                            <router-link :to="{name: 'details', params: { id: team.id }}" class="btn btn-primary">Show
-                            </router-link>
-                        </div>
-                        <div class="btn-group" role="group">
-                            <button @click="deleteobj(team.id)" class="btn btn-danger">Delete</button>
-                        </div>
-                        <div class="btn-group" role="group">
-                            <router-link :to="{name: 'edit', params: { id: team.id }}" class="btn btn-primary">Edit
-                            </router-link>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </section>
-    </main>
-    </body>
+						<tbody>
+						<tr v-for="team in teams" :key="team.id">
+								<td>{{ team.id }}</td>
+								<td>{{ team.name }}</td>
+								<td>
+									<div class="actions-box">
+										<div>
+											<router-link :to="{name: 'details', params: { id: team.id }}" class="btn view-btn">
+												<font-awesome-icon :icon="['fas', 'eye']" />
+											</router-link>
+										</div>
+										<div>
+												<router-link :to="{name: 'edit', params: { id: team.id }}" class="btn edit-btn">
+													<font-awesome-icon :icon="['fas', 'pen-to-square']" />
+												</router-link>
+										</div>
+										<div>
+												<button @click="deleteobj(team.id)" class="btn delete-btn">
+													<font-awesome-icon :icon="['fas', 'delete-left']" />
+												</button>
+										</div>
+									</div>
+								</td>
+						</tr>
+						</tbody>
+				</table>
+			</section>
+		</main>
+	</body>
 </template>
 
 
@@ -259,11 +265,43 @@ tbody tr td p {
     color: white;
 }
 
-@media (max-width: 1000px) {
-    /* td:not(:first-of-type) {
-        min-width: 12.1rem;
-    } */
+.actions-box{
+	display: flex;
+	width: 100%;
 }
+
+.actions-box div{
+	width: 33.3%;
+	text-align: center;
+}
+
+@media (max-width: 1000px) {
+    th{
+			display: none;
+		}
+
+		td{
+			display: grid;
+			gap: 0.5rem;
+			grid-template-columns: 15ch auto;
+			padding: 0.5rem 1rem;
+		}
+
+		td:first-child{
+			padding-top: 2rem;
+		}
+
+		td:last-child{
+			padding-bottom: 2rem;
+		}
+
+		td::before{
+			content: attr(data-cell) ": ";
+			font-weight: 700;
+			text-transform: capitalize;
+		}
+}
+
 
 thead th:hover {
     color: #FDFDC9;
