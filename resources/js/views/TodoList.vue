@@ -1,7 +1,8 @@
 <script setup>
 import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
-
+import BaseModal from '../components/BaseModal.vue';
+import Addtodo from './AddTodo.vue'
 const router = useRouter()
 const route = useRoute()
 import {
@@ -9,10 +10,16 @@ import {
     ref, watch
 } from "vue";
 
+const modalActive = ref(null);
+const toggleModal = () => {
+  modalActive.value = !modalActive.value;
+};
 const todoList = ref([])
 const input = ref('')
 const onClickHandler = (page) => {
-    console.log(page);
+		$axios.get(`/task?include=user,project,status,assignee&per_page=1&page=${page}`).then((data) => {
+        todoList.value = data.data.data
+    })
   };
 
   const currentPage = ref(1);
@@ -21,10 +28,10 @@ const onClickHandler = (page) => {
 onMounted(() => {
     getData()
 })
+//?include=user,project,status,assignee&per_page=1&page=2
 const getData = () => {
-    $axios.get('/task?include=user,project,status,assignee').then((data) => {
+    $axios.get('/task?include=user,project,status,assignee&per_page=1&page=1').then((data) => {
         todoList.value = data.data.data
-				//console.log('get data here ',todoList.value)
     })
 }
 const deleteobj = (todoId) => {
@@ -62,6 +69,10 @@ watch(input,
 
 									<button class="addtask-btn">
 											<a href="/add-todo">Add Todo</a>
+									</button>
+
+									<button class="addtask-btn" @click="toggleModal">
+											Open Test Modal
 									</button>
 							</div>
 					</section>
@@ -124,14 +135,25 @@ watch(input,
 						:on-click="onClickHandler"
 					/>
 					</section>
+
+					<BaseModal
+						:modalActive="modalActive"
+						@close-modal="toggleModal"
+					>
+						<div class="text-black">
+							<h1 class="text-2xl mb-1">This is a blank modal:</h1>
+							<p class="mb-4">
+								You should replace this stuff and add appropiate stuff
+							</p>
+	
+						</div>
+					</BaseModal>
 			</main>
     </body>
 </template>
 
 
 <style scoped>
-
-
 .paginate-buttons{
 	background-color: red;
 	color: white;
@@ -366,7 +388,4 @@ tbody tr td p {
 thead th:hover {
     color: #FDFDC9;
 }
-
-
-
 </style>
