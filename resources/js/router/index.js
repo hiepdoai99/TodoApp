@@ -62,7 +62,7 @@ const routerCustom = [{
         component: Project
     },
     {
-        path:'/verify-mail/:code',
+        path:'/verify-mail/:slug',
         name: 'verify-mail',
         component: VerifyEmail
     },

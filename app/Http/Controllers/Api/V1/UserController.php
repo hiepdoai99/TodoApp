@@ -27,11 +27,10 @@ class UserController extends Controller
     public function index(UserRequest $request)
     {
         $user = QueryBuilder::for(User::class)
+            ->allowedIncludes(['roles', 'permissions'])
             ->allowedFilters('name')
             ->paginate($request->per_page ?? 10)
             ->appends($request->all());
-
-
         return $this->respondSuccess(
             new UserCollection($user)
         );
@@ -63,8 +62,6 @@ class UserController extends Controller
             );
         }
         return $this->respondError('Loi cap nhat User');
-
-
     }
 
     public function destroy($id, UserRequest $request)

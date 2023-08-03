@@ -5,7 +5,7 @@ import {onMounted, watch} from "vue";
 
 const router = useRouter()
 const route = useRoute()
-const token = route.params.code
+const token = route.params.slug
 
 onMounted(() => {
     if (token) {
