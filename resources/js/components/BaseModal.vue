@@ -18,7 +18,7 @@ defineProps({
           <Transition name="modal-item">
             <div
               v-if="modalActive"
-              class="p-4 bg-white self-start mt-32 max-w-screen-md"
+              class="modal-item"
             >
               <slot />
              <div class="btn-box">

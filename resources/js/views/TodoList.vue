@@ -2,7 +2,7 @@
 import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
 import BaseModal from '../components/BaseModal.vue';
-import Addtodo from './AddTodo.vue'
+
 const router = useRouter()
 const route = useRoute()
 import {
@@ -13,16 +13,27 @@ import {
 const modalActive = ref(null);
 const toggleModal = () => {
   modalActive.value = !modalActive.value;
+
 };
+
+const showDetail = (id) => {
+	$axios.get(`/task/${id}`).then((data) => {
+			taskdetail.value = data.data;
+			console.log(taskdetail.value);
+    })
+};
+
+
+const taskdetail = ref({})
 const todoList = ref([])
 const input = ref('')
 const onClickHandler = (page) => {
-		$axios.get(`/task?include=user,project,status,assignee&per_page=1&page=${page}`).then((data) => {
+		$axios.get(`/task?include=user,project,status,assignee&per_page=2&page=${page}`).then((data) => {
         todoList.value = data.data.data
     })
   };
 
-  const currentPage = ref(1);
+const currentPage = ref(1);
 
 
 onMounted(() => {
@@ -30,7 +41,7 @@ onMounted(() => {
 })
 //?include=user,project,status,assignee&per_page=1&page=2
 const getData = () => {
-    $axios.get('/task?include=user,project,status,assignee&per_page=1&page=1').then((data) => {
+    $axios.get('/task?include=user,project,status,assignee&per_page=2&page=1').then((data) => {
         todoList.value = data.data.data
     })
 }
@@ -70,10 +81,6 @@ watch(input,
 									<button class="addtask-btn">
 											<a href="/add-todo">Add Todo</a>
 									</button>
-
-									<button class="addtask-btn" @click="toggleModal">
-											Open Test Modal
-									</button>
 							</div>
 					</section>
 
@@ -104,10 +111,12 @@ watch(input,
 											</td>
 											<td data-cell="action">
 													<div class="actions-box">
-														<div>
-															<router-link :to="{name: 'details', params: { id: todo.id }}" class="btn view-btn">
+														<div @click="toggleModal();showDetail(todo.id)" class="btn view-btn">
 																<font-awesome-icon :icon="['fas', 'eye']" />
-															</router-link>
+
+															<!-- <router-link :to="{name: 'details', params: { id: todo.id }}" class="btn view-btn">
+																<font-awesome-icon :icon="['fas', 'eye']" />
+															</router-link> -->
 														</div>
 														<div>
 																<router-link :to="{name: 'edit', params: { id: todo.id }}" class="btn edit-btn">
@@ -123,9 +132,26 @@ watch(input,
 											</td>
 									</tr>
 									</tbody>
+									
 							</table>
 					</section>
-					
+					<BaseModal
+						:modalActive="modalActive"
+						@close-modal="toggleModal"
+					>
+						<div v-for="task in taskdetail" :key="task.id">					
+							<div >
+								ID: {{ task.id }}
+							</div>
+							<div >
+								name: {{ task.name }}
+							</div>	
+							<div >
+								description: {{ task.description }}
+							</div>			
+							
+						</div>
+					</BaseModal>
 					<section class="pagination-body">
 						<vue-awesome-paginate
 						:total-items="50"
@@ -136,18 +162,7 @@ watch(input,
 					/>
 					</section>
 
-					<BaseModal
-						:modalActive="modalActive"
-						@close-modal="toggleModal"
-					>
-						<div class="text-black">
-							<h1 class="text-2xl mb-1">This is a blank modal:</h1>
-							<p class="mb-4">
-								You should replace this stuff and add appropiate stuff
-							</p>
-	
-						</div>
-					</BaseModal>
+					
 			</main>
     </body>
 </template>
