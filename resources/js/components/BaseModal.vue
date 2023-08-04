@@ -55,16 +55,21 @@ defineProps({
 
   .modal-item{
     padding: 1rem; 
-    margin-top: 8rem; 
+    margin-top: 2rem; 
     align-self: flex-start; 
-    max-width: 768px; 
-    background-color: #807373; 
+    max-width: 612px;
+    min-width: 412px; 
+    background-color: #1D5D9B; 
+    color: white;
   }
 
   .modal-btn{
     padding: 0.5rem 1.5rem 0.5rem 1.5rem;
-    margin-top: 2rem; 
-    color: #995353; 
+    margin-top: 2rem;
+    background-color: #ebc474; 
+    color: white; 
+    border: none;
+    border-radius: 15px;
   }
 
 
