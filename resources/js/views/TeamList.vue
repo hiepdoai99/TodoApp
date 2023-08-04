@@ -36,7 +36,7 @@ const deleteobj = (teamId) => {
             <div class="table-search-and-add-box">
 
                 <button class="addteam-btn">
-                    <a href="/">Add Team</a>
+                    <a href="/add-team">Add Team</a>
                 </button>
             </div>
         </section>
@@ -64,7 +64,7 @@ const deleteobj = (teamId) => {
                             <button @click="deleteobj(team.id)" class="btn btn-danger">Delete</button>
                         </div>
                         <div class="btn-group" role="group">
-                            <router-link :to="{name: 'edit', params: { id: team.id }}" class="btn btn-primary">Edit
+                            <router-link :to="{name: 'edit-team', params: { id: team.id }}" class="btn btn-primary">Edit
                             </router-link>
                         </div>
                     </td>

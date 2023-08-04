@@ -41,7 +41,8 @@ class Task extends Model
             'status_id' => ['nullable', 'integer', 'min:1', 'exists:status,id'],
             'project_id' => ['nullable', 'integer', 'min:1', 'exists:projects,id'],
             'start_date' => ['required', 'date'],
-            'end_date' => ['required', 'date','after_or_equal:start_date']
+            'end_date' => ['required', 'date','after_or_equal:start_date'],
+            'image' => ['nullable']
         ];
     }
 

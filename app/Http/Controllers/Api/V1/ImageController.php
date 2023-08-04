@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ImageRequest;
 use App\Models\Image;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -30,16 +32,17 @@ class ImageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ImageRequest $request)
+    public function store(Request $request)
     {
-        $imageName = time().'.'.$request->image->extension();
-
-        $validatedData = $request->validated();
-
-        $validatedData['image'] = $request->file('image')->move('images', $imageName);
-        $validatedData['url'] = $imageName;
-        $data = Image::create($validatedData);
-        return response($data, Response::HTTP_CREATED);
+        list($type, $data) = explode(';', $request->image);
+        list(, $data)      = explode(',', $data);
+        $type = str_replace('data:image/','',$type);
+        $rand = substr(md5(microtime()),rand(0,26), 20);
+        $data = base64_decode($data);
+        $imageName = $rand.'.'.$type;
+        Storage::disk('public')->put($imageName, $data);
+        $path = storage_path('public/' . $imageName);
+        return response($path, Response::HTTP_CREATED);
 
     }
 

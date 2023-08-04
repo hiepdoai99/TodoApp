@@ -64,7 +64,7 @@ const deleteobj = (projectId) => {
                             <button @click="deleteobj(project.id)" class="btn btn-danger">Delete</button>
                         </div>
                         <div class="btn-group" role="group">
-                            <router-link :to="{name: 'edit', params: { id: project.id }}" class="btn btn-primary">Edit
+                            <router-link :to="{name: 'edit-project', params: { id: project.id }}" class="btn btn-primary">Edit
                             </router-link>
                         </div>
                     </td>
