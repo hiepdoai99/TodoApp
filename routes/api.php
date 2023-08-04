@@ -36,6 +36,8 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
 
         Route::post('/image', [\App\Http\Controllers\Api\V1\ImageController::class, 'store']);
 
+        Route::get('/dashboard',[\App\Http\Controllers\Api\V1\UserController::class, 'dashboard']);
+
 
 
 //        Route::get('/user', [\App\Http\Controllers\Api\V1\UserController::class, 'index']);

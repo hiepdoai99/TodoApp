@@ -1,11 +1,28 @@
 <script setup>
+import {$axios} from '../utils/request'
+import {onMounted, ref} from "vue";
+const user = ref('')
+const team = ref('')
+const task = ref('')
+const project = ref('')
+onMounted(() => {
+    getData()
+})
+const getData = () => {
+    $axios.get('/dashboard').then((data) => {
+        user.value = data.data.totalUser
+        team.value = data.data.totalTeam
+        task.value = data.data.totalTasks
+        project.value = data.data.totalProject
+    })
+}
 </script>
 
 <template class="statistic-section">
 		<div class="circle-container">
 			<div class="circle-box">
         <div class="number-statistic">
-            0
+            {{user}}
         </div>
         <div class="title-statistic">
             users
@@ -16,31 +33,31 @@
 		<div class="circle-container">
 			<div class="circle-box">
         <div class="number-statistic">
-            0
+            {{team}}
         </div>
         <div class="title-statistic">
             teams
         </div>
     	</div>
 		</div>
-    
+
 
 		<div class="circle-container">
 			<div class="circle-box">
         <div class="number-statistic">
-            0
+            {{project}}
         </div>
         <div class="title-statistic">
             projects
         </div>
     	</div>
 		</div>
-    
+
 
 		<div class="circle-container">
 			<div class="circle-box">
         <div class="number-statistic">
-            0
+            {{task}}
         </div>
         <div class="title-statistic">
             tasks
