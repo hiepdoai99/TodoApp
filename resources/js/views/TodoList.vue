@@ -17,14 +17,18 @@ const toggleModal = () => {
 };
 
 const showDetail = (id) => {
-	$axios.get(`/task/${id}`).then((data) => {
-			taskdetail.value = data.data;
-			console.log(taskdetail.value);
-    })
+	let itemByIndex = id -1;
+	let item = JSON.parse(JSON.stringify(todoList.value))
+	taskdetail = item[itemByIndex];
+	console.log(taskdetail);
+	// $axios.get(`/task/${id}`).then((data) => {
+	// 		taskdetail.value = data.data;
+	// 		console.log(taskdetail.value);
+  //   })
 };
 
 
-const taskdetail = ref({})
+let taskdetail = ref()
 const todoList = ref([])
 const input = ref('')
 const onClickHandler = (page) => {
@@ -138,19 +142,39 @@ watch(input,
 					<BaseModal
 						:modalActive="modalActive"
 						@close-modal="toggleModal"
-					>
-						<div v-for="task in taskdetail" :key="task.id">					
-							<div >
-								ID: {{ task.id }}
-							</div>
-							<div >
-								name: {{ task.name }}
-							</div>	
-							<div >
-								description: {{ task.description }}
-							</div>			
-							
-						</div>
+					>		
+						<table>
+									<thead>
+									<tr>
+											<th>ID</th>
+											<th>Name</th>
+											<th>Description</th>
+											<th>Assignor</th>
+											<th>Assignee</th>
+											<th>Project</th>
+											<th>Start date</th>
+											<th>End date</th>
+											<th>Status</th>
+									</tr>
+									</thead>
+									<tbody>
+										<tr v-if="taskdetail">
+											<td data-cell="id">{{ taskdetail.id }}</td>
+											<td data-cell="name">{{ taskdetail.name }}</td>
+											<td data-cell="description">{{ taskdetail.description }}</td>
+											<td data-cell="assignor">{{ taskdetail.assignor.name }}</td>
+											<td data-cell="assignee">{{ taskdetail.assignee.name }}</td>
+											<td data-cell="project">{{ taskdetail.project.name }}</td>
+											<td data-cell="start date">{{ taskdetail.start_date }}</td>
+											<td data-cell="end date">{{ taskdetail.end_date }}</td>
+											<td data-cell="action">
+												<span :class="taskdetail.status.name === 'Todo' ? 'status shipped' : '' ">
+													{{ taskdetail.status.name }}
+												</span>
+											</td>
+										</tr>	
+									</tbody>
+							</table>
 					</BaseModal>
 					<section class="pagination-body">
 						<vue-awesome-paginate
@@ -168,7 +192,7 @@ watch(input,
 </template>
 
 
-<style scoped>
+<style scoped lang="scss">
 .paginate-buttons{
 	background-color: red;
 	color: white;
@@ -403,4 +427,37 @@ tbody tr td p {
 thead th:hover {
     color: #FDFDC9;
 }
+
+.modal-item{
+	th{
+			display: none;
+		}
+
+	td{
+		display: grid;
+		gap: 0.5rem;
+		grid-template-columns: 15ch auto;
+		padding: 0.5rem 1rem;
+	}
+
+	td:first-child{
+		padding-top: 2rem;
+	}
+
+	td:last-child{
+		padding-bottom: 2rem;
+	}
+
+	td::before{
+		content: attr(data-cell) ": ";
+		font-weight: 700;
+		text-transform: capitalize;
+	}
+
+	tbody tr:hover {
+    background-color: none;
+}
+}
+
+
 </style>

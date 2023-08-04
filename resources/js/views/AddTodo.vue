@@ -11,11 +11,12 @@ import {
 } from "vue";
 const users = ref([])
 const status = ref([])
-
+const project = ref([])	
 const id = route.params.id ?? null;
 onMounted(()=>{
     getUser()
     getStatus()
+		getProject()
     if (id){
         getTodo(id)
     }
@@ -23,6 +24,11 @@ onMounted(()=>{
 const getUser = () => {
     $axios.get('/user').then((data)=>{
         users.value = data.data.data
+    })
+}
+const getProject = () => {
+    $axios.get('/project').then((data)=>{
+        project.value = data.data.data
     })
 }
 const getStatus = () => {
@@ -163,7 +169,7 @@ const edit = ()=> {
 					<div class="form-item">
 						<label for="exampleFormControlInput1">Project</label>
             <select class="form-select " v-model="formState.project_id">
-                <option v-for="projects in users" :key="projects.value" :value="projects.id">
+                <option v-for="projects in project" :key="projects.value" :value="projects.id">
                     {{ projects.name }}
                 </option>
             </select>
