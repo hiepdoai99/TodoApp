@@ -1,5 +1,33 @@
 <script setup>
 
+import {$axios} from '../utils/request'
+import {useRouter, useRoute} from 'vue-router'
+
+const router = useRouter()
+const route = useRoute()
+import {
+    onMounted,
+    ref, watch
+} from "vue";
+
+const teams = ref([])
+const input = ref('')
+
+
+onMounted(() => {
+    getData()
+})
+
+const getData = () => {
+    $axios.get('/team').then((data) => {
+        teams.value = data.data.data
+    })
+}
+const deleteobj = (teamId) => {
+    $axios.delete('/team/' + teamId).then(res => {
+        getData()
+    })
+}
 </script>
 
 <template>
@@ -24,40 +52,26 @@
 				</thead>
 
 				<tbody>
-					<tr>
-						<td data-cell="id"> 1 </td>
-						<td data-cell="name"> Z team  </td>
-						<td data-cell="actions"> 
-							<div class="task-setting">
+                <tr v-for="team in teams" :key="team.id">
+                    <td data-cell="id">{{ team.id }}</td>
+                    <td data-cell="name"> {{ team.name }}</td>
+                    <td data-cell="actions">
+                        <div class="task-setting">
 									<span class="edit-btn">
-										<font-awesome-icon :icon="['fas', 'pen-to-square']" />
+										<font-awesome-icon :icon="['fas', 'pen-to-square']"/>
 									</span>
-									<span class="view-btn">
-										<font-awesome-icon :icon="['fas', 'eye']" />
+                            <span class="view-btn">
+										<font-awesome-icon :icon="['fas', 'eye']"/>
 									</span>
-									<span class="delete-btn">
-										<font-awesome-icon :icon="['fas', 'delete-left']" />
+                            <span class="delete-btn">
+										<font-awesome-icon :icon="['fas', 'delete-left']"/>
 									</span>
-								</div> 
-							</td>
-						</tr>
-						<tr>
-								<td data-cell="id"> 2 </td>
-								<td data-cell="name"> Chan team</td>
-								<td data-cell="actions"> <div class="task-setting">
-										<span class="edit-btn">
-											<font-awesome-icon :icon="['fas', 'pen-to-square']" />
-										</span>
-										<span class="view-btn">
-											<font-awesome-icon :icon="['fas', 'eye']" />
-										</span>
-										<span class="delete-btn">
-											<font-awesome-icon :icon="['fas', 'delete-left']" />
-										</span>
-									</div> </td>
-						</tr>
-					
-				</tbody>
+                        </div>
+                    </td>
+                </tr>
+
+
+                </tbody>
 		</table>
 	</section>
 </template>
@@ -86,7 +100,7 @@
 }
 
 .task-setting{
-	width: 100%;	
+	width: 100%;
 	text-align: center;
 }
 .task-setting span{
@@ -146,7 +160,7 @@
     visibility: hidden;
 }
 
-.table-body:hover::-webkit-scrollbar-thumb{ 
+.table-body:hover::-webkit-scrollbar-thumb{
     visibility: visible;
 }
 

@@ -74,5 +74,19 @@ class UserController extends Controller
         return $this->respondError(__('user.delete_fail', ['resource', 'user ' . $todo->name]));
     }
 
+    public function dashboard(Request $request)
+    {
+        $user = DB::table('users')->count();
+        $task = DB::table('tasks')->count();
+        $team = DB::table('teams')->count();
+        $project = DB::table('projects')->count();
+        return response()->json([
+            'totalUser' => $user,
+            'totalTeam' => $team,
+            'totalTasks' => $task,
+            'totalProject'=>$project,
+        ]);
+    }
+
 
 }

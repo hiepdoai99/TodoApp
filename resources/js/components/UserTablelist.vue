@@ -1,76 +1,90 @@
 <script setup>
+import {$axios} from '../utils/request'
+import {useRouter, useRoute} from 'vue-router'
+
+const router = useRouter()
+const route = useRoute()
+import {
+    onMounted,
+    ref, watch
+} from "vue";
+
+const users = ref([])
+const input = ref('')
+
+
+onMounted(() => {
+    getData()
+})
+
+const getData = () => {
+    $axios.get('/user').then((data) => {
+        users.value = data.data.data
+    })
+}
+const deleteobj = (teamId) => {
+    $axios.delete('/user/' + teamId).then(res => {
+        getData()
+    })
+}
 
 </script>
 
 <template class="container">
-	<section class="table-header">
-		
-		<div class="table-search-and-add-box">
+    <section class="table-header">
 
-			<div class="input-group">
-				<input type="text" v-model="input" placeholder="Search for user(s)" />
-			</div>
+        <div class="table-search-and-add-box">
 
-		</div>
-	</section>
+            <div class="input-group">
+                <input type="text" v-model="input" placeholder="Search for user(s)"/>
+            </div>
 
-	<section class="table-body">
-		<table>
-				<thead>
-					<tr>
-							<th>ID</th>
-							<th>Name</th>
-							<th>Actions</th>
-					</tr>
-				</thead>
+        </div>
+    </section>
 
-				<tbody>
-					<tr>
-						<td data-cell="id"> 1 </td>
-						<td data-cell="name"> Zinzu  </td>
-						<td data-cell="actions"> 
-							<div class="task-setting">
+    <section class="table-body">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr v-for="user in users" :key="user.id">
+                <td data-cell="id">{{ user.id }}</td>
+                <td data-cell="name"> {{ user.name }}</td>
+                <td data-cell="actions">
+                    <div class="task-setting">
 									<span class="edit-btn">
-										<font-awesome-icon :icon="['fas', 'pen-to-square']" />
+										<font-awesome-icon :icon="['fas', 'pen-to-square']"/>
 									</span>
-									<span class="view-btn">
-										<font-awesome-icon :icon="['fas', 'eye']" />
+                        <span class="view-btn">
+										<font-awesome-icon :icon="['fas', 'eye']"/>
 									</span>
-									<span class="delete-btn">
-										<font-awesome-icon :icon="['fas', 'delete-left']" />
+                        <span class="delete-btn">
+										<font-awesome-icon :icon="['fas', 'delete-left']"/>
 									</span>
-								</div> 
-							</td>
-						</tr>
-						<tr>
-								<td data-cell="id"> 2 </td>
-								<td data-cell="name"> Chan Lee</td>
-								<td data-cell="actions"> <div class="task-setting">
-										<span class="edit-btn">
-											<font-awesome-icon :icon="['fas', 'pen-to-square']" />
-										</span>
-										<span class="view-btn">
-											<font-awesome-icon :icon="['fas', 'eye']" />
-										</span>
-										<span class="delete-btn">
-											<font-awesome-icon :icon="['fas', 'delete-left']" />
-										</span>
-									</div> </td>
-						</tr>
+                    </div>
+                </td>
+            </tr>
 
-				</tbody>
-		</table>
-	</section>
+            </tbody>
+        </table>
+    </section>
 </template>
 
 
 <style scoped>
 
 .table-header {
-	width: 100%;
-	justify-content: space-between;
-	text-align: center;
+    width: 100%;
+    justify-content: space-between;
+    text-align: center;
 }
+
 .input-group {
     width: 100%;
     height: 100%;
@@ -85,29 +99,30 @@
     transition: .2s;
 }
 
-.task-setting{
-	width: 100%;	
-	text-align: center;
-}
-.task-setting span{
-	margin-right: 10px;
-	cursor: pointer;
+.task-setting {
+    width: 100%;
+    text-align: center;
 }
 
-.table-search-and-add-box{
-	padding: 20px;
+.task-setting span {
+    margin-right: 10px;
+    cursor: pointer;
 }
 
-.view-btn{
-	color: green;
+.table-search-and-add-box {
+    padding: 20px;
 }
 
-.edit-btn{
-	color: #ebc474;
+.view-btn {
+    color: green;
 }
 
-.delete-btn{
-	color: red;
+.edit-btn {
+    color: #ebc474;
+}
+
+.delete-btn {
+    color: red;
 }
 
 .table-header .input-group:hover {
@@ -124,7 +139,7 @@
 }
 
 .table-body {
-		width: 80%;
+    width: 80%;
     max-height: calc(89% - 1.6rem);
     background-color: #fffb;
 
@@ -135,18 +150,18 @@
     overflow: overlay;
 }
 
-.table-body::-webkit-scrollbar{
+.table-body::-webkit-scrollbar {
     width: 0.5rem;
     height: 0.5rem;
 }
 
-.table-body::-webkit-scrollbar-thumb{
+.table-body::-webkit-scrollbar-thumb {
     border-radius: .5rem;
     background-color: #0004;
     visibility: hidden;
 }
 
-.table-body:hover::-webkit-scrollbar-thumb{ 
+.table-body:hover::-webkit-scrollbar-thumb {
     visibility: visible;
 }
 
@@ -165,7 +180,7 @@ thead th {
     top: 0;
     left: 0;
     background-color: #1D5D9B;
-		color: white;
+    color: white;
     cursor: pointer;
     text-transform: capitalize;
 }
@@ -191,31 +206,32 @@ tbody tr td p {
 thead th:hover {
     color: #FDFDC9;
 }
+
 @media (max-width: 1000px) {
-    th{
-			display: none;
-		}
+    th {
+        display: none;
+    }
 
-		td{
-			display: grid;
-			gap: 0.5rem;
-			grid-template-columns: 15ch auto;
-			padding: 0.5rem 1rem;
-		}
+    td {
+        display: grid;
+        gap: 0.5rem;
+        grid-template-columns: 15ch auto;
+        padding: 0.5rem 1rem;
+    }
 
-		td:first-child{
-			padding-top: 2rem;
-		}
+    td:first-child {
+        padding-top: 2rem;
+    }
 
-		td:last-child{
-			padding-bottom: 2rem;
-		}
+    td:last-child {
+        padding-bottom: 2rem;
+    }
 
-		td::before{
-			content: attr(data-cell) ": ";
-			font-weight: 700;
-			text-transform: capitalize;
-		}
+    td::before {
+        content: attr(data-cell) ": ";
+        font-weight: 700;
+        text-transform: capitalize;
+    }
 }
 
 </style>
