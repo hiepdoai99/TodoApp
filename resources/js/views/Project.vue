@@ -53,26 +53,20 @@ const deleteobj = (projectId) => {
                 </thead>
                 <tbody>
                 <tr v-for="project in projects" :key="project.id">
-                    <td data-cell="id">{{ project.id }}</td>
-                    <td data-cell="name">{{ project.name }}</td>
-                    <td data-cell="actions">
-											<div class="actions-box">
-														<div>
-															<router-link :to="{name: 'details', params: { id: project.id }}" class="btn view-btn">
-																<font-awesome-icon :icon="['fas', 'eye']" />
-															</router-link>
-														</div>
-														<div>
-																<router-link :to="{name: 'edit', params: { id: project.id }}" class="btn edit-btn">
-																	<font-awesome-icon :icon="['fas', 'pen-to-square']" />
-																</router-link>
-														</div>
-														<div>
-																<button @click="deleteobj(project.id)" class="btn delete-btn">
-																	<font-awesome-icon :icon="['fas', 'delete-left']" />
-																</button>
-														</div>
-													</div>
+                    <td>{{ project.id }}</td>
+                    <td>{{ project.name }}</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <router-link :to="{name: 'details', params: { id: project.id }}" class="btn btn-primary">Show
+                            </router-link>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button @click="deleteobj(project.id)" class="btn btn-danger">Delete</button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <router-link :to="{name: 'edit-project', params: { id: project.id }}" class="btn btn-primary">Edit
+                            </router-link>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
@@ -96,18 +90,19 @@ main {
     margin-top: 5%;
     background-color: #75C2F6;
     border-radius: 0px 0px 15px 15px;
-		max-width: 500px;
-		width: 90%;
 }
 
 body {
+    /* min-height: 80vh; */
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+
 .table-header {
     width: 100%;
+    height: 10%;
     justify-content: space-between;
     text-align: center;
 }
@@ -138,15 +133,6 @@ body {
 .table-search-and-add-box {
     padding: 20px;
 }
-.actions-box{
-	display: flex;
-	width: 100%;
-}
-
-.actions-box div{
-	width: 33.3%;
-	text-align: center;
-}
 
 .view-btn {
     color: green;
@@ -165,7 +151,7 @@ body {
     padding: 10px 0px 10px 0px;
     margin-top: 1%;
     height: 100%;
-    width: 30%;
+    width: 10%;
     border-radius: 20px;
     border: none;
     color: white;
@@ -257,9 +243,9 @@ tbody tr td p {
 }
 
 .status {
-	border-radius: 2rem;
-	text-align: center;
-	padding: .5rem 1.5rem;
+    padding: .4rem 0.8rem;
+    border-radius: 2rem;
+    text-align: center;
 }
 
 .status.delivered {
@@ -283,30 +269,9 @@ tbody tr td p {
 }
 
 @media (max-width: 1000px) {
-   th{
-			display: none;
-		}
-
-		td{
-			display: grid;
-			gap: 0.5rem;
-			grid-template-columns: 15ch auto;
-			padding: 0.5rem 1rem;
-		}
-
-		td:first-child{
-			padding-top: 2rem;
-		}
-
-		td:last-child{
-			padding-bottom: 2rem;
-		}
-
-		td::before{
-			content: attr(data-cell) ": ";
-			font-weight: 700;
-			text-transform: capitalize;
-		}
+    /* td:not(:first-of-type) {
+        min-width: 12.1rem;
+    } */
 }
 
 thead th:hover {

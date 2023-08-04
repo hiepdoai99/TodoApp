@@ -9,6 +9,9 @@ import AdminPage from "../views/AdminPage.vue"
 import Project from "../views/Project.vue"
 import VerifyEmail from "../views/ConfirmMail.vue"
 import ErrorMail from "../views/ErrorMail.vue"
+import AddTeam from "../views/AddTeam.vue"
+import AddProject from "../views/AddProject.vue"
+import Test from "../views/Test.vue"
 
 import { createRouter, createWebHistory } from "vue-router";
 const routerCustom = [{
@@ -71,6 +74,32 @@ const routerCustom = [{
         name: 'error-mail',
         component: ErrorMail
     },
+    {
+        path:'/add-team',
+        name: 'add-team',
+        component: AddTeam
+    },
+    {
+        path:'/edit-team/:id',
+        name: 'edit-team',
+        component: AddTeam
+    },
+    {
+        path:'/add-project',
+        name: 'add-project',
+        component: AddProject
+    },
+    {
+        path:'/edit-project/:id',
+        name: 'edit-project',
+        component: AddProject
+    },
+    {
+        path:'/test',
+        name: 'test',
+        component: Test
+    },
+
 
 ]
 
