@@ -2,7 +2,7 @@
 import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
 import BaseModal from '../components/BaseModal.vue';
-
+import ViewModal from '../components/ViewModal.vue'
 const router = useRouter()
 const route = useRoute()
 import {
@@ -103,7 +103,9 @@ watch(input,
 											<td data-cell="start date">{{ todo.start_date }}</td>
 											<td data-cell="end date">{{ todo.end_date }}</td>
 											<td data-cell="action">
-												<span :class="todo.status.name === 'Todo' ? 'status shipped' : '' ">
+												<span :class="
+													todo.status.name === 'Todo' ? 'status shipped' : todo.status.name === 'Ongoing' ? 'status pending' : todo.status.name === 'Done' ? 'status delivered' : 'status cancelled'
+												">
 													{{ todo.status.name }}
 												</span>
 											</td>
@@ -111,10 +113,6 @@ watch(input,
 													<div class="actions-box">
 														<div @click="toggleModal();showDetail(todo.id)" class="btn view-btn">
 																<font-awesome-icon :icon="['fas', 'eye']" />
-
-															<!-- <router-link :to="{name: 'details', params: { id: todo.id }}" class="btn view-btn">
-																<font-awesome-icon :icon="['fas', 'eye']" />
-															</router-link> -->
 														</div>
 														<div>
 																<router-link :to="{name: 'edit', params: { id: todo.id }}" class="btn edit-btn">
@@ -137,38 +135,7 @@ watch(input,
 						:modalActive="modalActive"
 						@close-modal="toggleModal"
 					>		
-						<table>
-									<thead>
-									<tr>
-											<th>ID</th>
-											<th>Name</th>
-											<th>Description</th>
-											<th>Assignor</th>
-											<th>Assignee</th>
-											<th>Project</th>
-											<th>Start date</th>
-											<th>End date</th>
-											<th>Status</th>
-									</tr>
-									</thead>
-									<tbody>
-										<tr v-if="taskdetail">
-											<td data-cell="id">{{ taskdetail.id }}</td>
-											<td data-cell="name">{{ taskdetail.name }}</td>
-											<td data-cell="description">{{ taskdetail.description }}</td>
-											<td data-cell="assignor">{{ taskdetail.assignor.name }}</td>
-											<td data-cell="assignee">{{ taskdetail.assignee.name }}</td>
-											<td data-cell="project">{{ taskdetail.project.name }}</td>
-											<td data-cell="start date">{{ taskdetail.start_date }}</td>
-											<td data-cell="end date">{{ taskdetail.end_date }}</td>
-											<td data-cell="action">
-												<span :class="taskdetail.status.name === 'Todo' ? 'status shipped' : '' ">
-													{{ taskdetail.status.name }}
-												</span>
-											</td>
-										</tr>	
-									</tbody>
-							</table>
+						<ViewModal :taskdetail="taskdetail"/>
 					</BaseModal>
 					<div class="pagination-body">
 						<vue-awesome-paginate
@@ -178,9 +145,7 @@ watch(input,
 							v-model="currentPage"
 							:on-click="onClickHandler"
 						/>
-					</div>
-
-					
+					</div>		
 			</main>
     </body>
 </template>
@@ -215,11 +180,8 @@ body {
 	.pagination-container {
   	column-gap: 10px;
 	}
-
-
 }
 
- 
 .table-header {
     width: 100%;
     justify-content: space-between;
@@ -386,7 +348,7 @@ tbody tr td p {
 }
 
 .status.cancelled {
-    background-color: #d893a3;
+    background-color: #d46c85;
     color: white;
 }
 
@@ -395,40 +357,9 @@ tbody tr td p {
     color: white;
 }
 @media (max-width: 1000px) {
-    th{
-			display: none;
-		}
-
-		td{
-			display: grid;
-			gap: 0.5rem;
-			grid-template-columns: 15ch auto;
-			padding: 0.5rem 1rem;
-		}
-
-		td:first-child{
-			padding-top: 2rem;
-		}
-
-		td:last-child{
-			padding-bottom: 2rem;
-		}
-
-		td::before{
-			content: attr(data-cell) ": ";
-			font-weight: 700;
-			text-transform: capitalize;
-		}
-}
-
-thead th:hover {
-    color: #FDFDC9;
-}
-
-.modal-item{
 	th{
-			display: none;
-		}
+		display: none;
+	}
 
 	td{
 		display: grid;
@@ -450,11 +381,10 @@ thead th:hover {
 		font-weight: 700;
 		text-transform: capitalize;
 	}
-
-	tbody tr:hover {
-    background-color: none;
-}
 }
 
+thead th:hover {
+  color: #FDFDC9;
+}
 
 </style>
