@@ -11,6 +11,11 @@ import {
 } from "vue";
 
 const modalActive = ref(null);
+let taskdetail = ref()
+const todoList = ref([])
+const input = ref('')
+const currentPage = ref(1);
+
 const toggleModal = () => {
   modalActive.value = !modalActive.value;
 
@@ -20,25 +25,14 @@ const showDetail = (id) => {
 	let itemByIndex = id -1;
 	let item = JSON.parse(JSON.stringify(todoList.value))
 	taskdetail = item[itemByIndex];
-	console.log(taskdetail);
-	// $axios.get(`/task/${id}`).then((data) => {
-	// 		taskdetail.value = data.data;
-	// 		console.log(taskdetail.value);
-  //   })
+	//console.log(taskdetail);
 };
 
-
-let taskdetail = ref()
-const todoList = ref([])
-const input = ref('')
 const onClickHandler = (page) => {
 		$axios.get(`/task?include=user,project,status,assignee&per_page=2&page=${page}`).then((data) => {
         todoList.value = data.data.data
     })
   };
-
-const currentPage = ref(1);
-
 
 onMounted(() => {
     getData()
@@ -176,15 +170,15 @@ watch(input,
 									</tbody>
 							</table>
 					</BaseModal>
-					<section class="pagination-body">
+					<div class="pagination-body">
 						<vue-awesome-paginate
-						:total-items="50"
-						:items-per-page="1"
-						:max-pages-shown="5"
-						v-model="currentPage"
-						:on-click="onClickHandler"
-					/>
-					</section>
+							:total-items="50"
+							:items-per-page="1"
+							:max-pages-shown="5"
+							v-model="currentPage"
+							:on-click="onClickHandler"
+						/>
+					</div>
 
 					
 			</main>
@@ -193,10 +187,6 @@ watch(input,
 
 
 <style scoped lang="scss">
-.paginate-buttons{
-	background-color: red;
-	color: white;
-}
 
 * {
     margin: 0;
@@ -222,7 +212,14 @@ body {
 
 .pagination-body{
 	text-align: center;
+	.pagination-container {
+  	column-gap: 10px;
+	}
+
+
 }
+
+ 
 .table-header {
     width: 100%;
     justify-content: space-between;
