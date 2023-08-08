@@ -22,15 +22,19 @@ const toggleModal = () => {
 };
 
 const showDetail = (id) => {
-	let itemByIndex = id -1;
 	let item = JSON.parse(JSON.stringify(todoList.value))
-	taskdetail = item[itemByIndex];
-	//console.log(taskdetail);
+	item.forEach(element => {
+		if (element.id === id){
+			taskdetail = element
+		} 
+	});
 };
 
 const onClickHandler = (page) => {
-		$axios.get(`/task?include=user,project,status,assignee&per_page=2&page=${page}`).then((data) => {
+		$axios.get(`/task?include=user,project,status,assignee&per_page=1&page=${page}`).then((data) => {
         todoList.value = data.data.data
+				let item = JSON.parse(JSON.stringify(todoList.value))
+				console.log('page shifted', item)
     })
   };
 
@@ -39,7 +43,7 @@ onMounted(() => {
 })
 //?include=user,project,status,assignee&per_page=1&page=2
 const getData = () => {
-    $axios.get('/task?include=user,project,status,assignee&per_page=2&page=1').then((data) => {
+    $axios.get('/task?include=user,project,status,assignee&per_page=1&page=1').then((data) => {
         todoList.value = data.data.data
     })
 }
@@ -48,6 +52,22 @@ const deleteobj = (todoId) => {
         getData()
     })
 }
+
+const statusStyleSet = (statusname) =>{
+	if (statusname === 'Todo'){
+		return 'status shipped'
+	} else if (statusname === ' Ongoing '){
+		console.log('is this jump 1',statusname)
+		return 'status pending'
+	}  else if (statusname === ' Done '){
+		console.log('is this jump 2',statusname)
+		return 'status delivered'
+	} else {
+		return 'status cancelled'
+	}
+
+}
+
 
 watch(input,
     async (newInput) => {
@@ -103,9 +123,7 @@ watch(input,
 											<td data-cell="start date">{{ todo.start_date }}</td>
 											<td data-cell="end date">{{ todo.end_date }}</td>
 											<td data-cell="action">
-												<span :class="
-													todo.status.name === 'Todo' ? 'status shipped' : todo.status.name === 'Ongoing' ? 'status pending' : todo.status.name === 'Done' ? 'status delivered' : 'status cancelled'
-												">
+												<span :class="statusStyleSet(todo.status.name) ">
 													{{ todo.status.name }}
 												</span>
 											</td>
