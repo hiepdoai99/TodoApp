@@ -21,18 +21,10 @@ import {
 /* add icons to the library */
 library.add(faUserSecret, faEye, faPenToSquare, faDeleteLeft, faBars);
 
-// import the pagination package
-import VueAwesomePaginate from "vue-awesome-paginate";
-// import the necessary css file
-import "vue-awesome-paginate/dist/style.css";
-
 import router from "./router";
 
 import { createApp } from "vue";
 import App from "./App.vue";
 const app = createApp(App);
 
-app.use(router)
-    .use(VueAwesomePaginate)
-    .component("font-awesome-icon", FontAwesomeIcon)
-    .mount("#app");
+app.use(router).component("font-awesome-icon", FontAwesomeIcon).mount("#app");

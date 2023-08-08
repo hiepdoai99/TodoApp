@@ -1,8 +1,10 @@
 <script setup>
 import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
-import BaseModal from '../components/BaseModal.vue';
+import BaseModal from '../components/BaseModal.vue'
 import ViewModal from '../components/ViewModal.vue'
+import VPagination from "@hennge/vue3-pagination"
+import "@hennge/vue3-pagination/dist/vue3-pagination.css"
 const router = useRouter()
 const route = useRoute()
 import {
@@ -41,7 +43,7 @@ const onClickHandler = (page) => {
 onMounted(() => {
     getData()
 })
-//?include=user,project,status,assignee&per_page=1&page=2
+
 const getData = () => {
     $axios.get('/task?include=user,project,status,assignee&per_page=1&page=1').then((data) => {
         todoList.value = data.data.data
@@ -156,14 +158,24 @@ watch(input,
 						<ViewModal :taskdetail="taskdetail"/>
 					</BaseModal>
 					<div class="pagination-body">
+						<v-pagination
+							v-model="currentPage"
+							:pages="10"
+							:range-size="1"
+							active-color="#FDFDC9"
+							@update:modelValue="onClickHandler"
+						/>
+
 						<vue-awesome-paginate
 							:total-items="50"
-							:items-per-page="1"
+							:items-per-page="5"
 							:max-pages-shown="5"
 							v-model="currentPage"
 							:on-click="onClickHandler"
 						/>
 					</div>		
+
+				
 			</main>
     </body>
 </template>
@@ -194,9 +206,9 @@ body {
 }
 
 .pagination-body{
-	text-align: center;
-	.pagination-container {
-  	column-gap: 10px;
+	width: 100%;
+	.Pagination{
+		justify-content: center;
 	}
 }
 
