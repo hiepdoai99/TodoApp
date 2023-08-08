@@ -1,10 +1,10 @@
 <script setup>
-import AppNav from "./components/Nav.vue";
+import AppNav from "./components/NavigateBar.vue";
 import AppFooter from './components/footer.vue'
 </script>
 <template>
     <div class="page-container">
-			<app-nav/>
+			<AppNav/>
         <div class="content-wrap">
             <router-view></router-view>
         </div>

@@ -2,24 +2,32 @@
 
 import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
+import VPagination from "@hennge/vue3-pagination"
+import "@hennge/vue3-pagination/dist/vue3-pagination.css"
 
 const router = useRouter()
 const route = useRoute()
 import {
     onMounted,
-    ref, watch
+    ref
 } from "vue";
 
 const teams = ref([])
 const input = ref('')
-
+const currentPage = ref(1);
 
 onMounted(() => {
     getData()
 })
 
+const onClickHandler = (page) => {
+		$axios.get(`/team?include=user,project,status,assignee&per_page=1&page=${page}`).then((data) => {
+			teams.value = data.data.data
+    })
+  };
+
 const getData = () => {
-    $axios.get('/team').then((data) => {
+    $axios.get('/team?include=user,project,status,assignee&per_page=1&page=1').then((data) => {
         teams.value = data.data.data
     })
 }
@@ -52,28 +60,41 @@ const deleteobj = (teamId) => {
 				</thead>
 
 				<tbody>
-                <tr v-for="team in teams" :key="team.id">
-                    <td data-cell="id">{{ team.id }}</td>
-                    <td data-cell="name"> {{ team.name }}</td>
-                    <td data-cell="actions">
-                        <div class="task-setting">
-									<span class="edit-btn">
-										<font-awesome-icon :icon="['fas', 'pen-to-square']"/>
-									</span>
-                            <span class="view-btn">
-										<font-awesome-icon :icon="['fas', 'eye']"/>
-									</span>
-                            <span class="delete-btn">
-										<font-awesome-icon :icon="['fas', 'delete-left']"/>
-									</span>
-                        </div>
-                    </td>
-                </tr>
+					<tr v-for="team in teams" :key="team.id">
+							<td data-cell="id">{{ team.id }}</td>
+							<td data-cell="name"> {{ team.name }}</td>
+							<td data-cell="action">
+								<div class="actions-box">
+									<div @click="" class="btn view-btn">
+											<font-awesome-icon :icon="['fas', 'eye']" />
+									</div>
+									<div>
+											<router-link :to="{name: 'edit', params: { id: team.id }}" class="btn edit-btn">
+												<font-awesome-icon :icon="['fas', 'pen-to-square']" />
+											</router-link>
+									</div>
+									<div>
+											<button @click="deleteobj(team.id)" class="btn delete-btn">
+												<font-awesome-icon :icon="['fas', 'delete-left']" />
+											</button>
+									</div>
+								</div>
+							</td>
+					</tr>
 
 
-                </tbody>
+					</tbody>
 		</table>
 	</section>
+	<div class="pagination-body">
+		<v-pagination
+			v-model="currentPage"
+			:pages="10"
+			:range-size="1"
+			active-color="#FDFDC9"
+			@update:modelValue="onClickHandler"
+		/>
+	</div>	
 </template>
 
 
@@ -99,6 +120,21 @@ const deleteobj = (teamId) => {
     transition: .2s;
 }
 
+.pagination-body{
+	width: 100%;
+	.Pagination{
+		justify-content: center;
+	}
+}
+.actions-box{
+	display: flex;
+	width: 100%;
+}
+
+.actions-box div{
+	width: 33.3%;
+	text-align: center;
+}
 .task-setting{
 	width: 100%;
 	text-align: center;

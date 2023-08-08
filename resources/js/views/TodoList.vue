@@ -3,6 +3,7 @@ import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
 import BaseModal from '../components/BaseModal.vue'
 import ViewModal from '../components/ViewModal.vue'
+
 import VPagination from "@hennge/vue3-pagination"
 import "@hennge/vue3-pagination/dist/vue3-pagination.css"
 const router = useRouter()
@@ -35,8 +36,6 @@ const showDetail = (id) => {
 const onClickHandler = (page) => {
 		$axios.get(`/task?include=user,project,status,assignee&per_page=1&page=${page}`).then((data) => {
         todoList.value = data.data.data
-				let item = JSON.parse(JSON.stringify(todoList.value))
-				console.log('page shifted', item)
     })
   };
 
@@ -157,6 +156,7 @@ watch(input,
 					>		
 						<ViewModal :taskdetail="taskdetail"/>
 					</BaseModal>
+
 					<div class="pagination-body">
 						<v-pagination
 							v-model="currentPage"
@@ -165,30 +165,13 @@ watch(input,
 							active-color="#FDFDC9"
 							@update:modelValue="onClickHandler"
 						/>
-
-						<vue-awesome-paginate
-							:total-items="50"
-							:items-per-page="5"
-							:max-pages-shown="5"
-							v-model="currentPage"
-							:on-click="onClickHandler"
-						/>
 					</div>		
-
-				
 			</main>
     </body>
 </template>
 
 
 <style scoped lang="scss">
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: sans-serif;
-}
 
 main {
     margin-top: 5%;
