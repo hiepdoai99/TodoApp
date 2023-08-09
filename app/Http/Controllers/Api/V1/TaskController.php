@@ -45,8 +45,9 @@ class TaskController extends Controller
     public function store(StoreTaskRequest $request)
     {
         $user = auth()->user();
-        $id = $request->assignee_id;
+        $id = $request->assigner_id;
         $asn = User::find($id);
+
         if ($user->team_id = $asn->team_id){
             $task = Task::create($request->all());
 
