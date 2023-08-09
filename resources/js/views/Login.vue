@@ -14,6 +14,11 @@ const formState = reactive({
 let error = ref(false);
 
 const handleLogin = ()=> {
+    const token = localStorage.getItem('token')
+    if (token){
+        localStorage.clear()
+        router.push('/login')
+    }
     $axios.post('login',{
         email:formState.email,
         password:formState.password})

@@ -27,12 +27,15 @@ import VueAwesomePaginate from "vue-awesome-paginate";
 import "vue-awesome-paginate/dist/style.css";
 
 import router from "./router";
+import store from './store/store.js'
+
 
 import { createApp } from "vue";
 import App from "./App.vue";
 const app = createApp(App);
 
 app.use(router)
+    .use(store)
     .use(VueAwesomePaginate)
     .component("font-awesome-icon", FontAwesomeIcon)
     .mount("#app");
