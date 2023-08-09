@@ -1,19 +1,48 @@
 <script setup>
 
 import {$axios} from '../utils/request'
-import {useRouter, useRoute} from 'vue-router'
 
+import {useRouter, useRoute} from 'vue-router'
+import VPagination from "@hennge/vue3-pagination"
+import "@hennge/vue3-pagination/dist/vue3-pagination.css"
+
+import BaseModal from '../components/BaseModal.vue'
+import ViewModal from '../components/ViewModal.vue'
 const router = useRouter()
 const route = useRoute()
 import {
     onMounted,
-    ref, watch
+    ref
 } from "vue";
+
+const modalActive = ref(null);
+let teamdetail = ref()
 const teams = ref([])
+const currentPage = ref(1);
 
 onMounted(() => {
     getData()
 })
+
+const toggleModal = () => {
+  modalActive.value = !modalActive.value;
+
+};
+
+const onClickHandler = (page) => {
+		$axios.get(`/team?include=user,project,status,assignee&per_page=1&page=${page}`).then((data) => {
+			teams.value = data.data.data
+    })
+  };
+
+const showDetail = (id) => {
+	let item = JSON.parse(JSON.stringify(teams.value))
+	item.forEach(element => {
+		if (element.id === id){
+			teamdetail = element
+		} 
+	});
+};
 
 const getData = () => {
     $axios.get('/team').then((data) => {
@@ -53,38 +82,51 @@ const deleteobj = (teamId) => {
 
                 <tbody>
                 <tr v-for="team in teams" :key="team.id">
-                    <td>{{ team.id }}</td>
-                    <td>{{ team.name }}</td>
-                    <td>
-                        <div class="btn-group" role="group">
-                            <router-link :to="{name: 'details', params: { id: team.id }}" class="btn btn-primary">Show
-                            </router-link>
-                        </div>
-                        <div class="btn-group" role="group">
-                            <button @click="deleteobj(team.id)" class="btn btn-danger">Delete</button>
-                        </div>
-                        <div class="btn-group" role="group">
-                            <router-link :to="{name: 'edit-team', params: { id: team.id }}" class="btn btn-primary">Edit
-                            </router-link>
-                        </div>
-                    </td>
+                    <td data-cell="id">{{ team.id }}</td>
+                    <td data-cell="name">{{ team.name }}</td>
+										<td data-cell="action">
+											<div class="actions-box">
+												<div @click="toggleModal();showDetail(team.id)" class="btn view-btn">
+														<font-awesome-icon :icon="['fas', 'eye']" />
+												</div>
+												<div>
+														<router-link :to="{name: 'edit', params: { id: team.id }}" class="btn edit-btn">
+															<font-awesome-icon :icon="['fas', 'pen-to-square']" />
+														</router-link>
+												</div>
+												<div>
+														<button @click="deleteobj(team.id)" class="btn delete-btn">
+															<font-awesome-icon :icon="['fas', 'delete-left']" />
+														</button>
+												</div>
+											</div>
+										</td>
                 </tr>
                 </tbody>
             </table>
         </section>
+				<BaseModal
+						:modalActive="modalActive"
+						@close-modal="toggleModal"
+					>		
+						<ViewModal :taskdetail="teamdetail"/>
+					</BaseModal>
+
+        <div class="pagination-body">
+					<v-pagination
+						v-model="currentPage"
+						:pages="10"
+						:range-size="1"
+						active-color="#FDFDC9"
+						@update:modelValue="onClickHandler"
+					/>
+				</div>		
     </main>
     </body>
 </template>
 
 
 <style scoped>
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: sans-serif;
-}
 
 main {
     margin-top: 5%;
@@ -100,7 +142,22 @@ body {
     align-items: center;
 }
 
+.pagination-body{
+	width: 100%;
+	.Pagination{
+		justify-content: center;
+	}
+}
 
+.actions-box{
+	display: flex;
+	width: 100%;
+}
+
+.actions-box div{
+	width: 33.3%;
+	text-align: center;
+}
 .table-header {
     width: 100%;
     height: 10%;
@@ -233,36 +290,31 @@ tbody tr td p {
     transition: .2s ease-in-out;
 }
 
-.status {
-    padding: .4rem 0.8rem;
-    border-radius: 2rem;
-    text-align: center;
-}
-
-.status.delivered {
-    background-color: #86e49d;
-    color: white;
-}
-
-.status.cancelled {
-    background-color: #d893a3;
-    color: white;
-}
-
-.status.pending {
-    background-color: #ebc474;
-    color: white;
-}
-
-.status.shipped {
-    background-color: #6fcaea;
-    color: white;
-}
-
 @media (max-width: 1000px) {
-    /* td:not(:first-of-type) {
-        min-width: 12.1rem;
-    } */
+	th{
+		display: none;
+	}
+
+	td{
+		display: grid;
+		gap: 0.5rem;
+		grid-template-columns: 15ch auto;
+		padding: 0.5rem 1rem;
+	}
+
+	td:first-child{
+		padding-top: 2rem;
+	}
+
+	td:last-child{
+		padding-bottom: 2rem;
+	}
+
+	td::before{
+		content: attr(data-cell) ": ";
+		font-weight: 700;
+		text-transform: capitalize;
+	}
 }
 
 thead th:hover {
