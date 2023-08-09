@@ -34,7 +34,7 @@ const showDetail = (id) => {
 };
 
 const onClickHandler = (page) => {
-		$axios.get(`/task?include=user,project,status,assignee&per_page=1&page=${page}`).then((data) => {
+		$axios.get(`/task?include=user,project,status,assignee&per_page=5&page=${page}`).then((data) => {
         todoList.value = data.data.data
     })
   };
@@ -44,7 +44,7 @@ onMounted(() => {
 })
 
 const getData = () => {
-    $axios.get('/task?include=user,project,status,assignee&per_page=1&page=1').then((data) => {
+    $axios.get('/task?include=user,project,status,assignee&per_page=5&page=1').then((data) => {
         todoList.value = data.data.data
     })
 }
@@ -58,10 +58,8 @@ const statusStyleSet = (statusname) =>{
 	if (statusname === 'Todo'){
 		return 'status shipped'
 	} else if (statusname === ' Ongoing '){
-		console.log('is this jump 1',statusname)
 		return 'status pending'
 	}  else if (statusname === ' Done '){
-		console.log('is this jump 2',statusname)
 		return 'status delivered'
 	} else {
 		return 'status cancelled'
@@ -160,7 +158,7 @@ watch(input,
 					<div class="pagination-body">
 						<v-pagination
 							v-model="currentPage"
-							:pages="10"
+							:pages="20"
 							:range-size="1"
 							active-color="#FDFDC9"
 							@update:modelValue="onClickHandler"
