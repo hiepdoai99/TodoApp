@@ -1,11 +1,5 @@
 <script setup>
-import { useStore } from 'vuex'
-import { computed } from 'vue'
 
-const store = useStore()
-store.dispatch("fetchAllTeam")
-const teams = computed(()=>store.state.team)
-console.log(teams)
 </script>
 
 <template>
