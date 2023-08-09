@@ -7,6 +7,7 @@ use App\Http\Requests\TeamRequest;
 use App\Http\Resources\TeamCollection;
 use App\Http\Resources\TeamResource;
 use App\Models\Team;
+use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 
 
@@ -31,6 +32,12 @@ class TeamController extends Controller
      */
     public function store(TeamRequest $request)
     {
+        $team = Team::create($request->validated());
+        $user = Auth::user();
+        if($user){
+            $user->team_id = $team->id;
+            $user->save();
+        }
         return $this->respondCreated(
             new TeamResource(Team::create($request->validated()))
         );
