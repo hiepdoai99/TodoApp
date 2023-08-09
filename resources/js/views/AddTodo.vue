@@ -14,7 +14,7 @@ import {
 const users = ref([])
 const status = ref([])
 const project = ref([])
-const file = ref('')
+let imgdata = ''
 
 const id = route.params.id ?? null;
 onMounted(() => {
@@ -85,15 +85,34 @@ const addTodo = async () => {
     }
 }
 
+const createImage = (file) => {
+	let reader = new FileReader();
 
-const onFileChange = (event) => {
-    file.value = event.target.files[0]
+	reader.onload = (e) => {
+			imgdata = e.target.result;
+			console.log('wat the hail is this',e.target.result);
+	};
+	reader.readAsDataURL(file);
+	console.log('this is reader',reader)
 }
 
-const sendImage =  () => {
-    const formdata = new FormData();
-    formdata.append('image', file.value);
-    $axios.post('/image', formdata)
+const onImageChange = (e) => {
+	console.log('this run')
+	let files = e.target.files || e.dataTransfer.files;
+	if (!files.length){
+		return;
+	} else {
+		createImage(files[0]);
+	}
+			
+}
+
+const uploadImage = () => {
+	$axios.post('/image', {image: imgdata}).then(response => {
+			if (response.data.success) {
+					alert(response.data.success);
+			}
+	});
 }
 
 const getTodo = (id) => {
@@ -237,13 +256,13 @@ const edit = () => {
             </div>
 
             <div class="upload-form-item">
-                <label for="uploadbtn" class="uploadLabel">Upload image</label>
-                <input id="uploadbtn" type="file"  @change="onFileChange" multiple>
+                <label for="uploadbtn" class="uploadLabel" @change="onImageChange">Upload image</label>
+                <input id="uploadbtn" type="file"  @change="onImageChange">
             </div>
 
             <div class="form-item">
                 <button v-if="id" @click="edit" class="btn-main" type="button">Update</button>
-                <button  @click="addTodo" class="btn-main" type="button">Submit</button>
+                <button  @click="addTodo();uploadImage()" class="btn-main" type="button">Submit</button>
             </div>
         </form>
 
