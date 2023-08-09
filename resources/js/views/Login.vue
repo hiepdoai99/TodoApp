@@ -1,6 +1,7 @@
 <script setup>
 import {$axios} from '../utils/request'
 import { useRouter, useRoute } from 'vue-router'
+import {emitter} from '../utils/eventBus';
 const router = useRouter()
 const route = useRoute()
 import {
@@ -12,6 +13,8 @@ const formState = reactive({
     password:''
 })
 let error = ref(false);
+let userdata = ref({});
+let userrole = ref();
 
 const handleLogin = ()=> {
     const token = localStorage.getItem('token')
@@ -25,6 +28,13 @@ const handleLogin = ()=> {
         .then((data) => {
             localStorage.setItem('token',data.data.access_token)
             localStorage.setItem('user',JSON.stringify(data.data.user) )
+            userdata = data.data.user
+						emitter.emit("user-login-data", userdata)
+
+						$axios.get(`/user/${userdata.id}?include=roles`).then((data) => {
+							userrole = data.data.data.roles
+							emitter.emit("user-role-data", userrole)
+						})
             if (data.data.access_token){
                 router.push('/')
                 console.log('dang nhap thanh cong')
@@ -37,7 +47,8 @@ const handleLogin = ()=> {
             error.value = true
         }
     });
-}
+
+}	
 </script>
 
 <template>

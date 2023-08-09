@@ -1,8 +1,11 @@
 <script setup>
 import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
-import BaseModal from '../components/BaseModal.vue';
+import BaseModal from '../components/BaseModal.vue'
+import ViewModal from '../components/ViewModal.vue'
 
+import VPagination from "@hennge/vue3-pagination"
+import "@hennge/vue3-pagination/dist/vue3-pagination.css"
 const router = useRouter()
 const route = useRoute()
 import {
@@ -11,41 +14,37 @@ import {
 } from "vue";
 
 const modalActive = ref(null);
+let taskdetail = ref()
+const todoList = ref([])
+const input = ref('')
+const currentPage = ref(1);
+
 const toggleModal = () => {
   modalActive.value = !modalActive.value;
 
 };
 
 const showDetail = (id) => {
-	let itemByIndex = id -1;
 	let item = JSON.parse(JSON.stringify(todoList.value))
-	taskdetail = item[itemByIndex];
-	console.log(taskdetail);
-	// $axios.get(`/task/${id}`).then((data) => {
-	// 		taskdetail.value = data.data;
-	// 		console.log(taskdetail.value);
-  //   })
+	item.forEach(element => {
+		if (element.id === id){
+			taskdetail = element
+		} 
+	});
 };
 
-
-let taskdetail = ref()
-const todoList = ref([])
-const input = ref('')
 const onClickHandler = (page) => {
-		$axios.get(`/task?include=user,project,status,assignee&per_page=2&page=${page}`).then((data) => {
+		$axios.get(`/task?include=user,project,status,assignee&per_page=1&page=${page}`).then((data) => {
         todoList.value = data.data.data
     })
   };
 
-const currentPage = ref(1);
-
-
 onMounted(() => {
     getData()
 })
-//?include=user,project,status,assignee&per_page=1&page=2
+
 const getData = () => {
-    $axios.get('/task?include=user,project,status,assignee&per_page=2&page=1').then((data) => {
+    $axios.get('/task?include=user,project,status,assignee&per_page=1&page=1').then((data) => {
         todoList.value = data.data.data
     })
 }
@@ -54,6 +53,22 @@ const deleteobj = (todoId) => {
         getData()
     })
 }
+
+const statusStyleSet = (statusname) =>{
+	if (statusname === 'Todo'){
+		return 'status shipped'
+	} else if (statusname === ' Ongoing '){
+		console.log('is this jump 1',statusname)
+		return 'status pending'
+	}  else if (statusname === ' Done '){
+		console.log('is this jump 2',statusname)
+		return 'status delivered'
+	} else {
+		return 'status cancelled'
+	}
+
+}
+
 
 watch(input,
     async (newInput) => {
@@ -109,7 +124,7 @@ watch(input,
 											<td data-cell="start date">{{ todo.start_date }}</td>
 											<td data-cell="end date">{{ todo.end_date }}</td>
 											<td data-cell="action">
-												<span :class="todo.status.name === 'Todo' ? 'status shipped' : '' ">
+												<span :class="statusStyleSet(todo.status.name) ">
 													{{ todo.status.name }}
 												</span>
 											</td>
@@ -117,10 +132,6 @@ watch(input,
 													<div class="actions-box">
 														<div @click="toggleModal();showDetail(todo.id)" class="btn view-btn">
 																<font-awesome-icon :icon="['fas', 'eye']" />
-
-															<!-- <router-link :to="{name: 'details', params: { id: todo.id }}" class="btn view-btn">
-																<font-awesome-icon :icon="['fas', 'eye']" />
-															</router-link> -->
 														</div>
 														<div>
 																<router-link :to="{name: 'edit', params: { id: todo.id }}" class="btn edit-btn">
@@ -143,67 +154,24 @@ watch(input,
 						:modalActive="modalActive"
 						@close-modal="toggleModal"
 					>		
-						<table>
-									<thead>
-									<tr>
-											<th>ID</th>
-											<th>Name</th>
-											<th>Description</th>
-											<th>Assignor</th>
-											<th>Assignee</th>
-											<th>Project</th>
-											<th>Start date</th>
-											<th>End date</th>
-											<th>Status</th>
-									</tr>
-									</thead>
-									<tbody>
-										<tr v-if="taskdetail">
-											<td data-cell="id">{{ taskdetail.id }}</td>
-											<td data-cell="name">{{ taskdetail.name }}</td>
-											<td data-cell="description">{{ taskdetail.description }}</td>
-											<td data-cell="assignor">{{ taskdetail.assignor.name }}</td>
-											<td data-cell="assignee">{{ taskdetail.assignee.name }}</td>
-											<td data-cell="project">{{ taskdetail.project.name }}</td>
-											<td data-cell="start date">{{ taskdetail.start_date }}</td>
-											<td data-cell="end date">{{ taskdetail.end_date }}</td>
-											<td data-cell="action">
-												<span :class="taskdetail.status.name === 'Todo' ? 'status shipped' : '' ">
-													{{ taskdetail.status.name }}
-												</span>
-											</td>
-										</tr>	
-									</tbody>
-							</table>
+						<ViewModal :taskdetail="taskdetail"/>
 					</BaseModal>
-					<section class="pagination-body">
-						<vue-awesome-paginate
-						:total-items="50"
-						:items-per-page="1"
-						:max-pages-shown="5"
-						v-model="currentPage"
-						:on-click="onClickHandler"
-					/>
-					</section>
 
-					
+					<div class="pagination-body">
+						<v-pagination
+							v-model="currentPage"
+							:pages="10"
+							:range-size="1"
+							active-color="#FDFDC9"
+							@update:modelValue="onClickHandler"
+						/>
+					</div>		
 			</main>
     </body>
 </template>
 
 
 <style scoped lang="scss">
-.paginate-buttons{
-	background-color: red;
-	color: white;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: sans-serif;
-}
 
 main {
     margin-top: 5%;
@@ -221,8 +189,12 @@ body {
 }
 
 .pagination-body{
-	text-align: center;
+	width: 100%;
+	.Pagination{
+		justify-content: center;
+	}
 }
+
 .table-header {
     width: 100%;
     justify-content: space-between;
@@ -389,7 +361,7 @@ tbody tr td p {
 }
 
 .status.cancelled {
-    background-color: #d893a3;
+    background-color: #d46c85;
     color: white;
 }
 
@@ -398,40 +370,9 @@ tbody tr td p {
     color: white;
 }
 @media (max-width: 1000px) {
-    th{
-			display: none;
-		}
-
-		td{
-			display: grid;
-			gap: 0.5rem;
-			grid-template-columns: 15ch auto;
-			padding: 0.5rem 1rem;
-		}
-
-		td:first-child{
-			padding-top: 2rem;
-		}
-
-		td:last-child{
-			padding-bottom: 2rem;
-		}
-
-		td::before{
-			content: attr(data-cell) ": ";
-			font-weight: 700;
-			text-transform: capitalize;
-		}
-}
-
-thead th:hover {
-    color: #FDFDC9;
-}
-
-.modal-item{
 	th{
-			display: none;
-		}
+		display: none;
+	}
 
 	td{
 		display: grid;
@@ -453,11 +394,10 @@ thead th:hover {
 		font-weight: 700;
 		text-transform: capitalize;
 	}
-
-	tbody tr:hover {
-    background-color: none;
-}
 }
 
+thead th:hover {
+  color: #FDFDC9;
+}
 
 </style>
