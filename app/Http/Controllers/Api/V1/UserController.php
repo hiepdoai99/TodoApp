@@ -15,7 +15,9 @@ use App\Http\Resources\UserResource;
 use App\Models\Role;
 use App\Models\Team;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -73,6 +75,10 @@ class UserController extends Controller
         }
         return $this->respondError(__('user.delete_fail', ['resource', 'user ' . $todo->name]));
     }
+    public function showUser(UserRequest $request)
+    {
+        return auth()->user();
+    }
 
     public function dashboard(Request $request)
     {
@@ -86,6 +92,33 @@ class UserController extends Controller
             'totalTasks' => $task,
             'totalProject'=>$project,
         ]);
+    }
+    public function sameTeam(Request $request)
+    {
+        $user= Auth::user();
+        $team = $user->team_id;
+        $query = User::where('team_id', $team);
+        $user = QueryBuilder::for($query)
+            ->allowedIncludes(['roles', 'permissions'])
+            ->allowedFilters('name')
+            ->paginate($request->per_page ?? 10)
+            ->appends($request->all());
+        return $this->respondSuccess(
+            new UserCollection($user)
+        );
+    }
+
+    public function noTeam(Request $request)
+    {
+        $query = User::whereNull('team_id');
+        $user = QueryBuilder::for($query)
+            ->allowedIncludes(['roles', 'permissions'])
+            ->allowedFilters('name')
+            ->paginate($request->per_page ?? 10)
+            ->appends($request->all());
+        return $this->respondSuccess(
+            new UserCollection($user)
+        );
     }
 
 
