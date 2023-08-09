@@ -42,6 +42,7 @@ export default {
             <button class="btn btn-success btn-block" @click="uploadImage">Upload Image</button>
         </div>
     </div>
+
 </template>
 
 

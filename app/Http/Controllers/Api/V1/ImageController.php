@@ -42,6 +42,12 @@ class ImageController extends Controller
         $imageName = $rand.'.'.$type;
         Storage::disk('public')->put($imageName, $data);
         $path = storage_path('public/' . $imageName);
+
+        $image = new Image();
+        $image->image = $imageName;
+        $image->url = storage_path('app/public/').$imageName;
+        $image->save();
+
         return response($path, Response::HTTP_CREATED);
 
     }
