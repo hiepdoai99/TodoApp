@@ -10,21 +10,22 @@ import {onMounted,ref, reactive} from "vue";
 const users = ref([])
 
 onMounted(() => {
-    getUser()
+    getNoTeamMember()
 })
 
-const getUser = () => {
+const getNoTeamMember = () => {
     $axios.get('/noTeam').then((data) => {
         users.value = data.data.data
+				console.log(users.value)
     })
 }
 
 const formState = reactive({
-		member_id: '',
+		id: '',
 })
 
 const rules = {
-		member_id: {required},
+		id: {required},
 }
 
 const v$ = userVuelidate(rules, formState)
@@ -33,9 +34,9 @@ const sendInvitation = async () => {
     //validate first
     const validateRes = await v$.value.$validate();
     if (validateRes) {
-        $axios.post('/invite', {member_id: formState.member_id}).then(
+        $axios.post('/invite', {id: formState.id}).then(
             (data) => {
-                router.push('/todo')
+                router.push('/team')
             }
         )
     }
@@ -50,14 +51,14 @@ const sendInvitation = async () => {
 				<form class="form-container" enctype="multipart/form-data">
 					<div class="form-item">
 							<label for="exampleFormControlInput1">Member</label>
-							<select class="form-select " v-model="formState.member_id" >
-									<option v-for="assigner in users" :key="assigner.id" :value="assigner.first_name">
-										{{ assigner.first_name }}
+							<select class="form-select " v-model="formState.id" >
+									<option v-for="assigner in users" :key="assigner.id" :value="assigner.id">
+										{{ assigner.name }}
 									</option>
 							</select>
 					</div>
 
-					<div class="errtext" v-for="error in v$.member_id.$errors" :key="error.$uid">
+					<div class="errtext" v-for="error in v$.id.$errors" :key="error.$uid">
 							{{ error.$message }}
 					</div>
 
