@@ -15,7 +15,7 @@ const openMenu = () => {
 onMounted(()=>{
 	emitter.on("user-role-data", res => {
 		userRoleReceived = res[0].name;
-		console.log(userRoleReceived);
+		//console.log(userRoleReceived);
 		if (userRoleReceived === 'ROOT' || userRoleReceived ==="ADMIN"){
 			adminVisible.value = !adminVisible.value
 			memberVisible.value = !memberVisible.value
@@ -24,13 +24,21 @@ onMounted(()=>{
 		}
     });
 
-	emitter.on("user-login-data", res => {
-		userLoginDataReceived = res;
-		console.log('loigin',userLoginDataReceived);
-    });
+		getUserLoginData()
+		emitter.emit("add-task-user-data", userLoginDataReceived)
 })
 
+const pushdata = async () => {
+	console.log("this run user-data", userLoginDataReceived)
+	emitter.emit("add-task-user-data", userLoginDataReceived)
+}
 
+const getUserLoginData = () => {
+	emitter.on("user-login-data", res => {
+		userLoginDataReceived = res;
+		console.log('loiginz',userLoginDataReceived);
+   });
+}
 </script>
 
 <template>
@@ -57,7 +65,7 @@ onMounted(()=>{
 					</li>
 					<li v-show="memberVisible === true" class="nav-item">
 							<a class="nav-link" href="#">
-									<router-link to="/add-todo">Add task</router-link>
+									<router-link @click="pushdata" to="/add-todo">Add task</router-link>
 							</a>
 					</li>
 					<li v-show="memberVisible === true" class="nav-item">
