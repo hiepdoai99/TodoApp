@@ -134,8 +134,9 @@ router.beforeEach(async (to, from, next) => {
     const isProtectedRoute = to.name !== "login";
     const register = to.name !== "register";
     const error_mail = to.name !== "error-mail";
+    const very_mail = to.name !== "verify-mail";
 
-    if ( error_mail && register && isProtectedRoute && !token) {
+    if (very_mail && error_mail && register && isProtectedRoute && !token) {
         next({
             name: "login",
         });
