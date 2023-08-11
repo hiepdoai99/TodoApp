@@ -22,7 +22,7 @@ onMounted(() => {
             <i class="checkmark">✓</i>
         </div>
         <h1>Success</h1>
-        <p>You have successfully verified your email<br/> </p>
+        <p>You have successfully joined the Team<br/> </p>
     </div>
     </body>
 
