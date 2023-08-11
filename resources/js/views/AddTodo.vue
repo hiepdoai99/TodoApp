@@ -34,7 +34,7 @@ const getUserLoginData = () => {
 		loginDaTaReceived = res;
 		console.log('received at addtodo',loginDaTaReceived);
    });
-	 
+
 }
 const getUser = () => {
     $axios.get('/user').then((data) => {
@@ -117,7 +117,7 @@ const onImageChange = (e) => {
 	} else {
 		createImage(files[0]);
 	}
-			
+
 }
 
 const uploadImage = () => {
@@ -193,8 +193,8 @@ const edit = () => {
             <div class="form-item">
                 <label for="exampleFormControlInput1">Assigner</label>
                 <select class="form-select " v-model="formState.assigner_id" >
-                    <option v-for="assigner in users" :key="assigner.id" :value="assigner.first_name">
-													{{ assigner.first_name }}
+                    <option v-for="assigner in users" :key="assigner.id" :value="assigner.id">
+													{{ assigner.name }}
                     </option>
                 </select>
             </div>
