@@ -37,7 +37,7 @@ const getUserLoginData = () => {
 
 }
 const getUser = () => {
-    $axios.get('/user').then((data) => {
+    $axios.get('/sameTeam').then((data) => {
         users.value = data.data.data
 				console.log('all user data', users.value);
     })
