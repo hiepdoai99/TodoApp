@@ -132,8 +132,9 @@ router.beforeEach(async (to, from, next) => {
     // if no token then redirect to login
     const token = localStorage.getItem('token');
     const isProtectedRoute = to.name !== "login";
+    const register = to.name !== "register";
 
-    if (isProtectedRoute && !token) {
+    if (register && isProtectedRoute && !token) {
         next({
             name: "login",
         });
