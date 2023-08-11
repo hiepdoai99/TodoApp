@@ -44,7 +44,7 @@ const handleRegister = async ()=> {
     })
         .then(
         (data) => {
-            router.push('/')
+            router.push('/login')
         }
     )
 	}
