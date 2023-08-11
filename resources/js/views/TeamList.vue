@@ -7,7 +7,8 @@ import VPagination from "@hennge/vue3-pagination"
 import "@hennge/vue3-pagination/dist/vue3-pagination.css"
 
 import BaseModal from '../components/BaseModal.vue'
-import ViewModal from '../components/ViewModal.vue'
+import InviteMemberModal from '../components/InviteMemberModal.vue'
+import ViewTeamModal from '../components/ViewTeamModal.vue'
 const router = useRouter()
 const route = useRoute()
 import {
@@ -15,7 +16,8 @@ import {
     ref
 } from "vue";
 
-const modalActive = ref(null);
+const viewDetailModal = ref(null);
+const inviteMemberModal = ref(null)
 let teamdetail = ref()
 const teams = ref([])
 const currentPage = ref(1);
@@ -25,8 +27,11 @@ onMounted(() => {
 })
 
 const toggleModal = () => {
-  modalActive.value = !modalActive.value;
+  viewDetailModal.value = !viewDetailModal.value;
+};
 
+const toggleInviteModal = () => {
+  inviteMemberModal.value = !inviteMemberModal.value;
 };
 
 const onClickHandler = (page) => {
@@ -45,8 +50,9 @@ const showDetail = (id) => {
 };
 
 const getData = () => {
-    $axios.get('/team').then((data) => {
+    $axios.get('/team?include=user,project,status,assignee&per_page=1&page=$1').then((data) => {
         teams.value = data.data.data
+				console.log('data return', teams.value)
     })
 }
 const deleteobj = (teamId) => {
@@ -64,9 +70,20 @@ const deleteobj = (teamId) => {
             <h1 class="form-header">Team manager</h1>
             <div class="table-search-and-add-box">
 
-                <button class="addteam-btn">
-                    <a href="/add-team">Add Team</a>
-                </button>
+            <div class="main-btn-container">
+							<div class="main-btn-box">
+								<button class="main-btn">
+                	<a class="linktext" href="/add-team">Add Team</a>
+              	</button>
+							</div>
+
+							<div class="main-btn-box">
+								<button  @click="toggleInviteModal()" class="main-btn">
+                   Invite new member
+              	</button>
+							</div>
+
+						</div>
             </div>
         </section>
 
@@ -106,10 +123,17 @@ const deleteobj = (teamId) => {
             </table>
         </section>
 				<BaseModal
-						:modalActive="modalActive"
+						:modalActive="viewDetailModal"
 						@close-modal="toggleModal"
 					>		
-						<ViewModal :taskdetail="teamdetail"/>
+						<ViewTeamModal :taskdetail="teamdetail"/>
+					</BaseModal>
+
+					<BaseModal
+						:modalActive="inviteMemberModal"
+						@close-modal="toggleInviteModal"
+					>		
+						<InviteMemberModal/>
 					</BaseModal>
 
         <div class="pagination-body">
@@ -126,7 +150,7 @@ const deleteobj = (teamId) => {
 </template>
 
 
-<style scoped>
+<style lang="scss" scoped>
 
 main {
     margin-top: 5%;
@@ -181,12 +205,12 @@ body {
 
 .task-setting {
     width: 10vh;
+		span {
+			margin-right: 5px;
+			cursor: pointer;
+		}
 }
 
-.task-setting span {
-    margin-right: 5px;
-    cursor: pointer;
-}
 
 .table-search-and-add-box {
     padding: 20px;
@@ -204,22 +228,33 @@ body {
     color: red;
 }
 
-.addteam-btn {
-    background-color: #1D5D9B;
-    padding: 10px 0px 10px 0px;
-    margin-top: 1%;
-    height: 100%;
-    width: 25%;
-    border-radius: 20px;
-    border: none;
-    color: white;
-    text-align: center;
+
+.main-btn-container{
+	width: 100%;
+	display: flex;
+	.main-btn-box{
+		width: 50%;
+		text-align: center;
+		margin: 1% 10px;
+			.main-btn {
+				background-color: #1D5D9B;
+				padding: 10px 0px 10px 0px;
+				height: 100%;
+				width: 100%;
+				border-radius: 20px;
+				border: none;
+				color: white;
+				text-align: center;
+			.linktext {
+				color: white;
+				text-decoration: none;
+			}
+		}
+	}
+
+	
 }
 
-.addteam-btn a {
-    color: white;
-    text-decoration: none;
-}
 
 .table-header .input-group:hover {
     background-color: #FDFDC9;
