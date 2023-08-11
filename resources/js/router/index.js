@@ -12,6 +12,7 @@ import ErrorMail from "../views/ErrorMail.vue"
 import AddTeam from "../views/AddTeam.vue"
 import AddProject from "../views/AddProject.vue"
 import Test from "../views/Test.vue"
+import Invite from "../views/ConfirmInviteTeam.vue"
 
 import { createRouter, createWebHistory } from "vue-router";
 const routerCustom = [{
@@ -98,6 +99,11 @@ const routerCustom = [{
         path:'/test',
         name: 'test',
         component: Test
+    },
+    {
+        path:'/verify-invite/:slug',
+        name: 'verify-invite',
+        component: Invite
     },
 
 
