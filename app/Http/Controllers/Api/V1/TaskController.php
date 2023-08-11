@@ -47,8 +47,8 @@ class TaskController extends Controller
         $user = auth()->user();
         $id = $request->assigner_id;
         $asn = User::find($id);
-
-        if ($user->team_id = $asn->team_id){
+        $team_id = $asn->team_id ?? null;
+        if ($user->team_id = $team_id){
             $task = Task::create($request->all());
 
             $image = $request->image ?? null;
