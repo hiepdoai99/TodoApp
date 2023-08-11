@@ -34,7 +34,8 @@ class AuthController extends Controller
                 $message->subject('Email Verification Mail');
             });
             return response()->json([
-                'message' => 'Unconfirmed email. Please verify your email'
+                'message' => 'Unconfirmed email. Please verify your email',
+                'status'=> 201,
             ]);
         }
 

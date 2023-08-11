@@ -129,12 +129,13 @@ router.beforeEach(async (to, from, next) => {
     const appName = "TodoList";
     document.title = to.meta?.title ? to.meta.title + " - " + appName : appName;
 
-    // if no token then redirect to login
+
     const token = localStorage.getItem('token');
     const isProtectedRoute = to.name !== "login";
     const register = to.name !== "register";
+    const error_mail = to.name !== "error-mail";
 
-    if (register && isProtectedRoute && !token) {
+    if ( error_mail && register && isProtectedRoute && !token) {
         next({
             name: "login",
         });
