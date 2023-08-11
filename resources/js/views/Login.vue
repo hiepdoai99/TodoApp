@@ -26,6 +26,7 @@ const handleLogin = ()=> {
         email:formState.email,
         password:formState.password})
         .then((data) => {
+            if (data.data.access_token){
             localStorage.setItem('token',data.data.access_token)
             localStorage.setItem('user',JSON.stringify(data.data.user) )
             userdata = data.data.user
@@ -35,20 +36,19 @@ const handleLogin = ()=> {
 							userrole = data.data.data.roles
 							emitter.emit("user-role-data", userrole)
 						})
-            if (data.data.access_token){
                 router.push('/')
                 console.log('dang nhap thanh cong')
-            }else {
+            }if(data.data.status) {
+                console.log(data.data.status.value)
                 router.push('/error-mail')
             }
-
         }).catch((err) => {
         if(err.response.status == 422) {
             error.value = true
         }
     });
 
-}	
+}
 </script>
 
 <template>
