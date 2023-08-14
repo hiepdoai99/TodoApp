@@ -9,22 +9,34 @@ use App\Models\UserVerify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Mail;
 
 class InviteTeamController extends Controller
 {
     public function invite(Request $request)
     {
         $a = Auth::user();
+        $team = $a->team_id ?? null;
 
         if ($a->team_id){
-            $token = Str::random(10);
-            $user = User::find($request->id);
-            UserVerify::create([
-                'user_id' => $user->id,
-                'token' => $token
-            ]);
-            SendMailInvite::dispatch($user,$token);
+            if ($request->id){
+                $token = Str::random(10);
+                $user = User::find($request->id);
+                UserVerify::create([
+                    'user_id' => $user->id,
+                    'token' => $token
+                ]);
+                SendMailInvite::dispatch($user,$token);
+            }else{
+                $email = $request->email;
+
+                Mail::send('emails.inviteRegister',['email'=>$email,'team'=>$team], function ($message) use ($email) {
+                    $message->to($email);
+                    $message->subject('Email Invite Team');
+                });
+            }
         }
+
     }
 
     public function verify($token)

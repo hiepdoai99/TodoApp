@@ -4,6 +4,10 @@ import { computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
+const mail = route.params.slug
+const team_id = route.params.id
+console.log(mail);
+console.log(team_id);
 import userVuelidate from '@vuelidate/core'
 import {required, minLength, email, sameAs} from '@vuelidate/validators'
 import {

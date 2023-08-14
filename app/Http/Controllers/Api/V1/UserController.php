@@ -30,7 +30,7 @@ class UserController extends Controller
     {
         $user = QueryBuilder::for(User::class)
             ->allowedIncludes(['roles', 'permissions'])
-            ->allowedFilters('name')
+            ->allowedFilters('name','email')
             ->paginate($request->per_page ?? 10)
             ->appends($request->all());
         return $this->respondSuccess(

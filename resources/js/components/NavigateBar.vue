@@ -2,6 +2,11 @@
 
 import { ref,onMounted } from "vue";
 import {emitter} from '../utils/eventBus';
+import {$axios} from "../utils/request.js";
+import {useRouter, useRoute} from 'vue-router'
+const router = useRouter()
+const route = useRoute()
+
 
 let isOpen = ref(false);
 let adminVisible = ref(false);
@@ -39,6 +44,15 @@ const getUserLoginData = () => {
 		console.log('loiginz',userLoginDataReceived);
    });
 }
+const logout = () =>{
+    const token = localStorage.getItem('token');
+    if (token) {
+        $axios.post('/logout')
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        router.push('/login')
+    }
+}
 </script>
 
 <template>
@@ -55,7 +69,7 @@ const getUserLoginData = () => {
 						<a class="nav-link" href="#">
 								<span>
 									WELCOME, {{ userLoginDataReceived.first_name }}
-								</span>			
+								</span>
 						</a>
 					</li>
 					<li class="nav-item">
@@ -94,13 +108,18 @@ const getUserLoginData = () => {
 									<router-link to="/register">Register</router-link>
 							</a>
 					</li>
+                    <li class="nav-item">
+							<a class="nav-link" href="/logout" @click="logout">
+									Logout
+							</a>
+					</li>
 					<li v-show="adminVisible === true" class="nav-item">
 							<a class="nav-link" href="#">
 									<router-link to="/admin">Admin</router-link>
 							</a>
 					</li>
 
-					
+
 			</ul>
 			</div>
 		</div>

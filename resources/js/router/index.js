@@ -13,6 +13,7 @@ import AddTeam from "../views/AddTeam.vue"
 import AddProject from "../views/AddProject.vue"
 import Test from "../views/Test.vue"
 import Invite from "../views/ConfirmInviteTeam.vue"
+import Logout from "../views/Logout.vue"
 
 import { createRouter, createWebHistory } from "vue-router";
 const routerCustom = [{
@@ -26,9 +27,19 @@ const routerCustom = [{
         component: Register
     },
     {
+        path:'/register/:id/:slug',
+        name: 'invite-register',
+        component: Register
+    },
+    {
         path: '/',
         name: 'index',
         component: Index
+    },
+    {
+        path: '/logout',
+        name: 'logout',
+        component: Logout
     },
     {
         path:'/todo',
