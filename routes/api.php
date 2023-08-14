@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->name('api.v1.')->group(function () {
     Route::get('/verify-email/{token}', [RegisterController::class, 'verifyAccount'])->name('verification.verify');
     Route::post('/login', [\App\Http\Controllers\Api\Auth\AuthController::class, 'login'])->name('login');
+    Route::post('/logout', [\App\Http\Controllers\Api\Auth\AuthController::class, 'logout'])->name('logout');
     Route::post('/register', [\App\Http\Controllers\Api\Auth\RegisterController::class, 'register']);
     Route::get('/send-mail', [App\Http\Controllers\MailController::class, 'index']);
 
@@ -24,6 +25,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     Route::group(['middleware' => ['auth:api']], function ($router) {
 
         Route::apiResource('permissions', \App\Http\Controllers\Api\V1\PermissionController::class)->only('index');
+        Route::post('permissions/refresh', [\App\Http\Controllers\Api\V1\PermissionController::class, 'refresh'])->name('permissions.refresh');
 
         Route::post('/verify-token', [\App\Http\Controllers\Api\Auth\AuthController::class, 'verifyToken']);
 
@@ -33,6 +35,8 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::apiResource('project', \App\Http\Controllers\Api\V1\ProjectController::class);
         Route::apiResource('task', \App\Http\Controllers\Api\V1\TaskController::class)->middleware( 'is_verify_email');;
         Route::apiResource('comments', \App\Http\Controllers\Api\V1\CommentController::class);
+        Route::apiResource('roles', \App\Http\Controllers\Api\V1\RoleController::class);
+
 
         Route::post('/image', [\App\Http\Controllers\Api\V1\ImageController::class, 'store']);
 
