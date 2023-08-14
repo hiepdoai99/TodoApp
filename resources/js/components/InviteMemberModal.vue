@@ -6,8 +6,9 @@ import {required} from '@vuelidate/validators'
 
 const router = useRouter()
 const route = useRoute()
-import {onMounted,ref, reactive} from "vue";
+import {onMounted, ref, reactive, watch} from "vue";
 const users = ref([])
+
 
 onMounted(() => {
     getNoTeamMember()
@@ -42,7 +43,6 @@ const sendInvitation = async () => {
     }
 }
 
-
 </script>
 
 <template>
@@ -57,6 +57,7 @@ const sendInvitation = async () => {
 									</option>
 							</select>
 					</div>
+
 
 					<div class="errtext" v-for="error in v$.id.$errors" :key="error.$uid">
 							{{ error.$message }}
