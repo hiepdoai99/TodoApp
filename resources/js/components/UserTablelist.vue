@@ -9,7 +9,7 @@ const router = useRouter()
 const route = useRoute()
 import {
     onMounted,
-    ref, watch
+    ref
 } from "vue";
 
 const users = ref([])

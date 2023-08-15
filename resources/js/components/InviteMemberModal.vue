@@ -6,7 +6,7 @@ import {required} from '@vuelidate/validators'
 
 const router = useRouter()
 const route = useRoute()
-import {onMounted, ref, reactive, watch} from "vue";
+import {onMounted, ref, reactive} from "vue";
 const users = ref([])
 
 
