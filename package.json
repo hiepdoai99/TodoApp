@@ -26,6 +26,7 @@
     "vue-awesome-paginate": "^1.1.46",
     "vue-axios": "^3.5.2",
     "vue-router": "^4.2.4",
+    "vuetify": "^3.3.13",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

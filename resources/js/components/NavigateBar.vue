@@ -15,6 +15,7 @@ const trackRole = computed(() => {
 let isOpen = ref(false);
 let adminVisible = ref(false);
 let memberVisible = ref(false);
+let loginVisible = ref(true);
 const openMenu = () => {
   isOpen.value = !isOpen.value;
 };
@@ -28,8 +29,10 @@ watch(trackRole, (newRole)=>{
 		if (newRole === 'ROOT' || newRole ==="ADMIN"){
 		adminVisible.value = !adminVisible.value
 		memberVisible.value = !memberVisible.value
+		loginVisible.value = !loginVisible.value
 		} else if (newRole === 'MEMBER') {
 			memberVisible.value = !memberVisible.value
+			loginVisible.value = !loginVisible.value
 		}
 })
 
@@ -86,7 +89,7 @@ const logout = () =>{
 									<router-link to="/projects">Project</router-link>
 							</a>
 					</li>
-					<li class="nav-item">
+					<li v-show="loginVisible === true" class="nav-item">
 							<a class="nav-link" href="#">
 									<router-link to="/login">Login</router-link>
 							</a>
@@ -97,7 +100,7 @@ const logout = () =>{
 									<router-link to="/register">Register</router-link>
 							</a>
 					</li>
-                    <li class="nav-item">
+          <li class="nav-item">
 							<a class="nav-link" href="/logout" @click="logout">
 									Logout
 							</a>

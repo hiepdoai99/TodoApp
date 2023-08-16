@@ -45,7 +45,9 @@ const deleteobj = (projectId) => {
             <h1 class="form-header">Project manager</h1>
             <div class="table-search-and-add-box">
                 <button class="addtask-btn">
-                    <a href="/add-project">Add project</a>
+                    <a href="#">
+											<router-link to="/add-project"> Add project</router-link>
+										</a>
                 </button>
             </div>
         </section>

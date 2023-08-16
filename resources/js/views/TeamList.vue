@@ -72,8 +72,10 @@ const deleteobj = (teamId) => {
 
             <div class="main-btn-container">
 							<div class="main-btn-box">
-								<button class="main-btn">
-                	<a class="linktext" href="/add-team">Add Team</a>
+								<button @click="testRoleStatus" class="main-btn">
+                	<a class="linktext" href="#">
+										<router-link class="linktext" to="/add-team">Add Team</router-link>
+									</a>
               	</button>
 							</div>
 
