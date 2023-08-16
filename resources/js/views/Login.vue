@@ -2,19 +2,16 @@
 import {$axios} from '../utils/request'
 import { useRouter, useRoute } from 'vue-router'
 import {emitter} from '../utils/eventBus';
+import store from '../store/store'
 const router = useRouter()
 const route = useRoute()
 import {
     ref,reactive
 } from "vue";
 
-const formState = reactive({
-    email:'',
-    password:''
-})
+const formState = reactive(store.state.registerFormState)
 let error = ref(false);
-let userdata = ref({});
-let userrole = ref();
+let userdata = ref();
 
 const handleLogin = ()=> {
     const token = localStorage.getItem('token')
@@ -30,12 +27,13 @@ const handleLogin = ()=> {
             localStorage.setItem('token',data.data.access_token)
             localStorage.setItem('user',JSON.stringify(data.data.user) )
             userdata = data.data.user
-						emitter.emit("user-login-data", userdata)
+            store.state.userLoginData = data.data.user
 
-						$axios.get(`/user/${userdata.id}?include=roles`).then((data) => {
-							userrole = data.data.data.roles
-							emitter.emit("user-role-data", userrole)
-						})
+            $axios.get(`/user/${userdata.id}?include=roles`).then((data) => {
+                store.state.userLoginRole = data.data.data.roles[0].name
+                //console.log('login page role',store.state.userLoginRole)
+                // console.log('login page userdata',store.state.userLoginData)
+            })
                 router.push('/')
                 console.log('dang nhap thanh cong')
             }if(data.data.status) {

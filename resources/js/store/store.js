@@ -8,7 +8,17 @@ const data = createStore({
     state() {
         return {
             count: 100,
-            team : null
+            team : null,
+            registerFormState:{
+                email:'',
+                password:''
+            },
+            userLoginData:{
+
+            },
+            userLoginRole:{
+
+            },
         }
     },
 
