@@ -70,8 +70,11 @@ const sendInvitation = async () => {
 
 				<div class="autocomplete-item">
 					<v-autocomplete
+						:model-value="formState.id"
 						label="Autocomplete"
-						:items="usersNameOnly"
+						item-title="name"
+						item-value="id"
+						:items="usersArrayFormData"
 					></v-autocomplete>
 				</div>
 
@@ -80,6 +83,8 @@ const sendInvitation = async () => {
 					</div>
 				</form>
     </div>
+
+		
 </template>
 
 
