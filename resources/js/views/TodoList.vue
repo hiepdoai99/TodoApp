@@ -96,7 +96,9 @@ watch(input,
 									</div>
 
 									<button class="addtask-btn">
-											<a href="/add-todo">Add Todo</a>
+											<a href="/#">
+												<router-link to="/add-todo">Add Todo</router-link>
+											</a>
 									</button>
 							</div>
 					</section>
