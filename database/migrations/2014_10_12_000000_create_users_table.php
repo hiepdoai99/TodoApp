@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('user_type', 50)->nullable();
             $table->boolean('status')->nullable();
-            $table->foreignId('team_id')->nullable();
+//            $table->foreignId('team_id')->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

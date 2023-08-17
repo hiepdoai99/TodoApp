@@ -6,6 +6,7 @@ use App\Actions\RegisterAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
+use App\Models\UserTeam;
 use App\Models\UserVerify;
 use Illuminate\Http\RedirectResponse;
 
@@ -13,9 +14,17 @@ class RegisterController extends Controller
 {
     public function register(RegisterRequest $request)
     {
+        $team = $request->team_id ?? null;
         if ($user = app(RegisterAction::class)->execute($request->all())) {
+            if ($request->team_id){
+                UserTeam::create([
+                    'team_id'=>$team,
+                    'user_id'=>$user->id
+                ]);
+            }
             return $this->respondCreated(new UserResource($user));
         }
+
         return $this->respondError('Tao moi user that bai');
     }
 
