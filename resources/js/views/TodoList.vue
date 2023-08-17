@@ -6,13 +6,17 @@ import ViewModal from '../components/ViewModal.vue'
 
 import VPagination from "@hennge/vue3-pagination"
 import "@hennge/vue3-pagination/dist/vue3-pagination.css"
-const router = useRouter()
-const route = useRoute()
+import store from '../store/store'
 import {
     onMounted,
     ref, watch
 } from "vue";
 
+const router = useRouter()
+const route = useRoute()
+
+let usersPermissionData = ref([])
+let usersPermissionDataFiltered = ref([])
 const modalActive = ref(null);
 let taskdetail = ref()
 const todoList = ref([])
@@ -47,6 +51,11 @@ const getData = () => {
     $axios.get('/task?include=user,project,status,assignee&per_page=5&page=1').then((data) => {
         todoList.value = data.data.data
     })
+		usersPermissionData =JSON.parse(JSON.stringify(store.state.userLoginPermission))
+		usersPermissionDataFiltered = usersPermissionData.map(e => {
+			return e.name
+		})
+		console.log('permission filtered:', usersPermissionDataFiltered)
 }
 const deleteobj = (todoId) => {
     $axios.delete('/task/' + todoId).then(res => {
@@ -64,8 +73,8 @@ const statusStyleSet = (statusname) =>{
 	} else {
 		return 'status cancelled'
 	}
-
 }
+
 
 
 watch(input,
@@ -100,6 +109,7 @@ watch(input,
 												<router-link to="/add-todo">Add Todo</router-link>
 											</a>
 									</button>
+
 							</div>
 					</section>
 

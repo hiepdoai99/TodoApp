@@ -16,6 +16,9 @@ const data = createStore({
             userLoginData:{
 
             },
+            userLoginPermission:{
+
+            },
             userLoginRole:{
 
             },

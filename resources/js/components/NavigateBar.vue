@@ -1,7 +1,6 @@
 <script setup>
 
-import { ref,watch,computed, onMounted } from "vue";
-import {emitter} from '../utils/eventBus';
+import { ref,watch,computed } from "vue";
 import {$axios} from "../utils/request.js";
 import {useRouter, useRoute} from 'vue-router';
 import store from '../store/store'
@@ -19,12 +18,9 @@ let loginVisible = ref(true);
 const openMenu = () => {
   isOpen.value = !isOpen.value;
 };
-onMounted(()=>{
-	console.log('role check on mount:', store.state.userLoginRole)
-})
 
 watch(trackRole, (newRole)=>{
-		console.log('role check on watch:', store.state.userLoginRole)
+		//console.log('role check on watch:', store.state.userLoginRole)
 		//console.log('login data check: ', store.state.userLoginData)
 		if (newRole === 'ROOT' || newRole ==="ADMIN"){
 		adminVisible.value = !adminVisible.value
