@@ -29,7 +29,7 @@ class UserController extends Controller
     public function index(UserRequest $request)
     {
         $user = QueryBuilder::for(User::class)
-            ->allowedIncludes(['roles', 'permissions'])
+            ->allowedIncludes(['roles', 'permissions','teams'])
             ->allowedFilters('name','email')
             ->paginate($request->per_page ?? 10)
             ->appends($request->all());

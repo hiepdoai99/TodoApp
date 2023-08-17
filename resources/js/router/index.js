@@ -112,7 +112,7 @@ const routerCustom = [{
         component: Test
     },
     {
-        path:'/verify-invite/:slug',
+        path:'/verify-invite/:id/:slug',
         name: 'verify-invite',
         component: Invite
     },

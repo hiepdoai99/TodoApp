@@ -20,4 +20,8 @@ class Team extends Model
             'name' => ['sometimes', 'required', 'string']
         ];
     }
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_team');
+    }
 }

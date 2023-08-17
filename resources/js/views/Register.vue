@@ -6,8 +6,6 @@ const router = useRouter()
 const route = useRoute()
 const mail = route.params.slug
 const team_id = route.params.id
-console.log(mail);
-console.log(team_id);
 import userVuelidate from '@vuelidate/core'
 import {required, minLength, email, sameAs} from '@vuelidate/validators'
 import {
@@ -16,7 +14,7 @@ import {
 const formState = reactive({
   first_name:'',
   last_name:'',
-  email:'',
+  email: mail ?? '',
   password:'',
   password_confirmation:''
 })
@@ -45,6 +43,7 @@ const handleRegister = async ()=> {
         password_confirmation:formState.password_confirmation,
         first_name:formState.first_name,
         last_name:formState.last_name,
+        team_id: team_id,
     })
         .then(
         (data) => {
@@ -81,7 +80,9 @@ const handleRegister = async ()=> {
 
         <div class="form-item">
           <label>Email</label>
-          <input v-model="formState.email" type="email" class="form-control" name="email" placeholder="Name@example.com">
+
+          <input v-if="mail" disabled v-model="formState.email" type="email" class="form-control" name="email" placeholder="Name@example.com">
+          <input v-else v-model="formState.email" type="email" class="form-control" name="email" placeholder="Name@example.com">
         </div>
 
         <div class="errtext" v-for="error in v$.email.$errors" :key="error.$uid">

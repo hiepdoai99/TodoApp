@@ -7,6 +7,7 @@ use App\Http\Requests\TeamRequest;
 use App\Http\Resources\TeamCollection;
 use App\Http\Resources\TeamResource;
 use App\Models\Team;
+use App\Models\UserTeam;
 use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -35,11 +36,13 @@ class TeamController extends Controller
         $team = Team::create($request->validated());
         $user = Auth::user();
         if($user){
-            $user->team_id = $team->id;
-            $user->save();
+            UserTeam::create([
+                'team_id'=>$team->id,
+                'user_id'=>$user->id
+            ]);
         }
         return $this->respondCreated(
-            new TeamResource(Team::create($request->validated()))
+            new TeamResource($team)
         );
     }
 

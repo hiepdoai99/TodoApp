@@ -16,18 +16,21 @@ class SendMailInvite implements ShouldQueue
 
     private $user;
     private $token;
+    private $team;
 
-    public function __construct($user, $token)
+    public function __construct($user, $token,$team)
     {
         $this->user = $user;
         $this->token = $token;
+        $this->team = $team;
     }
 
 
     public function handle()
     {
         $u = $this->user;
-        Mail::send('emails.invite', ['token' => $this->token, 'user' => $this->user], function ($message) use ($u) {
+        $team = $this->team;
+        Mail::send('emails.invite', ['token' => $this->token, 'user' => $this->user,'team'=>$team], function ($message) use ($u) {
             $message->to($u->email);
             $message->subject('Email Invite Team');
         });

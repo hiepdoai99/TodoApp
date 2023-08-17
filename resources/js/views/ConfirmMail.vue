@@ -9,7 +9,7 @@ const token = route.params.slug
 
 onMounted(() => {
     if (token) {
-        $axios.get('/verify-email/'+token)
+        $axios.get('/verify-email/'+ token )
     }
 })
 

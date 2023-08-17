@@ -100,6 +100,14 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Task::class, 'id');
     }
+//    public function userTeam()
+//    {
+//        return $this->hasManyThrough(User::class, Team::class);
+//    }
 
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'user_team');
+    }
 
 }
