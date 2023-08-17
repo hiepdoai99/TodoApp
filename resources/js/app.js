@@ -20,11 +20,23 @@ import {
 
 /* add icons to the library */
 library.add(faUserSecret, faEye, faPenToSquare, faDeleteLeft, faBars);
+// Vuetify
+import "vuetify/styles";
+import { createVuetify } from "vuetify";
+import * as components from "vuetify/components";
+import * as directives from "vuetify/directives";
 
+const vuetify = createVuetify({
+    components,
+    directives,
+});
 import router from "./router";
 
 import { createApp } from "vue";
 import App from "./App.vue";
 const app = createApp(App);
 
-app.use(router).component("font-awesome-icon", FontAwesomeIcon).mount("#app");
+app.use(router)
+    .use(vuetify)
+    .component("font-awesome-icon", FontAwesomeIcon)
+    .mount("#app");

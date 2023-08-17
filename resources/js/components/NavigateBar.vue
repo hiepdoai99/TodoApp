@@ -1,49 +1,37 @@
 <script setup>
 
-import { ref,onMounted } from "vue";
-import {emitter} from '../utils/eventBus';
+import { ref,watch,computed } from "vue";
 import {$axios} from "../utils/request.js";
-import {useRouter, useRoute} from 'vue-router'
+import {useRouter, useRoute} from 'vue-router';
+import store from '../store/store'
 const router = useRouter()
 const route = useRoute()
 
+const trackRole = computed(() => {
+  return store.state.userLoginRole
+})
 
 let isOpen = ref(false);
 let adminVisible = ref(false);
 let memberVisible = ref(false);
-let userLoginDataReceived = ref('');
-let userRoleReceived = ref('');
+let loginVisible = ref(true);
 const openMenu = () => {
   isOpen.value = !isOpen.value;
 };
 
-onMounted(()=>{
-	emitter.on("user-role-data", res => {
-		userRoleReceived = res[0].name;
-		//console.log(userRoleReceived);
-		if (userRoleReceived === 'ROOT' || userRoleReceived ==="ADMIN"){
-			adminVisible.value = !adminVisible.value
+watch(trackRole, (newRole)=>{
+		//console.log('role check on watch:', store.state.userLoginRole)
+		//console.log('login data check: ', store.state.userLoginData)
+		if (newRole === 'ROOT' || newRole ==="ADMIN"){
+		adminVisible.value = !adminVisible.value
+		memberVisible.value = !memberVisible.value
+		loginVisible.value = !loginVisible.value
+		} else if (newRole === 'MEMBER') {
 			memberVisible.value = !memberVisible.value
-		} else if (userRoleReceived === 'MEMBER') {
-			memberVisible.value = !memberVisible.value
+			loginVisible.value = !loginVisible.value
 		}
-    });
-
-		getUserLoginData()
-		emitter.emit("add-task-user-data", userLoginDataReceived)
 })
 
-const pushdata = async () => {
-	console.log("this run user-data", userLoginDataReceived)
-	emitter.emit("add-task-user-data", userLoginDataReceived)
-}
-
-const getUserLoginData = () => {
-	emitter.on("user-login-data", res => {
-		userLoginDataReceived = res;
-		console.log('loiginz',userLoginDataReceived);
-   });
-}
 const logout = () =>{
     const token = localStorage.getItem('token');
     if (token) {
@@ -68,7 +56,7 @@ const logout = () =>{
 					<li v-show="memberVisible === true || adminVisible === true" class="nav-item">
 						<a class="nav-link" href="#">
 								<span>
-									WELCOME, {{ userLoginDataReceived.first_name }}
+									WELCOME, {{store.state.userLoginData.first_name}} {{store.state.userLoginData.last_name}}
 								</span>
 						</a>
 					</li>
@@ -79,7 +67,7 @@ const logout = () =>{
 					</li>
 					<li v-show="memberVisible === true" class="nav-item">
 							<a class="nav-link" href="#">
-									<router-link @click="pushdata" to="/add-todo">Add task</router-link>
+									<router-link to="/add-todo">Add task</router-link>
 							</a>
 					</li>
 					<li v-show="memberVisible === true" class="nav-item">
@@ -97,7 +85,7 @@ const logout = () =>{
 									<router-link to="/projects">Project</router-link>
 							</a>
 					</li>
-					<li class="nav-item">
+					<li v-show="loginVisible === true" class="nav-item">
 							<a class="nav-link" href="#">
 									<router-link to="/login">Login</router-link>
 							</a>
@@ -108,7 +96,7 @@ const logout = () =>{
 									<router-link to="/register">Register</router-link>
 							</a>
 					</li>
-                    <li class="nav-item">
+          <li class="nav-item">
 							<a class="nav-link" href="/logout" @click="logout">
 									Logout
 							</a>
@@ -118,7 +106,6 @@ const logout = () =>{
 									<router-link to="/admin">Admin</router-link>
 							</a>
 					</li>
-
 
 			</ul>
 			</div>

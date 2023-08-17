@@ -1,15 +1,18 @@
 <script setup>
 import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
-import {onMounted, watch} from "vue";
+import {onMounted} from "vue";
 
 const router = useRouter()
 const route = useRoute()
 const token = route.params.slug
+const team = route.params.id
+
 
 onMounted(() => {
     if (token) {
-        $axios.get('/verify-invite/'+token)
+        $axios.get(`verify-invite/${team}/${token}`
+        )
     }
 })
 

@@ -3,22 +3,39 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserTeamCollection;
 use App\Jobs\SendMailInvite;
 use App\Models\User;
+use App\Models\UserTeam;
 use App\Models\UserVerify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Mail;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class InviteTeamController extends Controller
 {
+
+    public function getTeam(Request $request){
+        $user = Auth::user();
+        $query = UserTeam::where('user_id', $user->id);
+        $team = QueryBuilder::for($query)
+            ->allowedIncludes(['teams'])
+            ->paginate($request->per_page ?? 10)
+            ->appends($request->all());
+        return $this->respondSuccess(
+            new UserTeamCollection($team)
+        );
+    }
+
     public function invite(Request $request)
     {
         $a = Auth::user();
-        $team = $a->team_id ?? null;
+        $team = $request->team_id;
 
-        if ($a->team_id){
+        if ($a->teams){
             if ($request->id){
                 $token = Str::random(10);
                 $user = User::find($request->id);
@@ -26,7 +43,7 @@ class InviteTeamController extends Controller
                     'user_id' => $user->id,
                     'token' => $token
                 ]);
-                SendMailInvite::dispatch($user,$token);
+                SendMailInvite::dispatch($user,$token,$team);
             }else{
                 $email = $request->email;
 
@@ -39,20 +56,19 @@ class InviteTeamController extends Controller
 
     }
 
-    public function verify($token)
+    public function verify($id,$token)
     {
-        $team = Auth::user();
+        $a = Auth::user();
         $verifyUser = UserVerify::with('user')->where('token', $token)->first();
         $message = 'verified fail';
         if (!is_null($verifyUser)) {
             $user = $verifyUser->user;
-            if (!$user->team_id) {
-                $verifyUser->user->team_id = $team->team_id;
-                $verifyUser->user->save();
+                UserTeam::create([
+                'team_id'=>$id,
+                'user_id'=>$user->id
+            ]);
                 $message = "success";
-            } else {
-                $message = "fail";
-            }
+
         }
         return response()->json ([
             'done' => isset($verifyUser),

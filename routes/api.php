@@ -45,7 +45,8 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::get('/noTeam',[\App\Http\Controllers\Api\V1\UserController::class, 'noTeam']);
         Route::get('/show',[\App\Http\Controllers\Api\V1\UserController::class, 'showUser']);
         Route::post('/invite', [\App\Http\Controllers\Api\V1\InviteTeamController::class, 'invite']);
-        Route::get('/verify-invite/{token}', [\App\Http\Controllers\Api\V1\InviteTeamController::class, 'verify']);
+        Route::get('/get-team', [\App\Http\Controllers\Api\V1\InviteTeamController::class, 'getTeam']);
+        Route::get('/verify-invite/{id}/{token}', [\App\Http\Controllers\Api\V1\InviteTeamController::class, 'verify']);
 
 
 //        Route::get('/user', [\App\Http\Controllers\Api\V1\UserController::class, 'index']);
