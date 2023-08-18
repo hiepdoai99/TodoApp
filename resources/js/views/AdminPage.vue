@@ -4,7 +4,7 @@ import TabWrapper from '../components/TabWrapper.vue';
 import StatisticComponent from '../components/StatisticComponent.vue';
 import UserTableList from '../components/UserTablelist.vue';
 import TeamTableList from '../components/TeamTableList.vue'
-import Roles from '../components/Permisstions.vue'
+import RolesList from '../components/Permisstions.vue'
 </script>
 
 <template>
@@ -14,6 +14,7 @@ import Roles from '../components/Permisstions.vue'
 
  <section class="tab-section">
 		<TabWrapper>
+
 			<TabSection title="Users table">
 				<UserTableList/>
 			</TabSection>
@@ -21,9 +22,11 @@ import Roles from '../components/Permisstions.vue'
 			<TabSection title="Teams table">
 				<TeamTableList/>
 			</TabSection>
+
             <TabSection title="Roles table">
-				<Roles/>
+				<RolesList/>
 			</TabSection>
+
 		</TabWrapper>
  </section>
 </template>

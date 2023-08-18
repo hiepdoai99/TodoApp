@@ -1,40 +1,47 @@
 <script setup>
 import {$axios} from '../utils/request'
-import {roleouter, roleoute} from 'vue-router'
+import {useRouter, useRoute} from 'vue-router'
+import BaseModal from '../components/BaseModal.vue'
+import ViewModal from '../components/ViewPermisstionModal.vue'
+
 
 import VPagination from "@hennge/vue3-pagination"
 import "@hennge/vue3-pagination/dist/vue3-pagination.css"
 
-const router = roleouter()
-const route = roleoute()
+const router = useRouter()
+const route = useRoute()
 import {
     onMounted,
     ref
 } from "vue";
 
 const roles = ref([])
+const permissions = ref([])
+let roleDetail = ref([])
+
 const input = ref('')
 const currentPage = ref(1);
+const modalActive = ref(null);
+
 
 onMounted(() => {
     getData()
 })
-const onClickHandler = (page) => {
-    $axios.get(`/role?include=roles,permissions&per_page=1&page=${page}`).then((data) => {
-        roles.value = data.data.data
+const editRole = (id)=>{
+    $axios.get('/roles/'+ id).then((data) => {
+        permissions.value = data.data.data.permissions
     })
-};
+}
+const toggleModal = () => {
+    modalActive.value = !modalActive.value;
 
+};
 const getData = () => {
     $axios.get('/roles').then((data) => {
         roles.value = data.data.data
     })
 }
-const deleteobj = (teamId) => {
-    $axios.delete('/role/' + teamId).then(res => {
-        getData()
-    })
-}
+
 
 </script>
 
@@ -69,10 +76,8 @@ const deleteobj = (teamId) => {
                         <div @click="" class="btn view-btn">
                             <font-awesome-icon :icon="['fas', 'eye']" />
                         </div>
-                        <div>
-                            <router-link :to="{name: 'edit', params: { id: role.id }}" class="btn edit-btn">
-                                <font-awesome-icon :icon="['fas', 'pen-to-square']" />
-                            </router-link>
+                        <div @click="toggleModal();editRole(role.id)" class="btn view-btn">
+                            <font-awesome-icon :icon="['fas', 'pen-to-square']" />
                         </div>
 
                     </div>
@@ -82,6 +87,12 @@ const deleteobj = (teamId) => {
             </tbody>
         </table>
     </section>
+    <BaseModal
+        :modalActive="modalActive"
+        @close-modal="toggleModal"
+    >
+        <ViewModal :permissions="permissions"/>
+    </BaseModal>
 
     <div class="pagination-body">
         <v-pagination
@@ -89,7 +100,7 @@ const deleteobj = (teamId) => {
             :pages="10"
             :range-size="1"
             active-color="#FDFDC9"
-            @update:modelValue="onClickHandler"
+
         />
     </div>
 </template>

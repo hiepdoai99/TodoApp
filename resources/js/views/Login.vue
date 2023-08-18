@@ -29,10 +29,11 @@ const handleLogin = ()=> {
             userdata = data.data.user
             store.state.userLoginData = data.data.user
 
-            $axios.get(`/user/${userdata.id}?include=roles`).then((data) => {
+            $axios.get(`/user/${userdata.id}?include=roles,permissions`).then((data) => {
                 store.state.userLoginRole = data.data.data.roles[0].name
+                store.state.userLoginPermission = data.data.data.permissions
                 //console.log('login page role',store.state.userLoginRole)
-                // console.log('login page userdata',store.state.userLoginData)
+                console.log('login page permission',store.state.userLoginPermission)
             })
                 router.push('/')
                 console.log('dang nhap thanh cong')
@@ -67,7 +68,7 @@ const handleLogin = ()=> {
             </div>
 
             <div class="form-item">
-                <button class="btn-main" @click="handleLogin" type="button">Submit</button>
+                <button class="btn-main" @click="handleLogin" type="button">Login</button>
             </div>
 
         </form>
