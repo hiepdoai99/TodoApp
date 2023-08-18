@@ -96,7 +96,10 @@ class UserController extends Controller
     public function sameTeam(Request $request)
     {
         $user= Auth::user();
-        $team = $user->team_id;
+        $team = $user->teams;
+        dd($team);
+
+
         $query = User::where('team_id', $team);
         $user = QueryBuilder::for($query)
             ->allowedIncludes(['roles', 'permissions'])

@@ -168,7 +168,7 @@ const edit = () => {
 
 <template>
     <div class="form-register">
-        <h3 class="form-header"> Add Todo</h3>
+        <h3 class="form-header"> Add Task</h3>
         <form class="form-container" enctype="multipart/form-data">
 
             <div class="form-item">
@@ -276,7 +276,7 @@ const edit = () => {
 
             <div class="form-item">
                 <button v-if="id" @click="edit" class="btn-main" type="button">Update</button>
-                <button  @click="addTodo();uploadImage()" class="btn-main" type="button">Submit</button>
+                <button  @click="addTodo();uploadImage()" class="btn-main" type="button">Create Task</button>
             </div>
         </form>
 
