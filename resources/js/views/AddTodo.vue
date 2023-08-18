@@ -19,6 +19,7 @@ let loginDaTaReceived = ref([]);
 let imgdata = ''
 
 const id = route.params.id ?? null;
+
 onMounted(() => {
     getUser()
     getStatus()
@@ -37,7 +38,7 @@ const getUserLoginData = () => {
 
 }
 const getUser = () => {
-    $axios.get('/sameTeam').then((data) => {
+    $axios.get('/user').then((data) => {
         users.value = data.data.data
 				console.log('all user data', users.value);
     })
