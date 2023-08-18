@@ -33,7 +33,7 @@ const showDetail = (id) => {
 	item.forEach(element => {
 		if (element.id === id){
 			taskdetail = element
-		} 
+		}
 	});
 };
 
@@ -157,13 +157,13 @@ watch(input,
 											</td>
 									</tr>
 									</tbody>
-									
+
 							</table>
 					</section>
 					<BaseModal
 						:modalActive="modalActive"
 						@close-modal="toggleModal"
-					>		
+					>
 						<ViewModal :taskdetail="taskdetail"/>
 					</BaseModal>
 
@@ -175,7 +175,7 @@ watch(input,
 							active-color="#FDFDC9"
 							@update:modelValue="onClickHandler"
 						/>
-					</div>		
+					</div>
 			</main>
     </body>
 </template>

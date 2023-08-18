@@ -68,7 +68,7 @@ const handleLogin = ()=> {
             </div>
 
             <div class="form-item">
-                <button class="btn-main" @click="handleLogin" type="button">Submit</button>
+                <button class="btn-main" @click="handleLogin" type="button">Login</button>
             </div>
 
         </form>
