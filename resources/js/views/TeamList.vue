@@ -35,7 +35,7 @@ const toggleInviteModal = () => {
 };
 
 const onClickHandler = (page) => {
-		$axios.get(`/team?include=user,project,status,assignee&per_page=1&page=${page}`).then((data) => {
+		$axios.get(`/team?include=user,project,status,assignee&per_page=3&page=${page}`).then((data) => {
 			teams.value = data.data.data
     })
   };
@@ -50,7 +50,7 @@ const showDetail = (id) => {
 };
 
 const getData = () => {
-    $axios.get('/team?include=user,project,status,assignee&per_page=1&page=$1').then((data) => {
+    $axios.get('/team?include=user,project,status,assignee&per_page=3&page=$1').then((data) => {
         teams.value = data.data.data
 				console.log('data return', teams.value)
     })
