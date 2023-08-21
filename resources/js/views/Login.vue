@@ -1,7 +1,6 @@
 <script setup>
 import {$axios} from '../utils/request'
 import { useRouter, useRoute } from 'vue-router'
-import {emitter} from '../utils/eventBus';
 import store from '../store/store'
 const router = useRouter()
 const route = useRoute()
@@ -31,9 +30,11 @@ const handleLogin = ()=> {
 
             $axios.get(`/user/${userdata.id}?include=roles,permissions`).then((data) => {
                 store.state.userLoginRole = data.data.data.roles[0].name
-                store.state.userLoginPermission = data.data.data.permissions
-                //console.log('login page role',store.state.userLoginRole)
-                console.log('login page permission',store.state.userLoginPermission)
+                store.state.userLoginPermission = JSON.parse(JSON.stringify(data.data.data.permissions))
+
+								store.state.userLoginPermission = store.state.userLoginPermission.map(e => {
+									return e.name
+								})
             })
                 router.push('/')
                 console.log('dang nhap thanh cong')

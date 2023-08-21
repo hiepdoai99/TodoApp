@@ -9,6 +9,7 @@ import "@hennge/vue3-pagination/dist/vue3-pagination.css"
 import BaseModal from '../components/BaseModal.vue'
 import InviteMemberModal from '../components/InviteMemberModal.vue'
 import ViewTeamModal from '../components/ViewTeamModal.vue'
+import store from '../store/store'
 const router = useRouter()
 const route = useRoute()
 import {
@@ -16,15 +17,64 @@ import {
     ref
 } from "vue";
 
+let usersPermissionDataFiltered = store.state.userLoginPermission
 const viewDetailModal = ref(null);
 const inviteMemberModal = ref(null)
 let teamdetail = ref()
+let canEdit = ref(false)
+let canAddTeam = ref(false)
 const teams = ref([])
 const currentPage = ref(1);
 
 onMounted(() => {
     getData()
+		editTeamRoleCheck()
+		addTeamRoleCheck()
 })
+
+const editTeamRoleCheck = () =>{
+	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+		return roles === 'TEAM-UPDATE'
+	})
+	if (requiredRole === 'TEAM-UPDATE'){
+		canEdit = true
+	} 
+}
+
+const addTeamRoleCheck = () =>{
+	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+		return roles === 'TEAM-CREATE'
+	})
+	if (requiredRole === 'TEAM-CREATE'){
+		canAddTeam = true
+	} 
+}
+
+
+const deleteTeamRoleCheck = (id) =>{
+	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+		return roles === 'TEAM-DELETE'
+	})
+
+	if (requiredRole === 'TEAM-DELETE'){
+		deleteobj(id)
+	} else {
+		toggleWarningModal()
+	}
+}
+
+const viewTeamRoleCheck =(id) =>{
+	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+		return roles === 'TEAM-READ'
+	})
+
+	if (requiredRole === 'TEAM-READ'){
+		toggleModal()
+		showDetail(id)
+	} else {
+		toggleWarningModal()
+	}
+}
 
 const toggleModal = () => {
   viewDetailModal.value = !viewDetailModal.value;
@@ -71,7 +121,7 @@ const deleteobj = (teamId) => {
             <div class="table-search-and-add-box">
 
             <div class="main-btn-container">
-							<div class="main-btn-box">
+							<div v-if="canAddTeam === true" class="main-btn-box">
 								<button @click="testRoleStatus" class="main-btn">
                 	<a class="linktext" href="#">
 										<router-link class="linktext" to="/add-team">Add Team</router-link>
@@ -105,16 +155,16 @@ const deleteobj = (teamId) => {
                     <td data-cell="name">{{ team.name }}</td>
 										<td data-cell="action">
 											<div class="actions-box">
-												<div @click="toggleModal();showDetail(team.id)" class="btn view-btn">
+												<div @click="viewTeamRoleCheck(team.id)" class="btn view-btn">
 														<font-awesome-icon :icon="['fas', 'eye']" />
 												</div>
 												<div>
-														<router-link :to="{name: 'edit', params: { id: team.id }}" class="btn edit-btn">
+														<router-link v-if="canEdit" :to="{name: 'edit', params: { id: team.id }}" class="btn edit-btn">
 															<font-awesome-icon :icon="['fas', 'pen-to-square']" />
 														</router-link>
 												</div>
 												<div>
-														<button @click="deleteobj(team.id)" class="btn delete-btn">
+														<button @click="deleteTeamRoleCheck(team.id)" class="btn delete-btn">
 															<font-awesome-icon :icon="['fas', 'delete-left']" />
 														</button>
 												</div>
