@@ -2,15 +2,23 @@
 import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
 import BaseModal from '../components/BaseModal.vue'
-import {onMounted, ref, reactive} from "vue";
+import {onMounted, ref, reactive,watch} from "vue";
 const router = useRouter()
 const route = useRoute()
-const users = ref([])
+
+const emailRes = ref([])
+const teams = ref([])
 const modalActive = ref(null);
-let usersArrayFormData = ref([])
-let usersNameOnly = []
+
+let teamsArrayFormData = ref([])
+let teamsArrayFormDataFiltered = ref([])
+
+let emailArrayFormData = ref([])
+let emailArrayFormDataFiltered = ref([])
+
 onMounted(() => {
-    getNoTeamMember()
+    getTeams()
+		getEmails()
 })
 
 const toggleModal = () => {
@@ -18,35 +26,44 @@ const toggleModal = () => {
 
 };
 
-const getNoTeamMember = () => {
+const getTeams = () => {
 	//get-team
-    $axios.get('/noTeam').then((data) => {
-        users.value = data.data.data
-				usersArrayFormData = JSON.parse(JSON.stringify(users.value))
-				usersNameOnly = usersArrayFormData.map(e =>{
+    $axios.get('/get-team').then((data) => {
+        teams.value = data.data.data
+				teamsArrayFormData = JSON.parse(JSON.stringify(teams.value))
+				teamsArrayFormDataFiltered = teamsArrayFormData.map((e)=>{
+					return e.team
+				})
+				console.log('teams test filtered',teamsArrayFormDataFiltered)
+    })
+}
+
+const getEmails = () => {
+    $axios.get('/user?filter[email]=').then((data) => {
+				emailRes.value = data.data.data
+				emailArrayFormData = JSON.parse(JSON.stringify(emailRes.value))
+				emailArrayFormDataFiltered = emailArrayFormData.map((e)=>{
 					return {
-						name: e.name,
 						id: e.id,
 						email: e.email
 					}
 				})
-				console.log(users.value)
-				console.log('filtered value',usersArrayFormData)
-				console.log('user by name only ',usersNameOnly)
+				console.log('email test filtered',emailArrayFormDataFiltered)
     })
 }
 
 const formState = reactive({
 		id: '',
-		name:'',
+		team_id:'',
 		email:'',
 })
 
 
 const sendInvitation = async () => {
 		// later when send team id it should be team_id NOT teamID or any other shit
-    if (formState.id !== '') {
+    if (formState.team_id !== '' && formState.id !== '') {
         $axios.post('/invite', {
+					team_id: formState.team_id,
 					id: formState.id,
 				}).then(
             (data) => {
@@ -55,6 +72,7 @@ const sendInvitation = async () => {
         )
     } else if(formState.email !== '') {
 			$axios.post('/invite', {
+					team_id: formState.team_id,
 					email: formState.email
 				}).then(
             (data) => {
@@ -65,7 +83,6 @@ const sendInvitation = async () => {
 			toggleModal()
 		}
 }
-
 </script>
 
 <template>
@@ -75,12 +92,26 @@ const sendInvitation = async () => {
 
 				<div class="autocomplete-item">
 					<v-autocomplete
-						v-model="formState.id"
-						label="Members"
+						v-model="formState.team_id"
+						label="Teams"
 						item-title="name"
 						item-value="id"
-						:items="usersNameOnly"
+						:items="teamsArrayFormDataFiltered"
 					></v-autocomplete>
+				</div>
+
+				<div class="autocomplete-item">
+					<v-autocomplete
+						v-model="formState.id"
+						label="emails"
+						item-title="email"
+						item-value="id"
+						:items="emailArrayFormDataFiltered"
+					></v-autocomplete>
+				</div>
+
+				<div class="autocomplete-item">
+					<v-text-field v-model="formState.email" clearable label="New mail" variant="underlined"></v-text-field>
 				</div>
 
 					<div class="form-item">

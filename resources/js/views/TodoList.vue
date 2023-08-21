@@ -15,9 +15,10 @@ import {
 const router = useRouter()
 const route = useRoute()
 
-let usersPermissionData = ref([])
-let usersPermissionDataFiltered = ref([])
+let usersPermissionData = store.state.usersPermissionData
+let usersPermissionDataFiltered = store.state.usersPermissionDataFiltered
 const modalActive = ref(null);
+const modalWarningActive = ref(null);
 let taskdetail = ref()
 const todoList = ref([])
 const input = ref('')
@@ -28,14 +29,32 @@ const toggleModal = () => {
 
 };
 
+const toggleWarningModal = () => {
+  modalWarningActive.value = !modalWarningActive.value;
+
+};
+
 const showDetail = (id) => {
 	let item = JSON.parse(JSON.stringify(todoList.value))
 	item.forEach(element => {
 		if (element.id === id){
 			taskdetail = element
-		} 
+		}
 	});
 };
+
+const viewDetailByRole =(id) =>{
+	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+		return roles === 'TASK-READ'
+	})
+
+	if (requiredRole === 'TASK-READ'){
+		toggleModal()
+		showDetail(id)
+	} else {
+		toggleWarningModal()
+	}
+}
 
 const onClickHandler = (page) => {
 		$axios.get(`/task?include=user,project,status,assignee&per_page=5&page=${page}`).then((data) => {
@@ -44,7 +63,7 @@ const onClickHandler = (page) => {
   };
 
 onMounted(() => {
-    getData()
+	getData()
 })
 
 const getData = () => {
@@ -55,8 +74,9 @@ const getData = () => {
 		usersPermissionDataFiltered = usersPermissionData.map(e => {
 			return e.name
 		})
-		console.log('permission filtered:', usersPermissionDataFiltered)
+		//console.log('permission filtered:', usersPermissionDataFiltered)
 }
+
 const deleteobj = (todoId) => {
     $axios.delete('/task/' + todoId).then(res => {
         getData()
@@ -140,7 +160,7 @@ watch(input,
 											</td>
 											<td data-cell="action">
 													<div class="actions-box">
-														<div @click="toggleModal();showDetail(todo.id)" class="btn view-btn">
+														<div @click="viewDetailByRole(todo.id)" class="btn view-btn">
 																<font-awesome-icon :icon="['fas', 'eye']" />
 														</div>
 														<div>
@@ -157,14 +177,21 @@ watch(input,
 											</td>
 									</tr>
 									</tbody>
-									
+
 							</table>
 					</section>
 					<BaseModal
 						:modalActive="modalActive"
 						@close-modal="toggleModal"
-					>		
+					>
 						<ViewModal :taskdetail="taskdetail"/>
+					</BaseModal>
+
+					<BaseModal
+						:modalActive="modalWarningActive"
+						@close-modal="toggleWarningModal"
+					>		
+						We are sorry but you do not have the permission to do this action
 					</BaseModal>
 
 					<div class="pagination-body">
@@ -175,7 +202,7 @@ watch(input,
 							active-color="#FDFDC9"
 							@update:modelValue="onClickHandler"
 						/>
-					</div>		
+					</div>
 			</main>
     </body>
 </template>
