@@ -21,14 +21,15 @@ const props = defineProps({
 			</thead>
 			<tbody>
 				<tr v-if="taskdetail">
-					<td data-cell="id">{{ taskdetail.id }}</td>
-					<td data-cell="name">{{ taskdetail.name }}</td>
+					<td data-cell="id">{{ taskdetail.id || "NULL"}}</td>
+					<td data-cell="name">{{ taskdetail.name || "NULL"}}</td>
 					<td data-cell="description">{{ taskdetail.description }}</td>
-					<td data-cell="assignor">{{ taskdetail.assignor.name }}</td>
-					<td data-cell="assignee">{{ taskdetail.assignee.name }}</td>
-					<td data-cell="project">{{ taskdetail.project.name }}</td>
-					<td data-cell="start date">{{ taskdetail.start_date }}</td>
-					<td data-cell="end date">{{ taskdetail.end_date }}</td>
+					<!-- assigner and assignee got swapped for some reason -->
+					<td data-cell="assignee">{{ taskdetail.assignor.name || "NULL"}}</td>
+					<td data-cell="assignor">{{ taskdetail.assignee.name|| "NULL"}}</td>
+					<td data-cell="project">{{ taskdetail.project.name || "NULL"}}</td>
+					<td data-cell="start date">{{ taskdetail.start_date || "NULL"}}</td>
+					<td data-cell="end date">{{ taskdetail.end_date || "NULL"}}</td>
 					<td data-cell="action">
 						<span :class="taskdetail.status.name === 'Todo' ? 'status shipped' : '' ">
 							{{ taskdetail.status.name }}
