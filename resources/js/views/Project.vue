@@ -4,9 +4,13 @@ import {useRouter, useRoute} from 'vue-router'
 
 import VPagination from "@hennge/vue3-pagination"
 import "@hennge/vue3-pagination/dist/vue3-pagination.css"
-
+import store from '../store/store'
 const router = useRouter()
 const route = useRoute()
+
+let usersPermissionDataFiltered = store.state.userLoginPermission
+let canEdit = ref(false)
+let canAddProject = ref(false)
 import {
     onMounted,
     ref
@@ -16,7 +20,40 @@ const projects = ref([])
 const currentPage = ref(1);
 onMounted(() => {
     getData()
+		editProjectRoleCheck()
+		addProjectRoleCheck()
 })
+
+const editProjectRoleCheck = () =>{
+	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+		return roles === 'PROJECT-UPDATE'
+	})
+	if (requiredRole === 'PROJECT-UPDATE'){
+		canEdit = true
+	} 
+}
+
+const addProjectRoleCheck = () =>{
+	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+		return roles === 'PROJECT-CREATE'
+	})
+	if (requiredRole === 'PROJECT-CREATE'){
+		canAddProject = true
+	} 
+}
+
+const deleteProjectRoleCheck = (id) =>{
+	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+		return roles === 'PROJECT-DELETE'
+	})
+
+	if (requiredRole === 'PROJECT-DELETE'){
+		deleteobj(id)
+	} else {
+		toggleWarningModal()
+	}
+}
+
 
 const onClickHandler = (page) => {
 		$axios.get(`/team?include=user,project,status,assignee&per_page=1&page=${page}`).then((data) => {
@@ -44,7 +81,7 @@ const deleteobj = (projectId) => {
         <section class="table-header">
             <h1 class="form-header">Project manager</h1>
             <div class="table-search-and-add-box">
-                <button class="addtask-btn">
+                <button v-if="canAddProject === true" class="addtask-btn">
                     <a href="#">
 											<router-link to="/add-project"> Add project</router-link>
 										</a>
@@ -67,16 +104,13 @@ const deleteobj = (projectId) => {
                     <td data-cell="name">{{ project.name }}</td>
 										<td data-cell="action">
 											<div class="actions-box">
-												<div @click="" class="btn view-btn">
-														<font-awesome-icon :icon="['fas', 'eye']" />
-												</div>
-												<div>
+												<div v-if="canEdit === true">
 														<router-link :to="{name: 'edit', params: { id: project.id }}" class="btn edit-btn">
 															<font-awesome-icon :icon="['fas', 'pen-to-square']" />
 														</router-link>
 												</div>
 												<div>
-														<button @click="deleteobj(project.id)" class="btn delete-btn">
+														<button @click="deleteProjectRoleCheck(project.id)" class="btn delete-btn">
 															<font-awesome-icon :icon="['fas', 'delete-left']" />
 														</button>
 												</div>
@@ -163,7 +197,7 @@ body {
 }
 
 .actions-box div{
-	width: 33.3%;
+	width: 50%;
 	text-align: center;
 }
 .view-btn {
@@ -177,6 +211,7 @@ body {
 .delete-btn {
     color: red;
 }
+
 
 .addtask-btn {
     background-color: #1D5D9B;

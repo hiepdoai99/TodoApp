@@ -1,33 +1,93 @@
 <script setup>
 import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
+import BaseModal from '../components/BaseModal.vue'
+import ViewUserModal from '../components/ViewUserModal.vue'
 
 import VPagination from "@hennge/vue3-pagination"
 import "@hennge/vue3-pagination/dist/vue3-pagination.css"
-
+import store from '../store/store'
 const router = useRouter()
 const route = useRoute()
+const modalActive = ref(null);
 import {
     onMounted,
     ref
 } from "vue";
 
+
+let usersPermissionDataFiltered = store.state.userLoginPermission
 const users = ref([])
 const input = ref('')
+let canEdit =ref(false)
 const currentPage = ref(1);
+let userdetail = ref()
+const toggleModal = () => {
+  modalActive.value = !modalActive.value;
+};
 
 onMounted(() => {
     getData()
+		editTaskRoleCheck()
 })
+
+const toggleWarningModal = () => {
+  modalWarningActive.value = !modalWarningActive.value;
+};
+
+const showDetail = (id) => {
+	let item = JSON.parse(JSON.stringify(users.value))
+	item.forEach(element => {
+		if (element.id === id){
+			userdetail = element
+		}
+	});
+};
+
+const editTaskRoleCheck = () =>{
+	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+		return roles === 'USER-UPDATE'
+	})
+	if (requiredRole === 'USER-UPDATE'){
+		canEdit = true
+	} 
+}
+
+const deleteTaskRoleCheck = (id) =>{
+	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+		return roles === 'USER-DELETE'
+	})
+
+	if (requiredRole === 'USER-DELETE'){
+		deleteobj(id)
+	} else {
+		toggleWarningModal()
+	}
+}
+
+const viewUserDetailRoleCheck =(id) =>{
+	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+		return roles === 'USER-READ'
+	})
+
+	if (requiredRole === 'USER-READ'){
+		toggleModal()
+		showDetail(id)
+	} else {
+		toggleWarningModal()
+	}
+}
+
 const onClickHandler = (page) => {
-		$axios.get(`/user?include=roles,permissions&per_page=1&page=${page}`).then((data) => {
+		$axios.get(`/user?include=roles,permissions&per_page=2&page=${page}`).then((data) => {
 			users.value = data.data.data
     })
   };
 
 const getData = () => {
-    $axios.get('/user?include=roles,permissions&per_page=1&page=1').then((data) => {
+    $axios.get('/user?include=roles,permissions&per_page=2&page=1').then((data) => {
         users.value = data.data.data
+				console.log('users',users.value)
     })
 }
 const deleteobj = (teamId) => {
@@ -66,16 +126,16 @@ const deleteobj = (teamId) => {
                 <td data-cell="name"> {{ user.name }}</td>
                 <td data-cell="actions">
 									<div class="actions-box">
-										<div @click="" class="btn view-btn">
+										<div @click="viewUserDetailRoleCheck(user.id)" class="btn view-btn">
 												<font-awesome-icon :icon="['fas', 'eye']" />
 										</div>
-										<div>
+										<div v-if="canEdit === true">
 												<router-link :to="{name: 'edit', params: { id: user.id }}" class="btn edit-btn">
 													<font-awesome-icon :icon="['fas', 'pen-to-square']" />
 												</router-link>
 										</div>
 										<div>
-												<button @click="deleteobj(user.id)" class="btn delete-btn">
+												<button @click="deleteTaskRoleCheck(user.id)" class="btn delete-btn">
 													<font-awesome-icon :icon="['fas', 'delete-left']" />
 												</button>
 										</div>
@@ -86,6 +146,13 @@ const deleteobj = (teamId) => {
             </tbody>
         </table>
     </section>
+
+		<BaseModal
+			:modalActive="modalActive"
+			@close-modal="toggleModal"
+		>
+			<ViewUserModal :userdetail="userdetail"/>
+		</BaseModal>
 
 		<div class="pagination-body">
 			<v-pagination
