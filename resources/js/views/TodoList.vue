@@ -15,10 +15,10 @@ import {
 const router = useRouter()
 const route = useRoute()
 
-let usersPermissionData = store.state.usersPermissionData
-let usersPermissionDataFiltered = store.state.usersPermissionDataFiltered
+let usersPermissionDataFiltered = store.state.userLoginPermission
 const modalActive = ref(null);
 const modalWarningActive = ref(null);
+let canEdit = ref(false);
 let taskdetail = ref()
 const todoList = ref([])
 const input = ref('')
@@ -26,12 +26,10 @@ const currentPage = ref(1);
 
 const toggleModal = () => {
   modalActive.value = !modalActive.value;
-
 };
 
 const toggleWarningModal = () => {
   modalWarningActive.value = !modalWarningActive.value;
-
 };
 
 const showDetail = (id) => {
@@ -43,7 +41,28 @@ const showDetail = (id) => {
 	});
 };
 
-const viewDetailByRole =(id) =>{
+const editTaskRoleCheck = () =>{
+	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+		return roles === 'TASK-UPDATE'
+	})
+	if (requiredRole === 'TASK-UPDATE'){
+		canEdit = true
+	} 
+}
+
+const deleteTaskRoleCheck = (id) =>{
+	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+		return roles === 'TASK-DELETE'
+	})
+
+	if (requiredRole === 'TASK-DELETE'){
+		deleteobj(id)
+	} else {
+		toggleWarningModal()
+	}
+}
+
+const viewDetailRoleCheck =(id) =>{
 	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
 		return roles === 'TASK-READ'
 	})
@@ -64,17 +83,14 @@ const onClickHandler = (page) => {
 
 onMounted(() => {
 	getData()
+	editTaskRoleCheck()
 })
 
 const getData = () => {
     $axios.get('/task?include=user,project,status,assignee&per_page=5&page=1').then((data) => {
         todoList.value = data.data.data
     })
-		usersPermissionData =JSON.parse(JSON.stringify(store.state.userLoginPermission))
-		usersPermissionDataFiltered = usersPermissionData.map(e => {
-			return e.name
-		})
-		//console.log('permission filtered:', usersPermissionDataFiltered)
+		console.log('permission filtered:', usersPermissionDataFiltered)
 }
 
 const deleteobj = (todoId) => {
@@ -94,8 +110,6 @@ const statusStyleSet = (statusname) =>{
 		return 'status cancelled'
 	}
 }
-
-
 
 watch(input,
     async (newInput) => {
@@ -160,16 +174,16 @@ watch(input,
 											</td>
 											<td data-cell="action">
 													<div class="actions-box">
-														<div @click="viewDetailByRole(todo.id)" class="btn view-btn">
+														<div @click="viewDetailRoleCheck(todo.id)" class="btn view-btn">
 																<font-awesome-icon :icon="['fas', 'eye']" />
 														</div>
 														<div>
-																<router-link :to="{name: 'edit', params: { id: todo.id }}" class="btn edit-btn">
+																<router-link v-if="canEdit === true" :to="{name: 'edit', params: { id: todo.id }}" class="btn edit-btn">
 																	<font-awesome-icon :icon="['fas', 'pen-to-square']" />
 																</router-link>
 														</div>
 														<div>
-																<button @click="deleteobj(todo.id)" class="btn delete-btn">
+																<button @click="deleteTaskRoleCheck(todo.id)" class="btn delete-btn">
 																	<font-awesome-icon :icon="['fas', 'delete-left']" />
 																</button>
 														</div>
