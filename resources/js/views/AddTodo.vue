@@ -3,8 +3,7 @@ import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
 import userVuelidate from '@vuelidate/core'
 import {required} from '@vuelidate/validators'
-import {emitter} from '../utils/eventBus';
-
+import store from '../store/store'
 const router = useRouter()
 const route = useRoute()
 import {
@@ -15,7 +14,6 @@ import {
 const users = ref([])
 const status = ref([])
 const project = ref([])
-let loginDaTaReceived = ref([]);
 let imgdata = ''
 
 const id = route.params.id ?? null;
@@ -27,22 +25,14 @@ onMounted(() => {
     if (id) {
         getTodo(id)
     }
-		getUserLoginData()
 })
 
-const getUserLoginData = () => {
-	emitter.on("add-task-user-data", res => {
-		loginDaTaReceived = res;
-		console.log('received at addtodo',loginDaTaReceived);
-   });
-
-}
 const getUser = () => {
     $axios.get('/user').then((data) => {
         users.value = data.data.data
 				console.log('all user data', users.value);
     })
-		//formState.assigner_id = loginDaTaReceived.first_name;
+    formState.assigner_id = store.state.userLoginData.id;
 }
 const getStatus = () => {
     $axios.get('/status').then((data) => {
@@ -193,7 +183,7 @@ const edit = () => {
 
             <div class="form-item">
                 <label for="exampleFormControlInput1">Assigner</label>
-                <select class="form-select " v-model="formState.assigner_id" >
+                <select class="form-select " v-model="formState.assigner_id" disabled >
                     <option v-for="assigner in users" :key="assigner.id" :value="assigner.id">
 													{{ assigner.name }}
                     </option>
@@ -315,6 +305,9 @@ const edit = () => {
     width: 70%;
     border-radius: 0px 15px 15px 0px;
     background-color: #FDFDC9;
+}
+.form-item select:disabled {
+   cursor: not-allowed;
 }
 
 input[type='file'] {
