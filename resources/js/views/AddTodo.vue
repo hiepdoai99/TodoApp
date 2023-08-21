@@ -3,8 +3,7 @@ import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
 import userVuelidate from '@vuelidate/core'
 import {required} from '@vuelidate/validators'
-import {emitter} from '../utils/eventBus';
-
+import store from '../store/store'
 const router = useRouter()
 const route = useRoute()
 import {
@@ -15,7 +14,6 @@ import {
 const users = ref([])
 const status = ref([])
 const project = ref([])
-let loginDaTaReceived = ref([]);
 let imgdata = ''
 
 const id = route.params.id ?? null;
@@ -27,22 +25,14 @@ onMounted(() => {
     if (id) {
         getTodo(id)
     }
-		getUserLoginData()
 })
 
-const getUserLoginData = () => {
-	emitter.on("add-task-user-data", res => {
-		loginDaTaReceived = res;
-		console.log('received at addtodo',loginDaTaReceived);
-   });
-
-}
 const getUser = () => {
     $axios.get('/user').then((data) => {
         users.value = data.data.data
 				console.log('all user data', users.value);
     })
-		//formState.assigner_id = loginDaTaReceived.first_name;
+    formState.assignee_id = store.state.userLoginData.id;
 }
 const getStatus = () => {
     $axios.get('/status').then((data) => {
@@ -58,7 +48,7 @@ const formState = reactive({
     name: '',
     description: '',
     status_id: '',
-    assigner_id: '',
+    assignee_id: '',
     user_id: '',
     project_id: '',
     start_date: '',
@@ -69,7 +59,7 @@ const rules = {
     name: {required},
     description: {required},
     status_id: {required},
-    assigner_id: {required},
+    assignee_id: {required},
     user_id: {required},
     project_id: {required},
     start_date: {required},
@@ -86,7 +76,7 @@ const addTodo = async () => {
             name: formState.name,
             description: formState.description,
             status_id: formState.status_id,
-            assigner_id: formState.assigner_id,
+            assignee_id: formState.assignee_id,
             user_id: formState.user_id,
             project_id: formState.project_id,
             start_date: formState.start_date,
@@ -136,7 +126,7 @@ const getTodo = (id) => {
                 formState.name = res.data.data.name;
                 formState.description = res.data.data.description;
                 formState.status_id = res.data.data.status_id;
-                formState.assigner_id = res.data.data.assigner_id;
+                formState.assignee_id = res.data.data.assignee_id;
                 formState.user_id = res.data.data.user_id;
                 formState.project_id = res.data.data.project_id;
                 formState.start_date = res.data.data.start_date;
@@ -150,7 +140,7 @@ const edit = () => {
         name: formState.name,
         description: formState.description,
         status_id: formState.status_id,
-        assigner_id: formState.assigner_id,
+        assignee_id: formState.assignee_id,
         user_id: formState.user_id,
         project_id: formState.project_id,
         start_date: formState.start_date,
@@ -193,14 +183,14 @@ const edit = () => {
 
             <div class="form-item">
                 <label for="exampleFormControlInput1">Assigner</label>
-                <select class="form-select " v-model="formState.assigner_id" >
+                <select class="form-select " v-model="formState.assignee_id" disabled >
                     <option v-for="assigner in users" :key="assigner.id" :value="assigner.id">
 													{{ assigner.name }}
                     </option>
                 </select>
             </div>
 
-            <div class="errtext" v-for="error in v$.assigner_id.$errors" :key="error.$uid">
+            <div class="errtext" v-for="error in v$.assignee_id.$errors" :key="error.$uid">
                 {{ error.$message }}
             </div>
 
@@ -316,6 +306,12 @@ const edit = () => {
     border-radius: 0px 15px 15px 0px;
     background-color: #FDFDC9;
 }
+.form-item select:disabled {
+   cursor: not-allowed;
+   border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
 
 input[type='file'] {
     display: none;
@@ -360,5 +356,15 @@ input[type='file'] {
     height: 100px;
     background-size: cover;
     background-position: center center;
+}
+
+@media (max-width: 1000px) {
+	.date-container{
+    display: block;
+  }
+  .date-container div:first-child {
+    margin-right: 0px;
+}
+
 }
 </style>

@@ -27,6 +27,7 @@ const handleLogin = ()=> {
             localStorage.setItem('user',JSON.stringify(data.data.user) )
             userdata = data.data.user
             store.state.userLoginData = data.data.user
+						console.log('user data', store.state.userLoginData.id)
 
             $axios.get(`/user/${userdata.id}?include=roles,permissions`).then((data) => {
                 store.state.userLoginRole = data.data.data.roles[0].name

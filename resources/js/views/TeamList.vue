@@ -120,20 +120,20 @@ const deleteobj = (teamId) => {
             <h1 class="form-header">Team manager</h1>
             <div class="table-search-and-add-box">
 
-            <div class="main-btn-container">
-							<div v-if="canAddTeam === true" class="main-btn-box">
-								<button @click="testRoleStatus" class="main-btn">
-                	<a class="linktext" href="#">
-										<router-link class="linktext" to="/add-team">Add Team</router-link>
-									</a>
-              	</button>
-							</div>
+            	<div class="main-btn-container">
+								<div v-if="canAddTeam === true" class="main-btn-box">
+									<button @click="testRoleStatus" class="main-btn">
+										<a class="linktext" href="#">
+											<router-link class="linktext" to="/add-team">Add Team</router-link>
+										</a>
+									</button>
+								</div>
 
-							<div class="main-btn-box">
-								<button  @click="toggleInviteModal()" class="main-btn">
-                   Invite new member
-              	</button>
-							</div>
+								<div class="main-btn-box">
+									<button  @click="toggleInviteModal()" class="main-btn">
+										Invite new member
+									</button>
+								</div>
 
 						</div>
             </div>
@@ -206,7 +206,6 @@ const deleteobj = (teamId) => {
 
 main {
     margin-top: 5%;
-    min-width: 500px;
     background-color: #75C2F6;
     border-radius: 0px 0px 15px 15px;
 }
