@@ -8,8 +8,8 @@ const router = useRouter()
 const route = useRoute()
 
 let trackRole = computed(() => {
-  //return store.state.userLoginRole
-	return localStorage.getItem('loginRole')
+  return store.state.userLoginRole
+	//return localStorage.getItem('loginRole')
 })
 
 let isOpen = ref(false);
