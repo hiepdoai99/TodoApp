@@ -8,7 +8,7 @@ import store from '../store/store'
 const router = useRouter()
 const route = useRoute()
 
-let usersPermissionDataFiltered = store.state.userLoginPermission
+let localPermissions = JSON.parse(localStorage.getItem('permissions'))
 let canEdit = ref(false)
 let canAddProject = ref(false)
 import {
@@ -25,7 +25,7 @@ onMounted(() => {
 })
 
 const editProjectRoleCheck = () =>{
-	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'PROJECT-UPDATE'
 	})
 	if (requiredRole === 'PROJECT-UPDATE'){
@@ -34,7 +34,7 @@ const editProjectRoleCheck = () =>{
 }
 
 const addProjectRoleCheck = () =>{
-	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'PROJECT-CREATE'
 	})
 	if (requiredRole === 'PROJECT-CREATE'){
@@ -43,7 +43,7 @@ const addProjectRoleCheck = () =>{
 }
 
 const deleteProjectRoleCheck = (id) =>{
-	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'PROJECT-DELETE'
 	})
 
@@ -65,6 +65,7 @@ const getData = () => {
     $axios.get('/project').then((data) => {
         projects.value = data.data.data
     })
+    localPermissions= localPermissions.map(e => e.name)
 }
 const deleteobj = (projectId) => {
     $axios.delete('/project/' + projectId).then(res => {

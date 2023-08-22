@@ -13,7 +13,7 @@ import {
 
 const router = useRouter()
 const route = useRoute()
-let usersPermissionDataFiltered = store.state.userLoginPermission
+let localPermissions = JSON.parse(localStorage.getItem('permissions'))
 const viewDetailModal = ref(null);
 let teamdetail = ref()
 const teams = ref([])
@@ -40,7 +40,7 @@ const toggleModal = () => {
 };
 
 const editTeamRoleCheck = () =>{
-	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'TEAM-UPDATE'
 	})
 	if (requiredRole === 'TEAM-UPDATE'){
@@ -49,7 +49,7 @@ const editTeamRoleCheck = () =>{
 }
 
 const deleteTeamRoleCheck = (id) =>{
-	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'TEAM-DELETE'
 	})
 
@@ -61,7 +61,7 @@ const deleteTeamRoleCheck = (id) =>{
 }
 
 const viewTeamRoleCheck =(id) =>{
-	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'TEAM-READ'
 	})
 
@@ -83,6 +83,7 @@ const getData = () => {
     $axios.get('/team?include=user,project,status,assignee&per_page=1&page=1').then((data) => {
         teams.value = data.data.data
     })
+		localPermissions= localPermissions.map(e => e.name)
 }
 const deleteobj = (teamId) => {
     $axios.delete('/team/' + teamId).then(res => {
