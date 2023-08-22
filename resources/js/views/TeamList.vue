@@ -160,7 +160,7 @@ const deleteobj = (teamId	) => {
 														<font-awesome-icon :icon="['fas', 'eye']" />
 												</div>
 												<div>
-														<router-link v-if="canEdit" :to="{name: 'edit', params: { id: team.id }}" class="btn edit-btn">
+														<router-link v-if="canEdit" :to="{name: 'edit-team', params: { id: team.id }}" class="btn edit-btn">
 															<font-awesome-icon :icon="['fas', 'pen-to-square']" />
 														</router-link>
 												</div>

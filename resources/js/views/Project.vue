@@ -106,7 +106,7 @@ const deleteobj = (projectId) => {
 										<td data-cell="action">
 											<div class="actions-box">
 												<div v-if="canEdit === true">
-														<router-link :to="{name: 'edit', params: { id: project.id }}" class="btn edit-btn">
+														<router-link :to="{name: 'edit-project', params: { id: project.id }}" class="btn edit-btn">
 															<font-awesome-icon :icon="['fas', 'pen-to-square']" />
 														</router-link>
 												</div>
