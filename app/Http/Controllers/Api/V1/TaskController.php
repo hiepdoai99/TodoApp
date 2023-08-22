@@ -22,7 +22,7 @@ class TaskController extends Controller
     public function index(TaskRequest $request)
     {
         $tasks = QueryBuilder::for(Task::class)
-            ->allowedIncludes(['user','project','status','assignee'])
+            ->allowedIncludes(['user','project','status','assignee','comments'])
             ->allowedFilters(['name'])
             ->paginate($request->per_page ?? 10)
             ->appends($request->all());
@@ -82,7 +82,11 @@ class TaskController extends Controller
      */
     public function show(TaskRequest $request, Task $task)
     {
-        return $this->respondSuccess(new TaskResource($task));
+        $with = [];
+        if ($request->has('include')) {
+            $with = collect(explode(',', $request->include))->filter()->all();
+        }
+        return $this->respondSuccess(new TaskResource($task->loadMissing($with)));
     }
 
     /**

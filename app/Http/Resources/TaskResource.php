@@ -20,10 +20,12 @@ class TaskResource extends JsonResource
             'description' => $this->description,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
+            'image' => $this->image,
             'assignor' => new UserResource($this->whenLoaded('user')),
             'assignee' => new UserResource($this->whenLoaded('assignee')),
             'status' =>  $this->status,
             'project' => new ProjectResource($this->whenLoaded('project')),
+            'comments' => CommentResource::collection($this->whenLoaded('comments')),
         ];
     }
 }
