@@ -16,6 +16,8 @@ onMounted(() => {
             $axios.post('/logout/')
             localStorage.removeItem('token');
             localStorage.removeItem('user');
+            localStorage.removeItem('permissions');
+            localStorage.removeItem('loginRole');
             router.push('/login')
         }
 
