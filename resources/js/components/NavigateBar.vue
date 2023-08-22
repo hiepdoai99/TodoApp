@@ -78,10 +78,6 @@ const logout = () =>{
     }
 }
 
-const test = () =>{
-    const localRole = localStorage.getItem('loginRole');
-		console.log('role check',token)
-}
 </script>
 
 <template>
@@ -105,7 +101,7 @@ const test = () =>{
 						</a>
 					</li>
 					<li class="nav-item">
-							<a @click="test" class="nav-link active" aria-current="page" href="#">
+							<a class="nav-link active" aria-current="page" href="#">
 									<router-link to="/">Home</router-link>
 							</a>
 					</li>
