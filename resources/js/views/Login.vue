@@ -27,12 +27,16 @@ const handleLogin = ()=> {
             localStorage.setItem('user',JSON.stringify(data.data.user) )
             userdata = data.data.user
             store.state.userLoginData = data.data.user
-						console.log('user data', store.state.userLoginData.id)
-
             $axios.get(`/user/${userdata.id}?include=roles,permissions`).then((data) => {
                 store.state.userLoginRole = data.data.data.roles[0].name
 								localStorage.setItem('loginRole',store.state.userLoginRole)
 								localStorage.setItem('permissions',(JSON.stringify(data.data.data.permissions)))
+
+								window.dispatchEvent(new CustomEvent('role-added', {
+									detail: {
+										storage: localStorage.getItem('loginRole')
+									}
+								}));
             })
                 router.push('/')
                 console.log('dang nhap thanh cong')

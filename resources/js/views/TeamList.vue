@@ -17,7 +17,7 @@ import {
     ref
 } from "vue";
 
-let usersPermissionDataFiltered = store.state.userLoginPermission
+let localPermissions = JSON.parse(localStorage.getItem('permissions'))
 const viewDetailModal = ref(null);
 const inviteMemberModal = ref(null)
 let teamdetail = ref()
@@ -33,7 +33,7 @@ onMounted(() => {
 })
 
 const editTeamRoleCheck = () =>{
-	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'TEAM-UPDATE'
 	})
 	if (requiredRole === 'TEAM-UPDATE'){
@@ -42,7 +42,7 @@ const editTeamRoleCheck = () =>{
 }
 
 const addTeamRoleCheck = () =>{
-	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'TEAM-CREATE'
 	})
 	if (requiredRole === 'TEAM-CREATE'){
@@ -52,7 +52,7 @@ const addTeamRoleCheck = () =>{
 
 
 const deleteTeamRoleCheck = (id) =>{
-	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'TEAM-DELETE'
 	})
 
@@ -64,7 +64,7 @@ const deleteTeamRoleCheck = (id) =>{
 }
 
 const viewTeamRoleCheck =(id) =>{
-	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'TEAM-READ'
 	})
 
@@ -104,8 +104,9 @@ const getData = () => {
         teams.value = data.data.data
 				console.log('data return', teams.value)
     })
+	localPermissions= localPermissions.map(e => e.name)
 }
-const deleteobj = (teamId) => {
+const deleteobj = (teamId	) => {
     $axios.delete('/team/' + teamId).then(res => {
         getData()
     })
