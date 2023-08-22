@@ -14,8 +14,8 @@ import {
 
 const router = useRouter()
 const route = useRoute()
+let localPermissions = JSON.parse(localStorage.getItem('permissions'))
 
-let usersPermissionDataFiltered = store.state.userLoginPermission
 const modalActive = ref(null);
 const modalWarningActive = ref(null);
 let canEdit = ref(false);
@@ -42,7 +42,7 @@ const showDetail = (id) => {
 };
 
 const editTaskRoleCheck = () =>{
-	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'TASK-UPDATE'
 	})
 	if (requiredRole === 'TASK-UPDATE'){
@@ -51,7 +51,7 @@ const editTaskRoleCheck = () =>{
 }
 
 const deleteTaskRoleCheck = (id) =>{
-	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'TASK-DELETE'
 	})
 
@@ -63,7 +63,7 @@ const deleteTaskRoleCheck = (id) =>{
 }
 
 const viewDetailRoleCheck =(id) =>{
-	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'TASK-READ'
 	})
 
@@ -90,7 +90,8 @@ const getData = () => {
     $axios.get('/task?include=user,project,status,assignee&per_page=5&page=1').then((data) => {
         todoList.value = data.data.data
     })
-		console.log('permission filtered:', usersPermissionDataFiltered)
+		localPermissions= localPermissions.map(e => e.name)
+		console.log('permission filtered:', localPermissions)
 }
 
 const deleteobj = (todoId) => {
