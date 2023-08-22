@@ -16,7 +16,7 @@ import {
 } from "vue";
 
 
-let usersPermissionDataFiltered = store.state.userLoginPermission
+let localPermissions = JSON.parse(localStorage.getItem('permissions'))
 const users = ref([])
 const input = ref('')
 let canEdit =ref(false)
@@ -45,7 +45,7 @@ const showDetail = (id) => {
 };
 
 const editTaskRoleCheck = () =>{
-	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'USER-UPDATE'
 	})
 	if (requiredRole === 'USER-UPDATE'){
@@ -54,7 +54,7 @@ const editTaskRoleCheck = () =>{
 }
 
 const deleteTaskRoleCheck = (id) =>{
-	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'USER-DELETE'
 	})
 
@@ -66,7 +66,7 @@ const deleteTaskRoleCheck = (id) =>{
 }
 
 const viewUserDetailRoleCheck =(id) =>{
-	const requiredRole = usersPermissionDataFiltered.find((roles)=>{
+	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'USER-READ'
 	})
 
@@ -89,6 +89,7 @@ const getData = () => {
         users.value = data.data.data
 				console.log('users',users.value)
     })
+    localPermissions= localPermissions.map(e => e.name)
 }
 const deleteobj = (teamId) => {
     $axios.delete('/user/' + teamId).then(res => {

@@ -1,37 +1,70 @@
 <script setup>
-
-import { ref,watch,computed, } from "vue";
+import { ref,watch,computed, onMounted } from "vue";
 import {$axios} from "../utils/request.js";
 import {useRouter, useRoute} from 'vue-router';
 import store from '../store/store'
 const router = useRouter()
 const route = useRoute()
+let roledata = ref('')
 
-let trackRole = computed(() => {
-  return store.state.userLoginRole
-	//return localStorage.getItem('loginRole')
-})
+// const trackRole = computed(() => {
+// 	return store.state.userLoginRole
+// })
 
 let isOpen = ref(false);
 let adminVisible = ref(false);
 let memberVisible = ref(false);
 let loginVisible = ref(true);
+const userNameLocal = JSON.parse(localStorage.getItem('user'))
+
 const openMenu = () => {
   isOpen.value = !isOpen.value;
 };
 
-watch(trackRole, (newRole)=>{
-		//console.log('role check on watch:', store.state.userLoginRole)
-		//console.log('login data check: ', store.state.userLoginData)
-		if (newRole === 'ROOT' || newRole ==="ADMIN"){
+onMounted(()=>{
+	afterLoginRoleCheck();
+	afterReloadRolecheck();
+})
+// watch(trackRole, (newRole)=>{
+// 		if (newRole === 'ROOT' || newRole ==="ADMIN"){
+// 		adminVisible.value = !adminVisible.value
+// 		memberVisible.value = !memberVisible.value
+// 		loginVisible.value = !loginVisible.value
+// 		} else if (newRole === 'MEMBER') {
+// 			memberVisible.value = !memberVisible.value
+// 			loginVisible.value = !loginVisible.value
+// 		}
+// })
+
+const afterLoginRoleCheck = () =>{
+		window.addEventListener('role-added', () => {
+    roledata = localStorage.getItem('loginRole');
+		//console.log('roledata login check here',roledata)
+
+		if (roledata === 'ROOT' || roledata ==="ADMIN"){
 		adminVisible.value = !adminVisible.value
 		memberVisible.value = !memberVisible.value
 		loginVisible.value = !loginVisible.value
-		} else if (newRole === 'MEMBER') {
+		} else if (roledata === 'MEMBER') {
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
 		}
-})
+  });
+}
+
+const afterReloadRolecheck = () =>{
+    roledata = localStorage.getItem('loginRole');
+		//console.log('roledata reload check here',roledata)
+
+		if (roledata === 'ROOT' || roledata ==="ADMIN"){
+		adminVisible.value = !adminVisible.value
+		memberVisible.value = !memberVisible.value
+		loginVisible.value = !loginVisible.value
+		} else if (roledata === 'MEMBER') {
+			memberVisible.value = !memberVisible.value
+			loginVisible.value = !loginVisible.value
+		}
+  };
 
 const logout = () =>{
     const token = localStorage.getItem('token');
@@ -39,10 +72,15 @@ const logout = () =>{
         $axios.post('/logout')
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-		localStorage.removeItem('permissions');
+				localStorage.removeItem('permissions');
         localStorage.removeItem('loginRole');
         router.push('/login')
     }
+}
+
+const test = () =>{
+    const localRole = localStorage.getItem('loginRole');
+		console.log('role check',token)
 }
 </script>
 
@@ -58,13 +96,16 @@ const logout = () =>{
 				<ul class="navbar-nav">
 					<li v-show="memberVisible === true || adminVisible === true" class="nav-item">
 						<a class="nav-link" href="#">
-								<span>
+								<span v-if="store.state.userLoginData.first_name !== undefined">
 									WELCOME, {{store.state.userLoginData.first_name}} {{store.state.userLoginData.last_name}}
+								</span>
+								<span v-else-if="userNameLocal !== null">
+									WELCOME, {{userNameLocal.first_name || ''}} {{userNameLocal.last_name || ''}}
 								</span>
 						</a>
 					</li>
 					<li class="nav-item">
-							<a class="nav-link active" aria-current="page" href="#">
+							<a @click="test" class="nav-link active" aria-current="page" href="#">
 									<router-link to="/">Home</router-link>
 							</a>
 					</li>
