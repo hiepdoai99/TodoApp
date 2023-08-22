@@ -131,7 +131,7 @@ const logout = () =>{
 							</a>
 
 					</li>
-					<li class="nav-item">
+					<li  v-show="loginVisible === true" class="nav-item">
 							<a class="nav-link" href="#">
 									<router-link to="/register">Register</router-link>
 							</a>
