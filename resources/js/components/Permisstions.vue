@@ -4,7 +4,6 @@ import {useRouter, useRoute} from 'vue-router'
 import BaseModal from '../components/BaseModal.vue'
 import ViewModal from '../components/ViewPermisstionModal.vue'
 
-
 import VPagination from "@hennge/vue3-pagination"
 import "@hennge/vue3-pagination/dist/vue3-pagination.css"
 
@@ -17,19 +16,19 @@ import {
 
 const roles = ref([])
 const permissions = ref([])
-let roleDetail = ref([])
 
 const input = ref('')
 const currentPage = ref(1);
 const modalActive = ref(null);
-
+const id_role = ref([])
 
 onMounted(() => {
     getData()
 })
-const editRole = (id)=>{
+const getRole = (id)=>{
     $axios.get('/roles/'+ id).then((data) => {
         permissions.value = data.data.data.permissions
+        id_role.value = id
     })
 }
 const toggleModal = () => {
@@ -76,7 +75,7 @@ const getData = () => {
                         <div @click="" class="btn view-btn">
                             <font-awesome-icon :icon="['fas', 'eye']" />
                         </div>
-                        <div @click="toggleModal();editRole(role.id)" class="btn view-btn">
+                        <div @click="toggleModal();getRole(role.id)" class="btn view-btn">
                             <font-awesome-icon :icon="['fas', 'pen-to-square']" />
                         </div>
 
@@ -91,7 +90,10 @@ const getData = () => {
         :modalActive="modalActive"
         @close-modal="toggleModal"
     >
-        <ViewModal :permissions="permissions"/>
+        <ViewModal
+            :permissions="permissions"
+            :id_role="id_role"
+        />
     </BaseModal>
 
     <div class="pagination-body">
