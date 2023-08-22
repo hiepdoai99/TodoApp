@@ -1,14 +1,15 @@
 <script setup>
 
-import { ref,watch,computed } from "vue";
+import { ref,watch,computed, } from "vue";
 import {$axios} from "../utils/request.js";
 import {useRouter, useRoute} from 'vue-router';
 import store from '../store/store'
 const router = useRouter()
 const route = useRoute()
 
-const trackRole = computed(() => {
+let trackRole = computed(() => {
   return store.state.userLoginRole
+	//return localStorage.getItem('loginRole')
 })
 
 let isOpen = ref(false);
@@ -38,6 +39,8 @@ const logout = () =>{
         $axios.post('/logout')
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+		localStorage.removeItem('permissions');
+        localStorage.removeItem('loginRole');
         router.push('/login')
     }
 }
