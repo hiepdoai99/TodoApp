@@ -1,48 +1,37 @@
-<script>
+<script setup>
 import {$axios} from '../utils/request'
+import {
+    onMounted,
+    ref, reactive
+} from "vue";
+const teams = ref([])
 
-export default {
-    data() {
-        return {
-            image: ''
-        }
-    },
-    methods: {
-        onImageChange(e) {
-            let files = e.target.files || e.dataTransfer.files;
-            if (!files.length)
-                return;
-            this.createImage(files[0]);
-        },
-        createImage(file) {
-            let reader = new FileReader();
-            let vm = this;
-            reader.onload = (e) => {
-                vm.image = e.target.result;
-            };
-            reader.readAsDataURL(file);
-            console.log(reader)
-        },
-        uploadImage() {
-            $axios.post('/image', {image: this.image}).then(response => {
-                if (response.data.success) {
-                    alert(response.data.success);
-                }
-            });
-        }
-    }
-}
+onMounted(() => {
+    $axios.get('/get-team')
+        .then(
+        (data) => {
+            teams.value = data.data
+            console.log(data.data)
+        })
+})
+
 </script>
 <template>
-    <div class="row">
-        <div class="col-md-9">
-            <input type="file" v-on:change="onImageChange" class="form-control">
-        </div>
-        <div class="col-md-3">
-            <button class="btn btn-success btn-block" @click="uploadImage">Upload Image</button>
-        </div>
-    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+        </tr>
+        </thead>
 
+        <tbody>
+        <tr v-for="team in teams" :key="team.id">
+            <td data-cell="id">{{ team.id }}</td>
+            <td data-cell="name">{{ team.name }}</td>
+        </tr>
+        </tbody>
+    </table>
 </template>
 
 

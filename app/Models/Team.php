@@ -11,17 +11,27 @@ class Team extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name'
+        'name',
+        'created_by',
     ];
 
     public function getRules()
     {
         return [
-            'name' => ['sometimes', 'required', 'string']
+            'name' => ['sometimes', 'required', 'string'],
+            'created_by' => ['required', 'integer', 'min:1', 'exists:users,id'],
         ];
     }
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_team');
+    }
+    public function created_by_user()
+    {
+        return $this->belongsTo(User::class,'created_by', 'id');
+    }
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
     }
 }
