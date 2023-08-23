@@ -19,6 +19,7 @@ class TeamResource extends JsonResource
             'name' => $this->name,
             'created_by' => new UserResource($this->whenLoaded('created_by_user')),
             'projects' => ProjectResource::collection($this->whenLoaded('projects')),
+            'users' => UserResource::collection($this->whenLoaded('users')),
         ];
     }
 }

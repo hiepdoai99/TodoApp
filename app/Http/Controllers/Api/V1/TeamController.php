@@ -19,7 +19,7 @@ class TeamController extends Controller
     public function index(TeamRequest $request)
     {
         $teams = QueryBuilder::for(Team::class)
-            ->allowedIncludes(['projects','created_by_user'])
+            ->allowedIncludes(['projects','created_by_user','users'])
             ->allowedFilters(['name'])
             ->paginate($request->per_page ?? 10)
             ->appends($request->all());
