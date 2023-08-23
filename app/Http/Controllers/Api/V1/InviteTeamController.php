@@ -20,14 +20,15 @@ class InviteTeamController extends Controller
 
     public function getTeam(Request $request){
         $user = Auth::user();
-        $query = UserTeam::where('user_id', $user->id);
-        $team = QueryBuilder::for($query)
-            ->allowedIncludes(['teams'])
-            ->paginate($request->per_page ?? 10)
-            ->appends($request->all());
-        return $this->respondSuccess(
-            new UserTeamCollection($team)
-        );
+        $allTeams = [];
+        $teams = $user->teams;
+        foreach ($teams as $team){
+            $allTeams[] = [
+                'id' => $team->id,
+                'name' => $team->name,
+            ];
+        }
+        return response()->json($allTeams);
     }
 
     public function invite(Request $request)
