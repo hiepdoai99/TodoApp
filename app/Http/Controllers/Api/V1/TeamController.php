@@ -8,6 +8,7 @@ use App\Http\Resources\TeamCollection;
 use App\Http\Resources\TeamResource;
 use App\Models\Team;
 use App\Models\UserTeam;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -18,6 +19,7 @@ class TeamController extends Controller
     public function index(TeamRequest $request)
     {
         $teams = QueryBuilder::for(Team::class)
+            ->allowedIncludes(['projects','created_by_user'])
             ->allowedFilters(['name'])
             ->paginate($request->per_page ?? 10)
             ->appends($request->all());
@@ -31,10 +33,17 @@ class TeamController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TeamRequest $request)
+    public function store(Request $request)
     {
-        $team = Team::create($request->validated());
         $user = Auth::user();
+
+        $data = $request->validate([
+            'name' => ['sometimes', 'required', 'string'],
+        ]);
+        $data['created_by'] = $user->id;
+
+        $team = Team::create($data);
+
         if($user){
             UserTeam::create([
                 'team_id'=>$team->id,

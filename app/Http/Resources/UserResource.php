@@ -24,8 +24,8 @@ class UserResource extends JsonResource
             'status' => $this->status,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
-            'team' => $this->teams,
-//            'team' => TeamResource::collection($this->whenLoaded('teams')),
+//            'team' => $this->teams,
+            'team' => TeamResource::collection($this->whenLoaded('teams')),
             'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
             'roles' => RoleResource::collection($this->whenLoaded('roles')),
         ];

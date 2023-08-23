@@ -9,9 +9,12 @@ use App\Enums\UserTypesEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UserRequest;
+use App\Http\Resources\ProjectCollection;
 use App\Http\Resources\TeamResource;
 use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserProjectCollection;
 use App\Http\Resources\UserResource;
+use App\Models\Project;
 use App\Models\Role;
 use App\Models\Team;
 use App\Models\User;
@@ -95,6 +98,8 @@ class UserController extends Controller
     }
     public function sameTeam(Request $request)
     {
+        $id = $request->project_id ?? null;
+
 //        $user = Auth::user();
 //        $teams = $user->teams;
 //        $optionUsers = [];
