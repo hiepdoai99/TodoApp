@@ -22,7 +22,7 @@ class TaskController extends Controller
     public function index(TaskRequest $request)
     {
         $tasks = QueryBuilder::for(Task::class)
-            ->allowedIncludes(['user','project','status','assignee'])
+            ->allowedIncludes(['user','project','status','assignee','comments'])
             ->allowedFilters(['name'])
             ->paginate($request->per_page ?? 10)
             ->appends($request->all());
@@ -58,19 +58,14 @@ class TaskController extends Controller
                 $data = base64_decode($data);
                 $imageName = $rand.'.'.$type;
                 Storage::disk('public')->put($imageName, $data);
-                Image::create([
-                    'image' => $imageName,
-                    'task_id' => $task->id
-                ]);
+                $task->image = $imageName;
+                $task->save();
             }
-
             return $this->respondCreated(
                 new TaskResource($task)
             );
         }
         return $this->respondError(__('create task fail',['resource',  'Task ']));
-
-
 
     }
 
@@ -82,7 +77,11 @@ class TaskController extends Controller
      */
     public function show(TaskRequest $request, Task $task)
     {
-        return $this->respondSuccess(new TaskResource($task));
+        $with = [];
+        if ($request->has('include')) {
+            $with = collect(explode(',', $request->include))->filter()->all();
+        }
+        return $this->respondSuccess(new TaskResource($task->loadMissing($with)));
     }
 
     /**

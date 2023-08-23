@@ -15,6 +15,7 @@ const users = ref([])
 const status = ref([])
 const project = ref([])
 let imgdata = ''
+let userLoginData = JSON.parse(localStorage.getItem('user'))
 
 const id = route.params.id ?? null;
 
@@ -32,7 +33,8 @@ const getUser = () => {
         users.value = data.data.data
 				console.log('all user data', users.value);
     })
-    formState.assignee_id = store.state.userLoginData.id;
+    //formState.assignee_id = store.state.userLoginData.id;
+		formState.assignee_id = userLoginData.id;
 }
 const getStatus = () => {
     $axios.get('/status').then((data) => {
@@ -80,6 +82,7 @@ const addTodo = async () => {
             user_id: formState.user_id,
             project_id: formState.project_id,
             start_date: formState.start_date,
+            image: imgdata,
             end_date: formState.end_date})
             .then(
             (data) => {
@@ -266,7 +269,7 @@ const edit = () => {
 
             <div class="form-item">
                 <button v-if="id" @click="edit" class="btn-main" type="button">Update</button>
-                <button  @click="addTodo();uploadImage()" class="btn-main" type="button">Create Task</button>
+                <button v-else @click="addTodo()" class="btn-main" type="button">Create Task</button>
             </div>
         </form>
 

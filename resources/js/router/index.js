@@ -14,6 +14,7 @@ import AddProject from "../views/AddProject.vue"
 import Test from "../views/Test.vue"
 import Invite from "../views/ConfirmInviteTeam.vue"
 import Logout from "../views/Logout.vue"
+import EditUser from "../views/EditUser.vue"
 
 import { createRouter, createWebHistory } from "vue-router";
 const routerCustom = [{
@@ -105,6 +106,11 @@ const routerCustom = [{
         path:'/edit-project/:id',
         name: 'edit-project',
         component: AddProject
+    },
+    {
+        path:'/EditUser/:id',
+        name: 'edit-user',
+        component: EditUser
     },
     {
         path:'/test',

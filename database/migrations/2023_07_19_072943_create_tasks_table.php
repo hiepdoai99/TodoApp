@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('assignee_id')->nullable();
             $table->foreignId('project_id')->nullable();
             $table->foreignId('status_id')->nullable();
+            $table->string('image')->nullable();
             $table->date('start_date');
             $table->date('end_date');
             $table->softDeletes();
