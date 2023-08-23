@@ -82,6 +82,7 @@ const addTodo = async () => {
             user_id: formState.user_id,
             project_id: formState.project_id,
             start_date: formState.start_date,
+            image: imgdata,
             end_date: formState.end_date})
             .then(
             (data) => {
@@ -268,7 +269,7 @@ const edit = () => {
 
             <div class="form-item">
                 <button v-if="id" @click="edit" class="btn-main" type="button">Update</button>
-                <button v-else @click="addTodo();uploadImage()" class="btn-main" type="button">Create Task</button>
+                <button v-else @click="addTodo()" class="btn-main" type="button">Create Task</button>
             </div>
         </form>
 

@@ -95,20 +95,27 @@ class UserController extends Controller
     }
     public function sameTeam(Request $request)
     {
-        $user= Auth::user();
-        $team = $user->teams;
-        dd($team);
+//        $user = Auth::user();
+//        $teams = $user->teams;
+//        $optionUsers = [];
+//        foreach ($teams as $team){
+//            foreach ($team->users as $item){
+//                $optionUsers[$item->id] = $item->name;
+//            }
+//        }
+//        dd($optionUsers);
 
 
-        $query = User::where('team_id', $team);
-        $user = QueryBuilder::for($query)
-            ->allowedIncludes(['roles', 'permissions'])
-            ->allowedFilters('name')
-            ->paginate($request->per_page ?? 10)
-            ->appends($request->all());
-        return $this->respondSuccess(
-            new UserCollection($user)
-        );
+
+//        $query = User::where('team_id', $team);
+//        $user = QueryBuilder::for($query)
+//            ->allowedIncludes(['roles', 'permissions'])
+//            ->allowedFilters('name')
+//            ->paginate($request->per_page ?? 10)
+//            ->appends($request->all());
+//        return $this->respondSuccess(
+//            new UserCollection($user)
+//        );
     }
 
     public function noTeam(Request $request)
