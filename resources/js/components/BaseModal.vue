@@ -45,12 +45,13 @@ defineProps({
     position: absolute; 
     top: 0; 
     left: 0; 
-    padding-left: 2rem;
-    padding-right: 2rem; 
+    padding-left: 1rem;
+    padding-right: 1rem; 
     justify-content: center; 
     width: 100%; 
     height: 100vh; 
     background: rgba(0, 0, 0, 0.4);
+    overflow: scroll;
   }
 
   .modal-item{
@@ -59,7 +60,7 @@ defineProps({
     align-self: flex-start; 
     max-width: 612px;
     min-width: 412px; 
-    background-color: #1D5D9B; 
+    background-color: #0b4f94; 
     color: white;
   }
 

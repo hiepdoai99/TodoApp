@@ -76,7 +76,7 @@ const viewDetailRoleCheck =(id) =>{
 }
 
 const onClickHandler = (page) => {
-		$axios.get(`/task?include=user,project,status,assignee&per_page=5&page=${page}`).then((data) => {
+		$axios.get(`/task?include=user,project,status,assignee,comments&per_page=5&page=${page}`).then((data) => {
         todoList.value = data.data.data
     })
   };
@@ -87,11 +87,12 @@ onMounted(() => {
 })
 
 const getData = () => {
-    $axios.get('/task?include=user,project,status,assignee&per_page=5&page=1').then((data) => {
+    $axios.get('/task?include=user,project,status,assignee,comments&per_page=5&page=1').then((data) => {
         todoList.value = data.data.data
+				console.log('todo value with comments :',  todoList.value)
     })
 		localPermissions= localPermissions.map(e => e.name)
-		console.log('permission filtered:', localPermissions)
+		//console.log('permission filtered:', localPermissions)
 }
 
 const deleteobj = (todoId) => {
@@ -226,7 +227,7 @@ watch(input,
 <style scoped lang="scss">
 
 main {
-    margin-top: 5%;
+    margin-top: 1%;
     background-color: #75C2F6;
     border-radius: 0px 0px 15px 15px;
 		width: 90%;

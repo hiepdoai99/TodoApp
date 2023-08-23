@@ -2,77 +2,208 @@
 const props = defineProps({
   taskdetail: Object,
 });
+
+const statusStyleSet = (statusname) =>{
+	if (statusname === 'Todo'){
+		return 'status shipped'
+	} else if (statusname === ' Ongoing '){
+		return 'status pending'
+	}  else if (statusname === ' Done '){
+		return 'status delivered'
+	} else {
+		return 'status cancelled'
+	}
+}
+
+const makeFullScreen =() => {
+  var divObj = document.getElementById("theImage");
+  //Use the specification method before using prefixed versions
+  if (divObj.requestFullscreen) {
+    divObj.requestFullscreen();
+  } else if (divObj.msRequestFullscreen) {
+    divObj.msRequestFullscreen();
+  } else if (divObj.mozRequestFullScreen) {
+    divObj.mozRequestFullScreen();
+  } else if (divObj.webkitRequestFullscreen) {
+    divObj.webkitRequestFullscreen();
+  }
+}
 </script>
 
 <template>
-    <table>
-			<thead>
-			<tr>
-					<th>ID</th>
-					<th>Name</th>
-					<th>Description</th>
-					<th>Assignor</th>
-					<th>Assignee</th>
-					<th>Project</th>
-					<th>Start date</th>
-					<th>End date</th>
-					<th>image</th>
-					<th>Status</th>
-			</tr>
-			</thead>
-			<tbody>
-				<tr v-if="taskdetail">
-					<td data-cell="id">{{ taskdetail.id || "NULL"}}</td>
-					<td data-cell="name">{{ taskdetail.name || "NULL"}}</td>
-					<td data-cell="description">{{ taskdetail.description }}</td>
-					<!-- assigner and assignee got swapped for some reason -->
-					<td data-cell="assignee">{{ taskdetail.assignor.name || "NULL"}}</td>
-					<td data-cell="assignor">{{ taskdetail.assignee.name|| "NULL"}}</td>
-					<td data-cell="project">{{ taskdetail.project.name || "NULL"}}</td>
-					<td data-cell="start date">{{ taskdetail.start_date || "NULL"}}</td>
-					<td data-cell="end date">{{ taskdetail.end_date || "NULL"}}</td>
-					<td data-cell="image"><img :src=" taskdetail.image || ''" alt=""></td>
-					<td data-cell="action">
-						<span :class="taskdetail.status.name === 'Todo' ? 'status shipped' : '' ">
-							{{ taskdetail.status.name }}
-						</span>
-					</td>
-				</tr>
-			</tbody>
-        <div>
-        <h2>Bình luận</h2>
-        <div class="comment">
-            <p><strong>Tên người dùng:</strong> Jane Smith</p>
-            <p><strong>Bình luận:</strong> Tôi thích trang web này.</p>
-            <p><em>Ngày: 24/08/2023</em></p>
-        </div>
+	<div class="container">
+		<div class="infos-section">
+			<div class="table-box">
+				<table>
+					<thead>
+					<tr>
+							<th>ID</th>
+							<th>Name</th>
+							<th>Description</th>
+							<th>Assignor</th>
+							<th>Assignee</th>
+							<th>Project</th>
+							<th>Start date</th>
+							<th>End date</th>
+							<th>Status</th>
+							<th>Image</th>
+					</tr>
+					</thead>
+					<tbody>
+						<tr v-if="taskdetail">
+							<td data-cell="id">{{ taskdetail.id || "NULL"}}</td>
+							<td data-cell="name">{{ taskdetail.name || "NULL"}}</td>
+							<td data-cell="description">{{ taskdetail.description }}</td>
+							<!-- assigner and assignee got swapped for some reason -->
+							<td data-cell="assignee">{{ taskdetail.assignor.name || "NULL"}}</td>
+							<td data-cell="assignor">{{ taskdetail.assignee.name|| "NULL"}}</td>
+							<td data-cell="project">{{ taskdetail.project.name || "NULL"}}</td>
+							<td data-cell="start date">{{ taskdetail.start_date || "NULL"}}</td>
+							<td data-cell="end date">{{ taskdetail.end_date || "NULL"}}</td>
+							<td data-cell="action">
+								<span :class="statusStyleSet(taskdetail.status.name)">
+									{{ taskdetail.status.name }}
+								</span>
+							</td>
+							<td data-cell="Image">
+								<img id="theImage" @click="makeFullScreen" :src="taskdetail.image || ''" alt="no image">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 
-        <h2>Thêm bình luận mới</h2>
-        <form action="#" method="post">
-            <label for="username">Tên người dùng:</label>
-            <input type="text" id="username" name="username" required><br>
+		<div class="comments-section">
+			<div class="padding-box">
+				<div class="form-register">
+					<h3 class="form-header">Comments</h3>
+					<form class="form-container" enctype="multipart/form-data" v-for="comments in taskdetail.comments" :key="comments.id">
+						<!-- <div v-for="comments in taskdetail.comments" :key="comments.id" class="comments-box">
+							<div>{{comments.user.first_name}} said: {{ comments.content }}</div>
+						</div> -->
+							<div class="form-item">
+									<label for="exampleFormControlInput1">{{comments.user.first_name}}'s said</label>
+									<span class="form-control"> {{ comments.content }}</span>
+							</div>
+					</form>
+    		</div>
 
-            <label for="comment">Bình luận:</label><br>
-            <textarea id="comment" name="comment" rows="4" cols="50" required></textarea><br>
+				<div class="form-register">
+					<h3 class="form-header"> Send comments</h3>
+					<form class="form-container" enctype="multipart/form-data">
 
-            <input type="submit" value="Gửi bình luận">
-        </form>
-        </div>
+							<div class="form-item">
+									<label for="exampleFormControlInput1">Sender</label>
+									<input class="form-control" type="text" aria-label=".form-control-lg example">
 
-		</table>
+							</div>
+
+							<div class="form-item">
+									<label for="exampleFormControlInput1">Comments</label>
+									<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+							</div>
+
+							<div class="form-item">
+									<button class="btn-main" type="button">Send</button>
+							</div>
+					</form>
+    		</div>
+      </div>
+		</div>
+	</div>
 
 </template>
 
-<style scoped>
-	th{
-			display: none;
+<style lang="scss" scoped>
+	.container{
+		width: 100%;
+		display: flex;
+		.infos-section{
+			width: 50%;
+			.table-box{
+				width: 100%;
+				padding: 5px 5px 0px 0px;
+				table{
+					width: 100%;
+					background-color: #75C2F6;
+    			border-radius: 15px;
+					margin-right: 0px;
+					//text-align: center;
+				}
+			}
 		}
+
+		.form-container {
+			width: 100%;
+			background-color: #75C2F6;
+			padding: 10px ;
+			box-shadow: none;
+			border-radius: 10px;
+		}
+
+		.form-item{
+			width: 100%;
+			margin-bottom: 10px;
+			display: block;
+			color: white;
+			justify-content: center;
+			text-align: center;
+				label{
+					background-color: #1D5D9B;
+					width: 100%;
+					border-radius: 15px 15px 0px 0px;
+					color: white;
+					text-align:left;
+					padding: 15px;
+					text-align: center;
+				}
+				input{
+					width: 100%;
+					border-radius: 0px 0px 15px 15px;
+					background-color: #FDFDC9;
+				}
+				textarea{
+					width: 100%;
+					border-radius: 0px 0px 15px 15px;
+					background-color: #FDFDC9;
+				}	
+				span{
+					width: 100%;
+					border-radius: 0px 0px 15px 15px;
+					background-color: #FDFDC9;
+				}
+
+  }
+
+
+		.comments-section{
+			width: 50%;
+			.padding-box{
+				padding: 0px 0px 5px 5px;
+			}
+			.comments-box{
+				width: 100%;
+				background-color: #86e49d;
+				height: 212px;
+			}
+		}
+	}
+
+	th{
+		display: none;
+	}
 
 	td{
 		display: grid;
 		gap: 0.5rem;
 		grid-template-columns: 15ch auto;
 		padding: 0.5rem 1rem;
+		width: 100%;
+		img{
+			width: 100%;
+			height: 100%;
+		}
 	}
 
 	td:first-child{
@@ -90,6 +221,31 @@ const props = defineProps({
 	}
 
 	tbody tr:hover {
-    background-color: none;
+		background-color: none;
+	}
+
+	.status {
+		border-radius: 2rem;
+		text-align: center;
+		padding: .5rem 1.5rem;
+	}
+	.status.shipped {
+		background-color: #6fcaea;
+		color: white;
+	}
+
+	.status.delivered {
+		background-color: #86e49d;
+		color: white;
+	}
+
+	.status.cancelled {
+		background-color: #d46c85;
+		color: white;
+	}
+
+	.status.pending {
+		background-color: #ebc474;
+		color: white;
 	}
 </style>
