@@ -26,7 +26,7 @@ const showDetail = (id) => {
 	item.forEach(element => {
 		if (element.id === id){
 			teamdetail = element
-		} 
+		}
 	});
 };
 
@@ -45,7 +45,7 @@ const editTeamRoleCheck = () =>{
 	})
 	if (requiredRole === 'TEAM-UPDATE'){
 		canEdit = true
-	} 
+	}
 }
 
 const deleteTeamRoleCheck = (id) =>{
@@ -74,13 +74,13 @@ const viewTeamRoleCheck =(id) =>{
 }
 
 const onClickHandler = (page) => {
-		$axios.get(`/team?include=user,project,status,assignee&per_page=1&page=${page}`).then((data) => {
+		$axios.get(`/team?include=projects,created_by_user,users&per_page=1&page=${page}`).then((data) => {
 			teams.value = data.data.data
     })
   };
 
 const getData = () => {
-    $axios.get('/team?include=user,project,status,assignee&per_page=1&page=1').then((data) => {
+    $axios.get('/team?include=projects,created_by_user,users&per_page=1&page=1').then((data) => {
         teams.value = data.data.data
     })
 		localPermissions= localPermissions.map(e => e.name)
@@ -144,7 +144,7 @@ const deleteobj = (teamId) => {
 	<BaseModal
 		:modalActive="viewDetailModal"
 		@close-modal="toggleModal"
-	>		
+	>
 		<ViewTeamModal :taskdetail="teamdetail"/>
 	</BaseModal>
 
@@ -156,7 +156,7 @@ const deleteobj = (teamId) => {
 			active-color="#FDFDC9"
 			@update:modelValue="onClickHandler"
 		/>
-	</div>	
+	</div>
 </template>
 
 
