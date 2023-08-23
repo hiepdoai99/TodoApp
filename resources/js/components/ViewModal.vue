@@ -1,7 +1,41 @@
 <script setup>
+import {$axios} from '../utils/request'
+import {useRouter, useRoute} from 'vue-router'
+import { reactive,toRefs, ref, onMounted} from "vue";
+import userVuelidate from '@vuelidate/core'
+import {required} from '@vuelidate/validators'
 const props = defineProps({
   taskdetail: Object,
 });
+
+const router = useRouter()
+const route = useRoute()
+
+
+let userLocalData= ref({})
+let userLocalID = ref('')
+
+onMounted(()=>{
+	userLocalData = JSON.parse(localStorage.getItem('user'))
+	userLocalID = userLocalData.id
+	formState.user_id = userLocalID
+	formState.task_id = props.taskdetail.id
+})
+
+const formState = reactive({
+    content: '',
+    user_id: userLocalID,
+    task_id: '',
+})
+
+const rules = {
+    content: {required},
+    user_id: {required},
+    task_id: {required},
+}
+
+
+const v$ = userVuelidate(rules, formState)
 
 const statusStyleSet = (statusname) =>{
 	if (statusname === 'Todo'){
@@ -27,6 +61,25 @@ const makeFullScreen =() => {
   } else if (divObj.webkitRequestFullscreen) {
     divObj.webkitRequestFullscreen();
   }
+}
+
+const sendComment = async () => {
+    //validate first
+		console.log('this run ?')
+    // const validateRes = await v$.value.$validate();
+    // if (validateRes) {
+		
+        $axios.post('/comments', {
+            content: formState.content,
+            user_id: formState.user_id,
+            task_id: formState.task_id,
+					})
+            .then(
+            (data) => {
+                router.push('/todo')
+            }
+        )
+   // }
 }
 </script>
 
@@ -94,18 +147,12 @@ const makeFullScreen =() => {
 					<form class="form-container" enctype="multipart/form-data">
 
 							<div class="form-item">
-									<label for="exampleFormControlInput1">Sender</label>
-									<input class="form-control" type="text" aria-label=".form-control-lg example">
-
-							</div>
-
-							<div class="form-item">
 									<label for="exampleFormControlInput1">Comments</label>
-									<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+									<textarea v-model="formState.content" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
 							</div>
 
 							<div class="form-item">
-									<button class="btn-main" type="button">Send</button>
+									<button @click="sendComment" class="btn-main" type="button">Send</button>
 							</div>
 					</form>
     		</div>
@@ -175,7 +222,6 @@ const makeFullScreen =() => {
 				}
 
   }
-
 
 		.comments-section{
 			width: 50%;

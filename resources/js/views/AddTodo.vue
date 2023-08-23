@@ -3,7 +3,7 @@ import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
 import userVuelidate from '@vuelidate/core'
 import {required} from '@vuelidate/validators'
-import store from '../store/store'
+
 const router = useRouter()
 const route = useRoute()
 import {
