@@ -58,19 +58,14 @@ class TaskController extends Controller
                 $data = base64_decode($data);
                 $imageName = $rand.'.'.$type;
                 Storage::disk('public')->put($imageName, $data);
-                Image::create([
-                    'image' => $imageName,
-                    'task_id' => $task->id
-                ]);
+                $task->image = $imageName;
+                $task->save();
             }
-
             return $this->respondCreated(
                 new TaskResource($task)
             );
         }
         return $this->respondError(__('create task fail',['resource',  'Task ']));
-
-
 
     }
 
