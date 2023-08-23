@@ -147,7 +147,8 @@ const edit = () => {
         user_id: formState.user_id,
         project_id: formState.project_id,
         start_date: formState.start_date,
-        end_date: formState.end_date
+        end_date: formState.end_date,
+        image: imgdata,
     }).then(
         (data) => {
             router.push('/todo')
