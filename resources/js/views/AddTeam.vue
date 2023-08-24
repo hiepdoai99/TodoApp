@@ -7,8 +7,7 @@ import {required} from '@vuelidate/validators'
 const router = useRouter()
 const route = useRoute()
 import {
-    onMounted,
-    ref, reactive
+    onMounted, reactive
 } from "vue";
 
 const id = route.params.id ?? null;

@@ -1,17 +1,12 @@
 <script setup>
 import {onMounted, ref, watchEffect} from 'vue';
 import {$axios} from '../utils/request'
-import {useRouter, useRoute} from 'vue-router'
-const router = useRouter()
-const route = useRoute()
-const updatedPermissions = ref([]);
-const changedPermissions = ref([]);
-const checkedPermissions = ref([]);
 
+const updatedPermissions = ref([]);
+const checkedPermissions = ref([]);
 const props = defineProps({
     permissions: Array,
     id_role: String,
-
 });
 
 const items = [

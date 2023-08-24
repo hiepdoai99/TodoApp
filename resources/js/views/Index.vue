@@ -1,11 +1,7 @@
 <script setup>
-import { ref,watch,computed, onMounted } from "vue";
-import {$axios} from "../utils/request.js";
-import {useRouter, useRoute} from 'vue-router';
+import { watch,computed, onMounted } from "vue";
 import store from '../store/store'
 
-const router = useRouter()
-const route = useRoute()
 
 //let userTeamsDataListing = ref([{id:1 , name: 'test'}])
 let userTeamsData = computed(() => {

@@ -1,9 +1,9 @@
 <script setup>
 import {$axios} from '../utils/request'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import store from '../store/store'
 const router = useRouter()
-const route = useRoute()
+
 import {
     ref,reactive
 } from "vue";

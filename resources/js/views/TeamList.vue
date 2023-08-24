@@ -1,17 +1,13 @@
 <script setup>
-
 import {$axios} from '../utils/request'
 
-import {useRouter, useRoute} from 'vue-router'
 import VPagination from "@hennge/vue3-pagination"
 import "@hennge/vue3-pagination/dist/vue3-pagination.css"
 
 import BaseModal from '../components/BaseModal.vue'
 import InviteMemberModal from '../components/InviteMemberModal.vue'
 import ViewTeamModal from '../components/ViewTeamModal.vue'
-import store from '../store/store'
-const router = useRouter()
-const route = useRoute()
+
 import {
     onMounted,
     ref

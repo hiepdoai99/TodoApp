@@ -1,12 +1,8 @@
 <script setup>
 import {$axios} from '../utils/request'
-import {useRouter, useRoute} from 'vue-router'
 
 import VPagination from "@hennge/vue3-pagination"
 import "@hennge/vue3-pagination/dist/vue3-pagination.css"
-import store from '../store/store'
-const router = useRouter()
-const route = useRoute()
 
 let localPermissions = JSON.parse(localStorage.getItem('permissions'))
 let canEdit = ref(false)

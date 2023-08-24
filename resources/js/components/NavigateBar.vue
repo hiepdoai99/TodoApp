@@ -1,5 +1,5 @@
 <script setup>
-import { ref,watch,computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import {$axios} from "../utils/request.js";
 import {useRouter, useRoute} from 'vue-router';
 import store from '../store/store'
