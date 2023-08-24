@@ -72,8 +72,9 @@ const logout = () =>{
         $axios.post('/logout')
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-				localStorage.removeItem('permissions');
+		localStorage.removeItem('permissions');
         localStorage.removeItem('loginRole');
+		localStorage.removeItem('userTeams');
         router.push('/login')
     }
 }

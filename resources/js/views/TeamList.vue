@@ -85,7 +85,7 @@ const toggleInviteModal = () => {
 };
 
 const onClickHandler = (page) => {
-		$axios.get(`/team?include=user,project,status,assignee&per_page=3&page=${page}`).then((data) => {
+		$axios.get(`/team?include=projects,created_by_user,users&per_page=3&page=${page}`).then((data) => {
 			teams.value = data.data.data
     })
   };
@@ -100,7 +100,7 @@ const showDetail = (id) => {
 };
 
 const getData = () => {
-    $axios.get('/team?include=user,project,status,assignee&per_page=3&page=$1').then((data) => {
+    $axios.get('/team?include=projects,created_by_user,users&per_page=3&page=1').then((data) => {
         teams.value = data.data.data
 				console.log('data return', teams.value)
     })
@@ -123,10 +123,8 @@ const deleteobj = (teamId	) => {
 
             	<div class="main-btn-container">
 								<div v-if="canAddTeam === true" class="main-btn-box">
-									<button @click="testRoleStatus" class="main-btn">
-										<a class="linktext" href="#">
+									<button class="main-btn">
 											<router-link class="linktext" to="/add-team">Add Team</router-link>
-										</a>
 									</button>
 								</div>
 
@@ -206,9 +204,10 @@ const deleteobj = (teamId	) => {
 <style lang="scss" scoped>
 
 main {
-    margin-top: 5%;
+    margin-top: 1%;
     background-color: #75C2F6;
     border-radius: 0px 0px 15px 15px;
+		width: 75%;
 }
 
 body {

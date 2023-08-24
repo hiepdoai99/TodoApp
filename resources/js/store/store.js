@@ -14,9 +14,9 @@ const data = createStore({
             },
             userLoginData: {},
             userLoginRole: {},
-            //testValue: JSON.parse(localStorage.getItem('permissions')),
             usersPermissionData: ref([]),
             usersPermissionDataFiltered: ref([]),
+            usersTeamData: ref([]),
         };
     },
 
