@@ -1,7 +1,7 @@
 <script setup>
 import {$axios} from '../utils/request'
-import {useRouter, useRoute} from 'vue-router'
-import { reactive,toRefs, ref, onMounted} from "vue";
+import {useRouter} from 'vue-router'
+import { reactive, ref, onMounted} from "vue";
 import userVuelidate from '@vuelidate/core'
 import {required} from '@vuelidate/validators'
 const props = defineProps({
@@ -9,8 +9,6 @@ const props = defineProps({
 });
 
 const router = useRouter()
-const route = useRoute()
-
 
 let userLocalData= ref({})
 let userLocalID = ref('')

@@ -12,10 +12,13 @@ import {
 } from "vue";
 
 const id = route.params.id ?? null;
+const teams = ref([])
 onMounted(() => {
     if (id) {
         getProject(id)
+        
     }
+		getTeams()
 })
 const getProject = (id) => {
     $axios.get('/project/' + id).then(
@@ -26,12 +29,21 @@ const getProject = (id) => {
         }
     )
 }
+
+const getTeams = () => {
+    $axios.get('/team?include=projects,created_by_user,users&per_page=3&page=1').then((data) => {
+        teams.value = data.data.data
+				console.log('team return in project', teams.value)
+    })
+}
 const formState = reactive({
     name: '',
+    team_id:'',
 })
 
 const rules = {
     name: {required},
+    team_id: {required},
 }
 
 const v$ = userVuelidate(rules, formState)
@@ -41,7 +53,9 @@ const addTeam = async () => {
     const validateRes = await v$.value.$validate();
     if (validateRes) {
         $axios.post('/project', {
-            name: formState.name,})
+            name: formState.name,
+            // team_id:  formState.team_id
+        })
             .then(
                 (data) => {
                     router.push('/projects')
@@ -75,6 +89,19 @@ const edit = () => {
             </div>
 
             <div class="errtext" v-for="error in v$.name.$errors" :key="error.$uid">
+                {{ error.$message }}
+            </div>
+
+            <div class="form-item">
+                <label for="exampleFormControlInput1">Team</label>
+                <select class="form-select " v-model="formState.team_id">
+                    <option v-for="team in teams" :key="team.name" :value="team.id">
+                        {{ team.name }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="errtext" v-for="error in v$.team_id.$errors" :key="error.$uid">
                 {{ error.$message }}
             </div>
 

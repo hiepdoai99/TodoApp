@@ -1,9 +1,9 @@
 <script setup>
 import {$axios} from '../utils/request'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import store from '../store/store'
 const router = useRouter()
-const route = useRoute()
+
 import {
     ref,reactive
 } from "vue";
@@ -37,6 +37,12 @@ const handleLogin = ()=> {
 										storage: localStorage.getItem('loginRole')
 									}
 								}));
+            })
+
+						$axios.get(`/get-team`).then((data) => {
+								localStorage.setItem('userTeams',(JSON.stringify(data.data)))
+								store.state.usersTeamData = data.data
+								console.log('state teams data',store.state.usersTeamData)
             })
                 router.push('/')
                 console.log('dang nhap thanh cong')

@@ -1,10 +1,9 @@
 <script setup>
 import {$axios} from '../utils/request'
-import {useRouter, useRoute} from 'vue-router'
+import {useRouter} from 'vue-router'
 import BaseModal from '../components/BaseModal.vue'
-import {onMounted, ref, reactive,watch} from "vue";
+import {onMounted, ref, reactive} from "vue";
 const router = useRouter()
-const route = useRoute()
 
 const emailRes = ref([])
 const teams = ref([])
