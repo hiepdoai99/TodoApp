@@ -23,6 +23,7 @@ const formState = reactive({
     first_name: '',
     last_name: '',
     phone: '',
+		user_role: '',
     password: '',
 
 })
@@ -31,6 +32,7 @@ const rules = {
 	first_name: {required},
 	last_name: {required},
 	phone: {required},
+	user_role: {required},
 	password: {required},
 }
 
@@ -40,9 +42,11 @@ const getUser = (id) => {
     $axios.get('/user/' + id).then(
         (res) => {
             if (res) {
+							console.log('res',res.data.data)
                 formState.first_name = res.data.data.first_name;
                 formState.last_name = res.data.data.last_name;
                 formState.phone = res.data.data.phone;
+								formState.user_role = res.data.data.user_type;
                 formState.password = res.data.data.password;
             }
         }
@@ -98,6 +102,15 @@ const edit = async () => {
             </div>
 
             <div class="errtext" v-for="error in v$.phone.$errors" :key="error.$uid">
+                {{ error.$message }}
+            </div>
+
+						<div class="form-item">
+                <label for="exampleFormControlInput1">Role</label>
+                <input v-model="formState.user_role" class="form-control" type="text" aria-label=".form-control-lg example">
+            </div>
+
+            <div class="errtext" v-for="error in v$.user_role.$errors" :key="error.$uid">
                 {{ error.$message }}
             </div>
 

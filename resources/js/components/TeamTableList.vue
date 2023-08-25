@@ -74,14 +74,15 @@ const viewTeamRoleCheck =(id) =>{
 }
 
 const onClickHandler = (page) => {
-		$axios.get(`/team?include=projects,created_by_user,users&per_page=1&page=${page}`).then((data) => {
+		$axios.get(`/team?include=projects,created_by_user,users&per_page=3&page=${page}`).then((data) => {
 			teams.value = data.data.data
     })
   };
 
 const getData = () => {
-    $axios.get('/team?include=projects,created_by_user,users&per_page=1&page=1').then((data) => {
+    $axios.get('/team?include=projects,created_by_user,users&per_page=3&page=1').then((data) => {
         teams.value = data.data.data
+				console.log('team table',teams.value)
     })
 		localPermissions= localPermissions.map(e => e.name)
 }
