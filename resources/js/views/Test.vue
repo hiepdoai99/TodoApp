@@ -1,9 +1,6 @@
 <script setup>
 import {$axios} from '../utils/request'
-import {
-    onMounted,
-    ref, reactive
-} from "vue";
+import {onMounted,ref} from "vue";
 const teams = ref([])
 
 onMounted(() => {

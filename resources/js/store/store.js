@@ -1,7 +1,6 @@
 import { $axios } from "../utils/request";
 import { createStore } from "vuex";
 import { ref } from "vue";
-import router from "../router/index.js";
 
 const data = createStore({
     state() {
@@ -14,9 +13,9 @@ const data = createStore({
             },
             userLoginData: {},
             userLoginRole: {},
-            //testValue: JSON.parse(localStorage.getItem('permissions')),
             usersPermissionData: ref([]),
             usersPermissionDataFiltered: ref([]),
+            usersTeamData: ref([]),
         };
     },
 

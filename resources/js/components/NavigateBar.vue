@@ -1,5 +1,5 @@
 <script setup>
-import { ref,watch,computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import {$axios} from "../utils/request.js";
 import {useRouter, useRoute} from 'vue-router';
 import store from '../store/store'
@@ -72,8 +72,9 @@ const logout = () =>{
         $axios.post('/logout')
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-				localStorage.removeItem('permissions');
+		localStorage.removeItem('permissions');
         localStorage.removeItem('loginRole');
+		localStorage.removeItem('userTeams');
         router.push('/login')
     }
 }
