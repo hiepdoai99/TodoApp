@@ -3,12 +3,12 @@ import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
 import userVuelidate from '@vuelidate/core'
 import {required} from '@vuelidate/validators'
-
+import {
+    onMounted, reactive,ref
+} from "vue";
 const router = useRouter()
 const route = useRoute()
-import {
-    onMounted, reactive
-} from "vue";
+let teamDetail = ref()
 
 const id = route.params.id ?? null;
 onMounted(() => {
@@ -21,6 +21,8 @@ const getTeam = (id) => {
         (res) => {
             if (res) {
                 formState.name = res.data.data.name;
+								teamDetail = res.data.data
+								console.log('teamdetail page',teamDetail)
             }
         }
     )
