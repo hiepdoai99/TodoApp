@@ -33,7 +33,6 @@ const getUser = () => {
         users.value = data.data.data
 				console.log('all user data', users.value);
     })
-    //formState.assignee_id = store.state.userLoginData.id;
 		formState.assignee_id = userLoginData.id;
 }
 const getStatus = () => {
@@ -112,14 +111,6 @@ const onImageChange = (e) => {
 		createImage(files[0]);
 	}
 
-}
-
-const uploadImage = () => {
-	$axios.post('/image', {image: imgdata}).then(response => {
-			if (response.data.success) {
-					alert(response.data.success);
-			}
-	});
 }
 
 const getTodo = (id) => {
