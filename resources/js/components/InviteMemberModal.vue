@@ -10,7 +10,6 @@ const teams = ref([])
 const modalActive = ref(null);
 
 let teamsArrayFormData = ref([])
-let teamsArrayFormDataFiltered = ref([])
 
 let emailArrayFormData = ref([])
 let emailArrayFormDataFiltered = ref([])
@@ -26,14 +25,11 @@ const toggleModal = () => {
 };
 
 const getTeams = () => {
-	//get-team
     $axios.get('/get-team').then((data) => {
-        teams.value = data.data.data
+        teams.value = data.data
+				console.log('get team data teamvalue', teams.value)
 				teamsArrayFormData = JSON.parse(JSON.stringify(teams.value))
-				teamsArrayFormDataFiltered = teamsArrayFormData.map((e)=>{
-					return e.team
-				})
-				console.log('teams test filtered',teamsArrayFormDataFiltered)
+				console.log('teamsArrayFormData',teamsArrayFormData)
     })
 }
 
@@ -95,7 +91,7 @@ const sendInvitation = async () => {
 						label="Teams"
 						item-title="name"
 						item-value="id"
-						:items="teamsArrayFormDataFiltered"
+						:items="teamsArrayFormData"
 					></v-autocomplete>
 				</div>
 

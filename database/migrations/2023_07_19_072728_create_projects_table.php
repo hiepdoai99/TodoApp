@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('team_id')->nullable();
             $table->foreignId('created_by')->nullable();
             $table->softDeletes();
             $table->timestamps();

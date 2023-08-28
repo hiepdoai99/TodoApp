@@ -21,5 +21,9 @@ class TeamSeeder extends Seeder
             'name' => 'dev',
             'created_by'=> '1'
         ]);
+        Team::query()->create([
+            'name' => 'test',
+            'created_by'=> '3'
+        ]);
     }
 }
