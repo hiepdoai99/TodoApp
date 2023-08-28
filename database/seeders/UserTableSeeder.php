@@ -33,6 +33,15 @@ class UserTableSeeder extends Seeder
             'status' => '1',
             'is_email_verified' => '1',
         ]);
+        User::query()->create([
+            'first_name' => 'nguyen trung ',
+            'last_name' => ' hieu',
+            'user_type' => (string)UserTypesEnum::member(),
+            'email' => 'nguyentrunghieu987@gmail.com',
+            'password' => Hash::make('1968'),
+            'status' => '1',
+            'is_email_verified' => '1',
+        ]);
 
     }
 }

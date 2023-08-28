@@ -26,5 +26,9 @@ class UserProjectSeeder extends Seeder
             'user_id' => '2',
             'project_id' => '1',
         ]);
+        UserProject::query()->create([
+            'user_id' => '3',
+            'project_id' => '2',
+        ]);
     }
 }

@@ -11,6 +11,7 @@ use App\Models\Image;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -21,19 +22,20 @@ class TaskController extends Controller
 {
     public function index(TaskRequest $request)
     {
-        $tasks = QueryBuilder::for(Task::class)
-            ->allowedIncludes(['user','project','status','assignee','comments'])
-            ->allowedFilters(['name'])
-            ->paginate($request->per_page ?? 10)
-            ->appends($request->all());
-
-        if($request->filled('search')){
-            $tasks = Task::search($request->search)
+        $project_id = $request->project_id;
+        $query = Task::where('project_id' ,$project_id );
+            $tasks = QueryBuilder::for($query)
+                ->allowedIncludes(['user','project','status','assignee','comments'])
+                ->allowedFilters(['name'])
                 ->paginate($request->per_page ?? 10)
                 ->appends($request->all());
+            if($request->filled('search')){
+                $tasks = Task::search($request->search)
+                    ->paginate($request->per_page ?? 10)
+                    ->appends($request->all());
+                return $this->respondSuccess(new TaskCollection($tasks));
+            }
             return $this->respondSuccess(new TaskCollection($tasks));
-        }
-        return $this->respondSuccess(new TaskCollection($tasks));
     }
 
     /**
@@ -47,7 +49,7 @@ class TaskController extends Controller
         $user = auth()->user();
         $id = $request->assigner_id;
         $asn = User::find($id);
-        if ($user->teams){
+        if ($user){
             $task = Task::create($request->all());
             $image = $request->image ?? null;
             if ($image) {
@@ -93,6 +95,18 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, Task $task)
     {
+        $image = $request->image ?? null;
+        if ($image) {
+            list($type, $data) = explode(';', $image);
+            list(, $data)      = explode(',', $data);
+            $type = str_replace('data:image/','',$type);
+            $rand = substr(md5(microtime()),rand(0,26), 20);
+            $data = base64_decode($data);
+            $imageName = $rand.'.'.$type;
+            Storage::disk('public')->put($imageName, $data);
+            $task->image = $imageName;
+            $task->save();
+        }
         $task->fill($request->validated())->save();
         return $this->respondSuccess(new TaskResource($task));
     }

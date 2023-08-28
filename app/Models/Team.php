@@ -26,12 +26,13 @@ class Team extends Model
     {
         return $this->belongsToMany(User::class, 'user_team');
     }
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'team_project');
+    }
     public function created_by_user()
     {
         return $this->belongsTo(User::class,'created_by', 'id');
     }
-    public function projects()
-    {
-        return $this->hasMany(Project::class);
-    }
+
 }

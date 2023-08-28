@@ -13,7 +13,6 @@ class Project extends Model
 
     protected $fillable = [
         'name',
-        'team_id',
         'created_by',
     ];
 
@@ -22,12 +21,15 @@ class Project extends Model
         return [
             'name' => ['sometimes', 'required', 'string'],
             'created_by' => ['required', 'integer', 'min:1', 'exists:users,id'],
-            'team_id' => [ 'required', 'integer', 'min:1', 'exists:teams,id'],
         ];
     }
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_project');
+    }
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'team_project');
     }
 
     public function tasks()
@@ -35,12 +37,16 @@ class Project extends Model
         return $this->hasMany(Task::class);
     }
 
-    public function team()
-    {
-        return $this->belongsTo(Team::class);
-    }
+
     public function created_by_user()
     {
         return $this->belongsTo(User::class,'created_by', 'id');
+    }
+    protected static function boot() {
+        parent::boot();
+
+        static::deleting(function ($project) {
+            $project->tasks()->delete();
+        });
     }
 }
