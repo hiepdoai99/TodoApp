@@ -13,23 +13,29 @@ use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 
 
-
 class TeamController extends Controller
 {
     public function index(TeamRequest $request)
     {
-        $teams = QueryBuilder::for(Team::class)
-            ->allowedIncludes(['projects','created_by_user','users'])
-            ->allowedFilters(['name'])
-            ->paginate($request->per_page ?? 10)
-            ->appends($request->all());
-        return $this->respondSuccess(new TeamCollection($teams));
+        $user = Auth::user();
+        if (Auth::user()->hasRoleAdmin()) {
+            $teams = QueryBuilder::for(Team::class)
+                ->allowedIncludes(['projects', 'created_by_user', 'users'])
+                ->allowedFilters(['name'])
+                ->paginate($request->per_page ?? 10)
+                ->appends($request->all());
+            return $this->respondSuccess(new TeamCollection($teams));
+
+        } else {
+            $teams = $user->teams;
+            return $this->respondSuccess(new TeamCollection($teams));
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -43,10 +49,10 @@ class TeamController extends Controller
 
         $team = Team::create($data);
 
-        if($user){
+        if ($user) {
             UserTeam::create([
-                'team_id'=>$team->id,
-                'user_id'=>$user->id
+                'team_id' => $team->id,
+                'user_id' => $user->id
             ]);
         }
         return $this->respondCreated(
@@ -57,7 +63,7 @@ class TeamController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Team  $team
+     * @param \App\Models\Team $team
      * @return \Illuminate\Http\Response
      */
     public function show(TeamRequest $request, Team $team)
@@ -68,8 +74,8 @@ class TeamController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Team  $team
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Team $team
      * @return \Illuminate\Http\Response
      */
     public function update(TeamRequest $request, Team $team)
@@ -81,16 +87,17 @@ class TeamController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Team  $team
+     * @param \App\Models\Team $team
      * @return \Illuminate\Http\Response
      */
     public function destroy(TeamRequest $request, Team $team)
     {
         $user = Auth::user();
-        if (Auth::user()->hasRoleAdmin() || $user->id = $team->created_by  ){
-        if ($team->delete()) {
-            return $this->respondOk(__('team.delete_success', ['resource', 'Team '.$team->name]));
-        }}
-        return $this->respondError(__('team.delete_fail',['resource',  'Team '.$team->name]));
+        if (Auth::user()->hasRoleAdmin() || $user->id = $team->created_by) {
+            if ($team->delete()) {
+                return $this->respondOk(__('team.delete_success', ['resource', 'Team ' . $team->name]));
+            }
+        }
+        return $this->respondError(__('team.delete_fail', ['resource', 'Team ' . $team->name]));
     }
 }
