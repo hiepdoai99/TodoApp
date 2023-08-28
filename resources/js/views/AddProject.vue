@@ -1,25 +1,56 @@
 <script setup>
 import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
-import userVuelidate from '@vuelidate/core'
-import {required} from '@vuelidate/validators'
-
-const router = useRouter()
-const route = useRoute()
+import BaseModal from '../components/BaseModal.vue'
 import {
     onMounted,
     ref, reactive
 } from "vue";
+const router = useRouter()
+const route = useRoute()
 
 const id = route.params.id ?? null;
-const teams = ref([])
+const teamList = ref([])
+let userlist = ref([])
+let teamlistParse = ref([])
+const users = ref([])
+const modalActive = ref(null)
+
+let userRoleData = ref('')
+let userDatas = ref('')
+
 onMounted(() => {
+		userRoleData = localStorage.getItem('loginRole');
+		userDatas = JSON.parse(localStorage.getItem('user'));
+		console.log('role check', userRoleData)
+		console.log('data user check', userDatas)
     if (id) {
-        getProject(id)
-        
+      getProject(id)
     }
 		getTeams()
+		getUser()
 })
+
+const toggleModal = () => {
+  modalActive.value = !modalActive.value;
+
+};
+
+const getUser = () => {
+    $axios.get('/user').then((data) => {
+        users.value = data.data.data
+				if(userRoleData === 'ROOT' || userRoleData === 'ADMIN'){
+					userlist = JSON.parse(JSON.stringify(users.value))
+				} else if (userRoleData === 'MEMBER'){
+					userlist = [{
+						id: userDatas.id,
+						name: userDatas.first_name + userDatas.last_name
+					}]
+					console.log('member new data check', userlist)
+				}
+				
+    })
+}
 const getProject = (id) => {
     $axios.get('/project/' + id).then(
         (res) => {
@@ -32,36 +63,42 @@ const getProject = (id) => {
 
 const getTeams = () => {
     $axios.get('/team?include=projects,created_by_user,users&per_page=3&page=1').then((data) => {
-        teams.value = data.data.data
-				console.log('team return in project', teams.value)
+			teamList.value = data.data.data
+			teamlistParse = JSON.parse(JSON.stringify(teamList.value))
+			console.log('team return in project', teamlistParse)
     })
 }
 const formState = reactive({
     name: '',
-    team_id:'',
+    teams: [],
+		user: ''
 })
 
-const rules = {
-    name: {required},
-    team_id: {required},
-}
-
-const v$ = userVuelidate(rules, formState)
-
-const addTeam = async () => {
+const addProject = async () => {
     //validate first
-    const validateRes = await v$.value.$validate();
-    if (validateRes) {
-        $axios.post('/project', {
+		const teamDatacheck = JSON.parse(JSON.stringify(formState.teams));
+			if(teamDatacheck.length !== 0  && formState.name !== ''){
+				$axios.post('/project', {
             name: formState.name,
-            // team_id:  formState.team_id
-        })
-            .then(
-                (data) => {
-                    router.push('/projects')
-                }
-            )
-    }
+						teams: formState.teams,
+        }).then(
+						(data) => {
+								router.push('/projects')
+						}
+				)
+			} else if (formState.user !== '' && formState.name !== ''){
+				$axios.post('/project', {
+            name: formState.name,
+						user_id: formState.user
+        }).then(
+						(data) => {
+								router.push('/projects')
+						}
+				)
+			} else{
+				toggleModal()
+			}
+       
 }
 
 const edit = () => {
@@ -75,50 +112,73 @@ const edit = () => {
     )
 }
 
+const testid = () =>{
+	console.log('this formstate teams is',formState.teams)
+	console.log('this formstate user is',formState.user)
+}
 </script>
 
 <template>
     <div class="form-register">
-        <h3 class="form-header"> Add Project</h3>
+        <h3 v-if="id" class="form-header"> Edit Project</h3>
+        <h3 v-else class="form-header"> Add Project</h3>
         <form class="form-container" enctype="multipart/form-data">
+						<div class="autocomplete-item">
+							<v-text-field v-model="formState.name" clearable label="Project name" variant="underlined"></v-text-field>
+						</div>
 
-            <div class="form-item">
-                <label for="exampleFormControlInput1">Name</label>
-                <input v-model="formState.name" class="form-control" type="text" aria-label=".form-control-lg example">
+						<div v-if="userRoleData === 'ROOT' || userRoleData === 'ADMIN' " class="autocomplete-item">
+							<v-autocomplete
+								v-model="formState.teams"
+								:items="teamlistParse"
+								chips
+								closable-chips
+								label="Select team"
+								item-title="name"
+								item-value="id"						
+								multiple
+							></v-autocomplete>
+						</div>
 
-            </div>
-
-            <div class="errtext" v-for="error in v$.name.$errors" :key="error.$uid">
-                {{ error.$message }}
-            </div>
-
-            <div class="form-item">
-                <label for="exampleFormControlInput1">Team</label>
-                <select class="form-select " v-model="formState.team_id">
-                    <option v-for="team in teams" :key="team.name" :value="team.id">
-                        {{ team.name }}
-                    </option>
-                </select>
-            </div>
-
-            <div class="errtext" v-for="error in v$.team_id.$errors" :key="error.$uid">
-                {{ error.$message }}
-            </div>
+						<div class="autocomplete-item">
+							<v-autocomplete
+								v-model="formState.user"
+								:items="userlist"
+								label="Select user"
+								item-title="name"
+								item-value="id"
+							></v-autocomplete>
+						</div>
 
             <div class="form-item">
                 <button v-if="id" @click="edit" class="btn-main" type="button">Update</button>
-                <button v-else  @click="addTeam" class="btn-main" type="button">Submit</button>
+                <button v-else  @click="addProject" class="btn-main" type="button">Submit</button>
+								<button @click="testid" class="btn-main" type="button">log it</button>
             </div>
         </form>
 
-
     </div>
+
+		<BaseModal
+			:modalActive="modalActive"
+			@close-modal="toggleModal"
+		>		
+			you are missing some data
+		</BaseModal>
 </template>
 
 
 <style scoped>
 /* Most style are from register.vue  */
 
+.autocomplete-item{
+    width: 100%;
+    display: flex;
+    margin-bottom: 10px;
+    color: white;
+    justify-content: center;
+
+  }
 .date-container {
     display: flex;
 }
