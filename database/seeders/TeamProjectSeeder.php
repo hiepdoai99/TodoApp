@@ -3,31 +3,24 @@
 namespace Database\Seeders;
 
 use App\Enums\UserTypesEnum;
-use App\Models\UserTeam;
+use App\Models\Team;
 use App\Models\Status;
+use App\Models\TeamProject;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class UserTeamSeeder extends Seeder
+class  TeamProjectSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        UserTeam::query()->create([
+        TeamProject::query()->create([
             'team_id' => '1',
-            'user_id' => '1',
-        ]);
-        UserTeam::query()->create([
-            'team_id' => '1',
-            'user_id' => '2',
-        ]);
-        UserTeam::query()->create([
-            'team_id' => '2',
-            'user_id' => '3',
+            'project_id'=> '1'
         ]);
     }
 }

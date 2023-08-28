@@ -95,6 +95,14 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasAnyRole([(string)RolesEnum::root(), (string)RolesEnum::admin()]);
     }
+    public function hasRoleMember(): bool
+    {
+        return $this->hasAnyRole((string)RolesEnum::member());
+    }
+    public function hasRoleTeamLeader(): bool
+    {
+        return $this->hasAnyRole((string)RolesEnum::teamleader());
+    }
 
     public function tasks()
     {

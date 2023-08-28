@@ -63,5 +63,12 @@ class Task extends Model
     public function comments(){
         return $this->hasMany(Comment::class);
     }
+    protected static function boot() {
+        parent::boot();
+
+        static::deleting(function ($task) {
+            $task->comments()->delete();
+        });
+    }
 
 }

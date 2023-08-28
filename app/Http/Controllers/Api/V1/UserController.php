@@ -96,45 +96,4 @@ class UserController extends Controller
             'totalProject'=>$project,
         ]);
     }
-    public function sameTeam(Request $request)
-    {
-        $id = $request->project_id ?? null;
-
-//        $user = Auth::user();
-//        $teams = $user->teams;
-//        $optionUsers = [];
-//        foreach ($teams as $team){
-//            foreach ($team->users as $item){
-//                $optionUsers[$item->id] = $item->name;
-//            }
-//        }
-//        dd($optionUsers);
-
-
-
-//        $query = User::where('team_id', $team);
-//        $user = QueryBuilder::for($query)
-//            ->allowedIncludes(['roles', 'permissions'])
-//            ->allowedFilters('name')
-//            ->paginate($request->per_page ?? 10)
-//            ->appends($request->all());
-//        return $this->respondSuccess(
-//            new UserCollection($user)
-//        );
-    }
-
-    public function noTeam(Request $request)
-    {
-        $query = User::whereNull('team_id');
-        $user = QueryBuilder::for($query)
-            ->allowedIncludes(['roles', 'permissions'])
-            ->allowedFilters('name')
-            ->paginate($request->per_page ?? 10)
-            ->appends($request->all());
-        return $this->respondSuccess(
-            new UserCollection($user)
-        );
-    }
-
-
 }

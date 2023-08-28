@@ -65,6 +65,10 @@ class RoleAndPermissionSeeder extends Seeder
         Role::findByName((string)RolesEnum::teamleader())
             ->givePermissionTo($permissionTeamLeader);
 
+        $userLeader = User::where('email', 'nguyentrunghieu987@gmail.com')->first();
+        $userLeader->assignRole((string)RolesEnum::teamleader())
+            ->givePermissionTo($permissionTeamLeader);
+
         $userMember = User::where('email', 'test@gmail.com')->first();
         $userMember->assignRole((string)RolesEnum::member())
             ->givePermissionTo($permissionMember);

@@ -23,7 +23,6 @@ class TeamController extends Controller
             ->allowedFilters(['name'])
             ->paginate($request->per_page ?? 10)
             ->appends($request->all());
-
         return $this->respondSuccess(new TeamCollection($teams));
     }
 
@@ -87,9 +86,11 @@ class TeamController extends Controller
      */
     public function destroy(TeamRequest $request, Team $team)
     {
+        $user = Auth::user();
+        if (Auth::user()->hasRoleAdmin() || $user->id = $team->created_by  ){
         if ($team->delete()) {
             return $this->respondOk(__('team.delete_success', ['resource', 'Team '.$team->name]));
-        }
+        }}
         return $this->respondError(__('team.delete_fail',['resource',  'Team '.$team->name]));
     }
 }

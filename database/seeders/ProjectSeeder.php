@@ -19,8 +19,11 @@ class ProjectSeeder extends Seeder
     {
         Project::query()->create([
             'name' => 'Test',
-            'team_id' => '1',
             'created_by'=>'1'
+        ]);
+        Project::query()->create([
+            'name' => 'Task',
+            'created_by'=>'3'
         ]);
     }
 }
