@@ -3,17 +3,41 @@ import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
 import userVuelidate from '@vuelidate/core'
 import {required} from '@vuelidate/validators'
-
-const router = useRouter()
-const route = useRoute()
 import {
     onMounted,
     ref, reactive
 } from "vue";
 
+const router = useRouter()
+const route = useRoute()
 const users = ref([])
 const status = ref([])
 const project = ref([])
+
+const formState = reactive({
+    name: '',
+    description: '',
+    status_id: '',
+    assignee_id: '',
+    user_id: '',
+    project_id: '',
+    start_date: '',
+    end_date: '',
+})
+
+const rules = {
+    name: {required},
+    description: {required},
+    status_id: {required},
+    assignee_id: {required},
+    user_id: {required},
+    project_id: {required},
+    start_date: {required},
+    end_date: {required}
+}
+
+
+let disableStatus = true
 let imgdata = ''
 let userLoginData = JSON.parse(localStorage.getItem('user'))
 
@@ -45,28 +69,6 @@ const getProject = () => {
         project.value = data.data.data
     })
 }
-const formState = reactive({
-    name: '',
-    description: '',
-    status_id: '',
-    assignee_id: '',
-    user_id: '',
-    project_id: '',
-    start_date: '',
-    end_date: '',
-})
-
-const rules = {
-    name: {required},
-    description: {required},
-    status_id: {required},
-    assignee_id: {required},
-    user_id: {required},
-    project_id: {required},
-    start_date: {required},
-    end_date: {required}
-}
-
 const v$ = userVuelidate(rules, formState)
 
 const addTodo = async () => {
@@ -117,14 +119,14 @@ const getTodo = (id) => {
     $axios.get('/task/' + id).then(
         (res) => {
             if (res) {
-                formState.name = res.data.data.name;
-                formState.description = res.data.data.description;
-                formState.status_id = res.data.data.status_id;
-                formState.assignee_id = res.data.data.assignee_id;
-                formState.user_id = res.data.data.user_id;
-                formState.project_id = res.data.data.project_id;
-                formState.start_date = res.data.data.start_date;
-                formState.end_date = res.data.data.end_date;
+							formState.name = res.data.data.name;
+							formState.description = res.data.data.description;
+							formState.status_id = res.data.data.status_id;
+							formState.assignee_id = res.data.data.assignee_id;
+							formState.user_id = res.data.data.user_id;
+							formState.project_id = res.data.data.project_id;
+							formState.start_date = res.data.data.start_date;
+							formState.end_date = res.data.data.end_date;
             }
         }
     )
@@ -147,7 +149,9 @@ const edit = () => {
     )
 }
 
-
+const checkProjectData = () => {
+		disableStatus = false
+}
 
 </script>
 
@@ -157,7 +161,7 @@ const edit = () => {
         <form class="form-container" enctype="multipart/form-data">
 
             <div class="form-item">
-                <label for="exampleFormControlInput1">Name</label>
+                <label>Name</label>
                 <input v-model="formState.name" class="form-control" type="text" aria-label=".form-control-lg example">
 
             </div>
@@ -167,7 +171,7 @@ const edit = () => {
             </div>
 
             <div class="form-item">
-                <label for="exampleFormControlInput1">Description</label>
+                <label>Description</label>
                 <textarea v-model="formState.description" class="form-control" id="exampleFormControlTextarea1"
                           rows="3"></textarea>
             </div>
@@ -176,9 +180,22 @@ const edit = () => {
                 {{ error.$message }}
             </div>
 
+						<div class="form-item">
+                <label>Project</label>
+                <select @click="checkProjectData" class="form-select " v-model="formState.project_id">
+                    <option v-for="projects in project" :key="projects.value" :value="projects.id">
+                        {{ projects.name }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="errtext" v-for="error in v$.project_id.$errors" :key="error.$uid">
+                {{ error.$message }}
+            </div>
+
             <div class="form-item">
-                <label for="exampleFormControlInput1">Assigner</label>
-                <select class="form-select " v-model="formState.assignee_id" disabled >
+                <label>Assigner</label>
+                <select class="form-select " v-model="formState.assignee_id" disabled>
                     <option v-for="assigner in users" :key="assigner.id" :value="assigner.id">
 													{{ assigner.name }}
                     </option>
@@ -191,8 +208,8 @@ const edit = () => {
 
 
             <div class="form-item">
-                <label for="exampleFormControlInput1">Assignee</label>
-                <select class="form-select " v-model="formState.user_id">
+                <label>Assignee</label>
+                <select class="form-select " v-model="formState.user_id" :disabled="disableStatus">
                     <option v-for="user in users" :key="user.value" :value="user.id">
                         {{ user.name }}
                     </option>
@@ -203,21 +220,9 @@ const edit = () => {
                 {{ error.$message }}
             </div>
 
-            <div class="form-item">
-                <label for="exampleFormControlInput1">Project</label>
-                <select class="form-select " v-model="formState.project_id">
-                    <option v-for="projects in project" :key="projects.value" :value="projects.id">
-                        {{ projects.name }}
-                    </option>
-                </select>
-            </div>
-
-            <div class="errtext" v-for="error in v$.project_id.$errors" :key="error.$uid">
-                {{ error.$message }}
-            </div>
 
             <div class="form-item">
-                <label for="exampleFormControlInput1">Status</label>
+                <label>Status</label>
                 <select class="form-select" v-model="formState.status_id">
                     <option v-for="stt in status" :key="stt.value" :value="stt.id">
                         {{ stt.name }}
@@ -232,7 +237,7 @@ const edit = () => {
             <div class="date-container">
                 <div>
                     <div class="form-item">
-                        <label for="exampleFormControlInput1">Start date</label>
+                        <label>Start date</label>
                         <input class="date-select" type="date" name="date" v-model="formState.start_date">
                     </div>
 
@@ -244,7 +249,7 @@ const edit = () => {
 
                 <div>
                     <div class="form-item">
-                        <label for="exampleFormControlInput1">End date</label>
+                        <label>End date</label>
                         <input class="date-select" type="date" name="date" v-model="formState.end_date">
                     </div>
 
