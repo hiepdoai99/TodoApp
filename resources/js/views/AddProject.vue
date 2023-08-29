@@ -123,7 +123,7 @@ const edit = () => {
 							<v-text-field v-model="formState.name" clearable label="Project name" variant="underlined"></v-text-field>
 						</div>
 
-						<div v-if="userRoleData === 'ROOT' || userRoleData === 'ADMIN' " class="autocomplete-item">
+						<div v-if="userRoleData === 'ROOT' || userRoleData === 'ADMIN' || userRoleData === 'TEAMLEADER'" class="autocomplete-item">
 							<v-autocomplete
 								v-model="formState.teams"
 								:items="teamlistParse"

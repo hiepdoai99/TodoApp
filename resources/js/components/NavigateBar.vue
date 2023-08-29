@@ -46,7 +46,7 @@ const afterLoginRoleCheck = () =>{
 			adminVisible.value = !adminVisible.value
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value	
-		}else if (roledata === 'TEAM LEADER') {
+		}else if (roledata === 'TEAMLEADER') {
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
 			teamLeaderVisible.value = !teamLeaderVisible.value

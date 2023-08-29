@@ -39,14 +39,14 @@ const rules = {
 const v$ = userVuelidate(rules, formState)
 
 const getUser = (id) => {
-    $axios.get('/user/' + id).then(
+    $axios.get(`/user/${id}?include=roles`).then(
         (res) => {
             if (res) {
 							console.log('res',res.data.data)
                 formState.first_name = res.data.data.first_name;
                 formState.last_name = res.data.data.last_name;
                 formState.phone = res.data.data.phone;
-								formState.user_role = res.data.data.user_type;
+								formState.user_role = res.data.data.roles[0].name;
                 formState.password = res.data.data.password;
             }
         }

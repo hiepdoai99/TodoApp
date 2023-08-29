@@ -11,13 +11,13 @@ import {
     ref
 } from "vue";
 
-const roles = ref([])
-const permissions = ref([])
-
-const input = ref('')
+const roles = ref([]);
+const permissions = ref([]);
+let disabledCheck = true;
+const input = ref('');
 const currentPage = ref(1);
 const modalActive = ref(null);
-const id_role = ref([])
+const id_role = ref([]);
 
 onMounted(() => {
     getData()
@@ -38,6 +38,13 @@ const getData = () => {
     })
 }
 
+const editOff = () => {
+    disabledCheck = true;
+};
+
+const editOn = () => {
+    disabledCheck = false;
+};
 
 </script>
 
@@ -69,10 +76,10 @@ const getData = () => {
                 <td data-cell="name"> {{ role.name }}</td>
                 <td data-cell="actions">
                     <div class="actions-box">
-                        <div @click="" class="btn view-btn">
+                        <div @click="editOff();toggleModal();getRole(role.id)" class="btn view-btn">
                             <font-awesome-icon :icon="['fas', 'eye']" />
                         </div>
-                        <div @click="toggleModal();getRole(role.id)" class="btn view-btn">
+                        <div @click="editOn();toggleModal();getRole(role.id)" class="btn view-btn">
                             <font-awesome-icon :icon="['fas', 'pen-to-square']" />
                         </div>
 
@@ -90,6 +97,7 @@ const getData = () => {
         <ViewModal
             :permissions="permissions"
             :id_role="id_role"
+            :editPermissionCheck="disabledCheck"
         />
     </BaseModal>
 
