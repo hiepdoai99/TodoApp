@@ -6,14 +6,23 @@ import {required} from '@vuelidate/validators'
 import {
     onMounted, reactive,ref
 } from "vue";
+import BaseModal from '../components/BaseModal.vue'
+import ViewUserModal from '../components/ViewUserModal.vue'
 const router = useRouter()
 const route = useRoute()
 let teamDetail = ref()
-
+let localPermissions = JSON.parse(localStorage.getItem('permissions'))
+const usersOfTeam = ref([])
 const id = route.params.id ?? null;
+let selectedToDelUserId = ref();
+const modalActive = ref(null);
+const modalWarningActive = ref(null);
+const beforeDeleteModal = ref(null);
+let userDetail = ref()
 onMounted(() => {
     if (id) {
         getTeam(id)
+				getData(id)
     }
 })
 const getTeam = (id) => {
@@ -26,6 +35,14 @@ const getTeam = (id) => {
             }
         }
     )
+}
+
+const getData = (teamid) => {
+    $axios.get(`/team/${teamid}?include=users`).then((data) => {
+        usersOfTeam.value = data.data.data.users
+				console.log('usersOfTeam :',  usersOfTeam.value)
+    })
+		localPermissions= localPermissions.map(e => e.name)
 }
 const formState = reactive({
     name: '',
@@ -61,16 +78,73 @@ const edit = () => {
         }
     )
 }
+const toggleModal = () => {
+  modalActive.value = !modalActive.value;
+};
+
+const toggleWarningModal = () => {
+  modalWarningActive.value = !modalWarningActive.value;
+};
+
+const toggleBeforeDeleteModal = () => {
+  beforeDeleteModal.value = !beforeDeleteModal.value;
+};
+
+const showDetail = (id) => {
+	let item = JSON.parse(JSON.stringify(usersOfTeam.value))
+	item.forEach(element => {
+		if (element.id === id){
+			userDetail = element
+		}
+	});
+};
+
+const deleteUser = () => {
+    $axios.post('/remove-user-team/' + {
+			team_id: id,
+			user_id: selectedToDelUserId
+		}).then(res => {
+        getData(id)
+    })
+}
+
+const viewUserRoleCheck =(id) =>{
+	const requiredRole = localPermissions.find((roles)=>{
+		return roles === 'TASK-READ'
+	})
+
+	if (requiredRole === 'TASK-READ'){
+		toggleModal()
+		showDetail(id)
+	} else {
+		toggleWarningModal()
+	}
+}
+
+const deleteTaskRoleCheck = (userId) =>{
+	const requiredRole = localPermissions.find((roles)=>{
+		return roles === 'TASK-DELETE'
+	})
+
+	if (requiredRole === 'TASK-DELETE'){
+		selectedToDelUserId = userId
+		console.log('selectedToDelUserId',selectedToDelUserId)
+		toggleBeforeDeleteModal()
+	} else {
+		toggleWarningModal()
+	}
+}
 
 </script>
 
 <template>
     <div class="form-register">
-        <h3 class="form-header"> Add Team</h3>
+        <h3 v-if="id" class="form-header"> Edit Team</h3>
+				<h3 v-else class="form-header"> Add Team</h3>
         <form class="form-container" enctype="multipart/form-data">
 
             <div class="form-item">
-                <label for="exampleFormControlInput1">Name</label>
+                <label>Name</label>
                 <input v-model="formState.name" class="form-control" type="text" aria-label=".form-control-lg example">
 
             </div>
@@ -78,6 +152,37 @@ const edit = () => {
             <div class="errtext" v-for="error in v$.name.$errors" :key="error.$uid">
                 {{ error.$message }}
             </div>
+
+						<section v-if="id" class="table-body">
+							<table>
+									<thead>
+									<tr>
+											<th>ID</th>
+											<th>Name</th>
+											<th>Actions</th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr v-for="user in usersOfTeam" :key="user.id">
+											<td data-cell="id">{{ user.id }}</td>
+											<td data-cell="name">{{ user.name }}</td>
+											<td data-cell="action">
+													<div class="actions-box">
+														<div @click="viewUserRoleCheck(user.id)" class="btn view-btn">
+																<font-awesome-icon :icon="['fas', 'eye']" />
+														</div>
+														<div>
+																<div @click="deleteTaskRoleCheck(user.id)" class="btn delete-btn">
+																	<font-awesome-icon :icon="['fas', 'delete-left']" />
+																</div>
+														</div>
+													</div>
+											</td>
+									</tr>
+									</tbody>
+
+							</table>
+					</section>
 
             <div class="form-item">
                 <button v-if="id" @click="edit" class="btn-main" type="button">Update</button>
@@ -87,11 +192,169 @@ const edit = () => {
 
 
     </div>
+
+		<BaseModal
+			:modalActive="modalActive"
+			@close-modal="toggleModal"
+		>
+			<ViewUserModal :userdetail="userDetail"/>
+		</BaseModal>
+
+		<BaseModal
+			:modalActive="modalWarningActive"
+			@close-modal="toggleWarningModal"
+		>		
+			We are sorry but you do not have the permission to do this action
+		</BaseModal>
+
+		<BaseModal
+			:modalActive="beforeDeleteModal"
+			@close-modal="toggleBeforeDeleteModal"
+		>		
+			<div class="delete-modal-box">
+				<h3>Are you sure u want to delete this user?</h3>
+				<div class="delete-btn-box">
+					<div @click="deleteUser" class="btn-main" type="button">Delete</div>
+				</div>
+
+			</div>
+		</BaseModal>
+
 </template>
 
 
-<style scoped>
+<style scoped lang="scss">
 /* Most style are from register.vue  */
+
+.delete-modal-box{
+    
+	.delete-btn-box{
+		display: flex;
+    align-items: center;
+    flex-direction: column;
+		.btn-main{
+			background-color: rgb(170, 16, 16);
+		}
+	}
+}
+
+
+.table-header {
+    width: 100%;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.actions-box{
+	display: flex;
+	width: 100%;
+}
+
+.actions-box div{
+	width: 50%;
+	text-align: center;
+}
+.view-btn {
+    color: green;
+}
+
+.delete-btn {
+    color: red;
+}
+
+
+.table-body {
+    width: 95%;
+    max-height: calc(89% - 1.6rem);
+    background-color: #fffb;
+
+    margin: .8rem auto;
+    border-radius: .6rem;
+
+    overflow: auto;
+    overflow: overlay;
+}
+
+.table-body::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+}
+
+.table-body::-webkit-scrollbar-thumb {
+    border-radius: .5rem;
+    background-color: #0004;
+    visibility: hidden;
+}
+
+.table-body:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
+}
+
+table {
+    width: 100%;
+}
+
+table, th, td {
+    border-collapse: collapse;
+    padding: 1rem;
+    text-align: left;
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+    left: 0;
+    background-color: #1D5D9B;
+    color: white;
+    cursor: pointer;
+    text-transform: capitalize;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #0000000b;
+}
+
+tbody tr {
+    --delay: .1s;
+    transition: .5s ease-in-out var(--delay), background-color 0s;
+}
+
+
+tbody tr:hover {
+    background-color: #fff6 !important;
+}
+
+tbody tr td,
+tbody tr td p {
+    transition: .2s ease-in-out;
+}
+
+@media (max-width: 1000px) {
+	th{
+		display: none;
+	}
+
+	td{
+		display: grid;
+		gap: 0.5rem;
+		grid-template-columns: 15ch auto;
+		padding: 0.5rem 1rem;
+	}
+
+	td:first-child{
+		padding-top: 2rem;
+	}
+
+	td:last-child{
+		padding-bottom: 2rem;
+	}
+
+	td::before{
+		content: attr(data-cell) ": ";
+		font-weight: 700;
+		text-transform: capitalize;
+	}
+}
 
 .date-container {
     display: flex;

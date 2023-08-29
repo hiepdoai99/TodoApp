@@ -112,10 +112,6 @@ const edit = () => {
     )
 }
 
-const testid = () =>{
-	console.log('this formstate teams is',formState.teams)
-	console.log('this formstate user is',formState.user)
-}
 </script>
 
 <template>
@@ -153,7 +149,6 @@ const testid = () =>{
             <div class="form-item">
                 <button v-if="id" @click="edit" class="btn-main" type="button">Update</button>
                 <button v-else  @click="addProject" class="btn-main" type="button">Submit</button>
-								<button @click="testid" class="btn-main" type="button">log it</button>
             </div>
         </form>
 
