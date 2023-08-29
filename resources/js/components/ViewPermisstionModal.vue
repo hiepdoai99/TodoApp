@@ -7,6 +7,7 @@ const checkedPermissions = ref([]);
 const props = defineProps({
     permissions: Array,
     id_role: String,
+    editPermissionCheck: Boolean,
 });
 
 const items = [
@@ -82,18 +83,40 @@ onMounted(() => {
                             :name="permission"
                             :checked="isPermissionGranted(permission)"
                             @change="togglePermission(item.title, permission.split('-')[1])"
+                            :disabled="editPermissionCheck"
                         >
                     </div>
                 </td>
             </tr>
             </tbody>
         </table>
-        <button @click="updatePermissions" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Update</button>
+        <div class="role-manager-btn-box">
+            <div v-show="editPermissionCheck === false" @click="updatePermissions" class="permission-update-btn">Update</div>
+        </div>
 
     </div>
 </template>
 
 
-<style scoped>
+<style lang="scss" scoped>
+.overflow-x-auto{
+    .role-manager-btn-box{
+      align-items: center;
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			padding-top: 10px;
+			.permission-update-btn{
+				background-color: green;
+				padding: 10px 0px 10px 0px;
+				height: 100%;
+				width: 30%;
+				border-radius: 20px;
+				border: none;
+				color: white;
+				text-align: center;
+			}
+    }
+}
 /* Your styles here */
 </style>
