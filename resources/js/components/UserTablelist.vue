@@ -5,7 +5,6 @@ import ViewUserModal from '../components/ViewUserModal.vue'
 
 import VPagination from "@hennge/vue3-pagination"
 import "@hennge/vue3-pagination/dist/vue3-pagination.css"
-const modalActive = ref(null);
 import {
     onMounted,
     ref
@@ -13,13 +12,21 @@ import {
 
 
 let localPermissions = JSON.parse(localStorage.getItem('permissions'))
+let selectedToDelUserId = ref();
+const beforeDeleteModal = ref(null);
+const modalActive = ref(null);
 const users = ref([])
 const input = ref('')
 let canEdit =ref(false)
 const currentPage = ref(1);
 let userdetail = ref()
+
 const toggleModal = () => {
   modalActive.value = !modalActive.value;
+};
+
+const toggleBeforeDeleteModal = () => {
+  beforeDeleteModal.value = !beforeDeleteModal.value;
 };
 
 onMounted(() => {
@@ -49,13 +56,14 @@ const editTaskRoleCheck = () =>{
 	} 
 }
 
-const deleteTaskRoleCheck = (id) =>{
+const deleteTaskRoleCheck = (userId) =>{
 	const requiredRole = localPermissions.find((roles)=>{
 		return roles === 'USER-DELETE'
 	})
 
 	if (requiredRole === 'USER-DELETE'){
-		deleteobj(id)
+		selectedToDelUserId = userId
+		toggleBeforeDeleteModal()
 	} else {
 		toggleWarningModal()
 	}
@@ -83,13 +91,16 @@ const onClickHandler = (page) => {
 const getData = () => {
     $axios.get('/user?include=roles,permissions&per_page=2&page=1').then((data) => {
         users.value = data.data.data
-				console.log('users',users.value)
+				console.log('users ssasds',users.value)
     })
     localPermissions= localPermissions.map(e => e.name)
 }
-const deleteobj = (teamId) => {
-    $axios.delete('/user/' + teamId).then(res => {
-        getData()
+const deleteUser = () => {
+    $axios.post('/remove-user-team/' + {
+			team_id: id,
+			user_id: selectedToDelUserId
+		}).then(res => {
+        getData(id)
     })
 }
 
@@ -151,6 +162,19 @@ const deleteobj = (teamId) => {
 			<ViewUserModal :userdetail="userdetail"/>
 		</BaseModal>
 
+		<BaseModal
+			:modalActive="beforeDeleteModal"
+			@close-modal="toggleBeforeDeleteModal"
+		>		
+			<div class="delete-modal-box">
+				<h3>Are you sure u want to delete this user?</h3>
+				<div class="delete-btn-box">
+					<div @click="deleteUser" class="btn-main" type="button">Delete</div>
+				</div>
+
+			</div>
+		</BaseModal>
+
 		<div class="pagination-body">
 			<v-pagination
 				v-model="currentPage"
@@ -163,7 +187,19 @@ const deleteobj = (teamId) => {
 </template>
 
 
-<style scoped>
+<style lang="scss" scoped>
+
+.delete-modal-box{
+    
+		.delete-btn-box{
+			display: flex;
+			align-items: center;
+			flex-direction: column;
+			.btn-main{
+				background-color: rgb(170, 16, 16);
+			}
+		}
+	}
 .actions-box{
 	display: flex;
 	width: 100%;
