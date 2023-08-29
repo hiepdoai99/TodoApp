@@ -22,6 +22,7 @@ let taskdetail = ref()
 const todoList = ref([])
 const input = ref('')
 const currentPage = ref(1);
+let projectIdSelected = ref();
 
 const toggleModal = () => {
   modalActive.value = !modalActive.value;
@@ -75,18 +76,23 @@ const viewDetailRoleCheck =(id) =>{
 }
 
 const onClickHandler = (page) => {
-		$axios.get(`/task?include=user,project,status,assignee,comments&per_page=5&page=${page}`).then((data) => {
+		$axios.get(`/task?include=user,project,status,assignee,comments&project_id=${projectIdSelected}&per_page=1&page=${page}`).then((data) => {
         todoList.value = data.data.data
     })
   };
 
 onMounted(() => {
-	getData()
-	editTaskRoleCheck()
+	window.addEventListener('projectId-added', () => {
+    projectIdSelected = localStorage.getItem('selectedProjectId');
+		getData(projectIdSelected)
+		editTaskRoleCheck()
+		
+  });
+
 })
 
-const getData = () => {
-    $axios.get('/task?include=user,project,status,assignee,comments&per_page=5&page=1').then((data) => {
+const getData = (projectId) => {
+    $axios.get(`/task?include=user,project,status,assignee,comments&project_id=${projectId}&per_page=1&page=1`).then((data) => {
         todoList.value = data.data.data
 				console.log('todo value with comments :',  todoList.value)
     })
