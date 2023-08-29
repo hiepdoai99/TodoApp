@@ -68,7 +68,11 @@ class TeamController extends Controller
      */
     public function show(TeamRequest $request, Team $team)
     {
-        return $this->respondSuccess(new TeamResource($team));
+        $with = [];
+        if ($request->has('include')) {
+            $with = collect(explode(',', $request->include))->filter()->all();
+        }
+        return $this->respondSuccess(new TeamResource($team->loadMissing($with)));
     }
 
     /**
@@ -100,4 +104,25 @@ class TeamController extends Controller
         }
         return $this->respondError(__('team.delete_fail', ['resource', 'Team ' . $team->name]));
     }
+
+    public function removeUserTeam(Request $request){
+        if (Auth::user()->hasRoleAdmin() || Auth::user()->hasRoleTeamLeader()){
+            $team = $request->team_id ?? null;
+            $user_id = $request->user_id ?? null;
+            if ( $team && $user_id ){
+                $ut = UserTeam::where([
+                    ['team_id',$team],
+                    ['user_id',$user_id]
+                ])->first();
+                if ($ut && $ut->delete()) {
+                    return $this->respondOk(__('removeUserTeam.delete_success', ['resource', 'Remove user team success']));
+                }
+            }
+        }
+
+        return $this->respondError(__('removeUserTeam.delete_fail',['resource',  '']));
+
+    }
+
+
 }
