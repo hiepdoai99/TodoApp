@@ -22,5 +22,9 @@ class  TeamProjectSeeder extends Seeder
             'team_id' => '1',
             'project_id'=> '1'
         ]);
+        TeamProject::query()->create([
+            'team_id' => '2',
+            'project_id'=> '2'
+        ]);
     }
 }
