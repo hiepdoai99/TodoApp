@@ -65,7 +65,7 @@ const afterReloadRolecheck = () =>{
 			adminVisible.value = !adminVisible.value
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
-		} else if (roledata === 'TEAM LEADER') {
+		} else if (roledata === 'TEAMLEADER') {
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
 			teamLeaderVisible.value = !teamLeaderVisible.value
@@ -116,7 +116,7 @@ const logout = () =>{
 									<router-link to="/">Home</router-link>
 							</a>
 					</li>
-					<li v-show="memberVisible === true" class="nav-item">
+					<li v-show="teamLeaderVisible === true" class="nav-item">
 							<a class="nav-link" href="#">
 									<router-link to="/team">Team</router-link>
 							</a>
@@ -135,11 +135,6 @@ const logout = () =>{
 					<li  v-show="loginVisible === true" class="nav-item">
 							<a class="nav-link" href="#">
 									<router-link to="/register">Register</router-link>
-							</a>
-					</li>
-					<li v-show="teamLeaderVisible === true" class="nav-item">
-							<a class="nav-link" href="#">
-									<router-link to="/">Team leader</router-link>
 							</a>
 					</li>
 					<li v-show="adminVisible === true" class="nav-item">
