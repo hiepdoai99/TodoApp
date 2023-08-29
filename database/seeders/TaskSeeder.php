@@ -47,6 +47,16 @@ class TaskSeeder extends Seeder
             'start_date' => '2023-07-29',
             'end_date' => '2023-07-30',
         ]);
+        Task::query()->create([
+            'name' => 'task cua hieu',
+            'description' => 'test',
+            'user_id' => '3',
+            'status_id' => '1',
+            'project_id' => '2',
+            'assignee_id' => '3',
+            'start_date' => '2023-07-29',
+            'end_date' => '2023-07-30',
+        ]);
 
 
     }
