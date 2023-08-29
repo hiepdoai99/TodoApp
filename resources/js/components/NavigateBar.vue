@@ -14,6 +14,7 @@ let roledata = ref('')
 let isOpen = ref(false);
 let adminVisible = ref(false);
 let memberVisible = ref(false);
+let teamLeaderVisible = ref(false);
 let loginVisible = ref(true);
 const userNameLocal = JSON.parse(localStorage.getItem('user'))
 
@@ -42,9 +43,13 @@ const afterLoginRoleCheck = () =>{
 		//console.log('roledata login check here',roledata)
 
 		if (roledata === 'ROOT' || roledata ==="ADMIN"){
-		adminVisible.value = !adminVisible.value
-		memberVisible.value = !memberVisible.value
-		loginVisible.value = !loginVisible.value
+			adminVisible.value = !adminVisible.value
+			memberVisible.value = !memberVisible.value
+			loginVisible.value = !loginVisible.value	
+		}else if (roledata === 'TEAM LEADER') {
+			memberVisible.value = !memberVisible.value
+			loginVisible.value = !loginVisible.value
+			teamLeaderVisible.value = !teamLeaderVisible.value
 		} else if (roledata === 'MEMBER') {
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
@@ -57,9 +62,13 @@ const afterReloadRolecheck = () =>{
 		//console.log('roledata reload check here',roledata)
 
 		if (roledata === 'ROOT' || roledata ==="ADMIN"){
-		adminVisible.value = !adminVisible.value
-		memberVisible.value = !memberVisible.value
-		loginVisible.value = !loginVisible.value
+			adminVisible.value = !adminVisible.value
+			memberVisible.value = !memberVisible.value
+			loginVisible.value = !loginVisible.value
+		} else if (roledata === 'TEAM LEADER') {
+			memberVisible.value = !memberVisible.value
+			loginVisible.value = !loginVisible.value
+			teamLeaderVisible.value = !teamLeaderVisible.value
 		} else if (roledata === 'MEMBER') {
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
@@ -69,13 +78,14 @@ const afterReloadRolecheck = () =>{
 const logout = () =>{
     const token = localStorage.getItem('token');
     if (token) {
-        $axios.post('/logout')
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-		localStorage.removeItem('permissions');
-        localStorage.removeItem('loginRole');
-		localStorage.removeItem('userTeams');
-        router.push('/login')
+      $axios.post('/logout')
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+			localStorage.removeItem('permissions');
+      localStorage.removeItem('loginRole');
+			localStorage.removeItem('userTeams');
+			localStorage.removeItem('selectedProjectId');
+      router.push('/login')
     }
 }
 
@@ -108,16 +118,6 @@ const logout = () =>{
 					</li>
 					<li v-show="memberVisible === true" class="nav-item">
 							<a class="nav-link" href="#">
-									<router-link to="/add-todo">Add task</router-link>
-							</a>
-					</li>
-					<li v-show="memberVisible === true" class="nav-item">
-							<a class="nav-link" href="#">
-									<router-link to="/todo">Tasks</router-link>
-							</a>
-					</li>
-					<li v-show="memberVisible === true" class="nav-item">
-							<a class="nav-link" href="#">
 									<router-link to="/team">Team</router-link>
 							</a>
 					</li>
@@ -137,9 +137,9 @@ const logout = () =>{
 									<router-link to="/register">Register</router-link>
 							</a>
 					</li>
-          <li class="nav-item">
-							<a class="nav-link" href="/logout" @click="logout">
-									Logout
+					<li v-show="teamLeaderVisible === true" class="nav-item">
+							<a class="nav-link" href="#">
+									<router-link to="/">Team leader</router-link>
 							</a>
 					</li>
 					<li v-show="adminVisible === true" class="nav-item">
@@ -147,7 +147,11 @@ const logout = () =>{
 									<router-link to="/admin">Admin</router-link>
 							</a>
 					</li>
-
+					<li class="nav-item">
+							<a class="nav-link" href="/logout" @click="logout">
+									Logout
+							</a>
+					</li>
 			</ul>
 			</div>
 		</div>

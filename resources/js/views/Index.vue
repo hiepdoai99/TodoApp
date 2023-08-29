@@ -1,28 +1,56 @@
 <script setup>
-import { watch,computed, onMounted } from "vue";
+import { watch,computed, onMounted,ref } from "vue";
 import store from '../store/store'
-
+import {$axios} from '../utils/request'
 
 //let userTeamsDataListing = ref([{id:1 , name: 'test'}])
 let userTeamsData = computed(() => {
 	return store.state.usersTeamData
 })
 let userTeamsDatasLocal = JSON.parse(localStorage.getItem('userTeams'));
-
+const projects = ref([])
+let showProjects = ref(false)
 onMounted(()=>{
 	afterReloadTeamsCheck();
+  projectLengthCheck();
 })
 
 
 watch(userTeamsData,(newteams)=>{
   userTeamsData = JSON.parse(JSON.stringify(newteams))
-  console.log('userTeamsDataListing watch',userTeamsData)
 })
+
+const projectLengthCheck = ()=>{
+  if(projects.value.length !== 0){
+    showProjects = true
+  } else if (projects.value.length === 0){
+    showProjects = false
+  }
+    
+}
 
 const afterReloadTeamsCheck = () =>{
   userTeamsData = userTeamsDatasLocal
-  console.log('userTeamsDataListing reload',userTeamsData)
+};
 
+const passSelectedTeamId = (id) =>{
+  $axios.get(`/get-project?team_id=${id}`).then((data) => {
+        projects.value = data.data.data
+        console.log('get projects', projects.value)
+        if(projects.value.length !== 0){
+          showProjects = true
+          console.log('status',showProjects)
+        }
+    })
+};
+
+const passSelectedProjectId = (id) =>{
+  localStorage.setItem('selectedProjectId',id)
+  window.dispatchEvent(new CustomEvent('projectId-added', {
+    detail: {
+      storage: localStorage.getItem('selectedProjectId')
+    }
+  }));
 };
 </script>
 
@@ -42,10 +70,19 @@ const afterReloadTeamsCheck = () =>{
           <h2 class="pickteam-header"> Pick your team to work for today</h2>
           <div class="teams-listing-container">
             <div class="team-list" v-for="team in userTeamsData" :key="team.id">
-              <button class="team-btn">
-                  <router-link class="link-text" to="/add-team">{{ team.name }}</router-link>
-              </button>
+              <div @click="passSelectedTeamId(team.id)" class="team-btn">
+                 {{ team.name }}
+              </div>
+            </div>
           </div>
+
+          <h3 v-show="showProjects === true" class="pickteam-header"> Now, pick your projects</h3>
+          <div v-show="showProjects === true" class="teams-listing-container">
+            <div class="team-list" v-for="projectsItems in projects" :key="projectsItems.id">
+              <div @click="passSelectedProjectId(projectsItems.id)" class="team-btn">
+                 <router-link class="link-text" to="/todo">{{ projectsItems.name }}</router-link>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -66,6 +103,7 @@ const afterReloadTeamsCheck = () =>{
   .teams-listing-container{
     display: flex;
     width: 100%;
+    margin-bottom: 15px;
     .team-list{
       width: 100%;
       margin-right: 10px;
