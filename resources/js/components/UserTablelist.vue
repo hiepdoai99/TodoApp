@@ -19,6 +19,8 @@ const users = ref([])
 const input = ref('')
 let canEdit =ref(false)
 const currentPage = ref(1);
+const payloadData = ref([]);
+let maxPage = 5;
 let userdetail = ref()
 
 const toggleModal = () => {
@@ -83,14 +85,16 @@ const viewUserDetailRoleCheck =(id) =>{
 }
 
 const onClickHandler = (page) => {
-		$axios.get(`/user?include=roles,permissions&per_page=2&page=${page}`).then((data) => {
+		$axios.get(`/user?include=roles,permissions&per_page=1&page=${page}`).then((data) => {
 			users.value = data.data.data
     })
   };
 
 const getData = () => {
-    $axios.get('/user?include=roles,permissions&per_page=2&page=1').then((data) => {
+    $axios.get('/user?include=roles,permissions&per_page=1&page=1').then((data) => {
         users.value = data.data.data
+				payloadData.value = data.data.payload.pagination
+				maxPage = Math.round(data.data.payload.pagination.total / data.data.payload.pagination.per_page)
 				console.log('users ssasds',users.value)
     })
     localPermissions= localPermissions.map(e => e.name)
@@ -178,7 +182,7 @@ const deleteUser = () => {
 		<div class="pagination-body">
 			<v-pagination
 				v-model="currentPage"
-				:pages="10"
+				:pages="maxPage"
 				:range-size="1"
 				active-color="#FDFDC9"
 				@update:modelValue="onClickHandler"

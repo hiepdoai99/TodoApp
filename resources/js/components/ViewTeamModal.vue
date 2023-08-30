@@ -10,12 +10,18 @@ const props = defineProps({
 			<tr>
                 <th>ID</th>
                 <th>Name</th>
+				<th>Projects</th>
 			</tr>
 			</thead>
 			<tbody>
 				<tr v-if="taskdetail">
 					<td data-cell="id">{{ taskdetail.id }}</td>
 					<td data-cell="name">{{ taskdetail.name }}</td>
+					<td data-cell="Projects">
+						<div v-for="item in taskdetail.projects" :key="item.id">
+							{{ item.name }}
+						</div>
+					</td>
 				</tr>	
 			</tbody>
 		</table>

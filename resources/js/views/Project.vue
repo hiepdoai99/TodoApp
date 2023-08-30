@@ -14,6 +14,8 @@ import {
 
 const projects = ref([])
 const currentPage = ref(1);
+const payloadData = ref([]);
+let maxPage = 5;
 onMounted(() => {
     getData()
 		editProjectRoleCheck()
@@ -52,14 +54,18 @@ const deleteProjectRoleCheck = (id) =>{
 
 
 const onClickHandler = (page) => {
-		$axios.get(`/team?include=user,project,status,assignee&per_page=1&page=${page}`).then((data) => {
+		$axios.get(`/project?per_page=1&page=${page}`).then((data) => {
 			projects.value = data.data.data
     })
   };
 
 const getData = () => {
-    $axios.get('/project').then((data) => {
+    $axios.get('/project?per_page=1&page=1').then((data) => {
         projects.value = data.data.data
+        payloadData.value = data.data.payload.pagination
+				//console.log('projects.value',projects.value)
+				//console.log('payloadData.value',payloadData.value)
+				maxPage = Math.round(data.data.payload.pagination.total / data.data.payload.pagination.per_page)
     })
     localPermissions= localPermissions.map(e => e.name)
 }
@@ -121,7 +127,7 @@ const deleteobj = (projectId) => {
 				<div class="pagination-body">
 					<v-pagination
 						v-model="currentPage"
-						:pages="10"
+						:pages="maxPage"
 						:range-size="1"
 						active-color="#FDFDC9"
 						@update:modelValue="onClickHandler"
