@@ -49,6 +49,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::get('/verify-invite/{id}/{token}', [\App\Http\Controllers\Api\V1\InviteTeamController::class, 'verify']);
         Route::get('/get-project', [\App\Http\Controllers\Api\V1\ProjectController::class, 'getProject']);
         Route::post('/remove-user-team', [\App\Http\Controllers\Api\V1\TeamController::class, 'removeUserTeam']);
+        Route::get('/get-all-user-team', [\App\Http\Controllers\Api\V1\UserController::class, 'getAllUserTeam']);
 
 
 
