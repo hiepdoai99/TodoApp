@@ -100,16 +100,6 @@ const editOn = () => {
             :editPermissionCheck="disabledCheck"
         />
     </BaseModal>
-
-    <div class="pagination-body">
-        <v-pagination
-            v-model="currentPage"
-            :pages="10"
-            :range-size="1"
-            active-color="#FDFDC9"
-
-        />
-    </div>
 </template>
 
 
@@ -127,12 +117,6 @@ const editOn = () => {
     width: 100%;
     justify-content: space-between;
     text-align: center;
-}
-.pagination-body{
-    width: 100%;
-.Pagination{
-    justify-content: center;
-}
 }
 
 .input-group {

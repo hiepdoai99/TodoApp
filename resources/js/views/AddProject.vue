@@ -37,19 +37,30 @@ const toggleModal = () => {
 };
 
 const getUser = () => {
-    $axios.get('/user').then((data) => {
-        users.value = data.data.data
-				if(userRoleData === 'ROOT' || userRoleData === 'ADMIN'){
+    if(userRoleData === 'ROOT' || userRoleData === 'ADMIN'){
+        $axios.get('/user').then((data) => {
+					users.value = data.data.data
 					userlist = JSON.parse(JSON.stringify(users.value))
-				} else if (userRoleData === 'MEMBER'){
-					userlist = [{
+    	})
+    } else if (userRoleData === 'TEAMLEADER'){
+			$axios.get('/get-all-user-team').then((data) => {
+					users.value = data.data
+					console.log('users.value',users.value)
+					userlist = JSON.parse(JSON.stringify(users.value))
+					userlist = userlist.map((e)=>{
+						return {
+							id: e.id,
+							name: e.first_name + e.last_name,
+						}
+					})
+					console.log('userlist',userlist)
+    	})
+    } else{
+        userlist = [{
 						id: userDatas.id,
 						name: userDatas.first_name + userDatas.last_name
 					}]
-					console.log('member new data check', userlist)
-				}
-				
-    })
+    }
 }
 const getProject = (id) => {
     $axios.get('/project/' + id).then(

@@ -21,7 +21,8 @@ let canEdit = ref(false)
 let canAddTeam = ref(false)
 const teams = ref([])
 const currentPage = ref(1);
-
+const payloadData = ref([]);
+let maxPage = 5;
 onMounted(() => {
     getData()
 		editTeamRoleCheck()
@@ -87,17 +88,23 @@ const onClickHandler = (page) => {
   };
 
 const showDetail = (id) => {
-	let item = JSON.parse(JSON.stringify(teams.value))
-	item.forEach(element => {
-		if (element.id === id){
-			teamdetail = element
-		} 
-	});
+	// let item = JSON.parse(JSON.stringify(teams.value))
+	// item.forEach(element => {
+	// 	if (element.id === id){
+	// 		teamdetail = element
+	// 	} 
+	// });
+	$axios.get(`/team/${id}?include=projects`).then((data) => {
+			teamdetail.value = data.data.data
+			console.log('data return from api', teamdetail.value)
+    })
 };
 
 const getData = () => {
     $axios.get('/team?include=projects,created_by_user,users&per_page=3&page=1').then((data) => {
         teams.value = data.data.data
+				payloadData.value = data.data.payload.pagination
+				maxPage = Math.round(data.data.payload.pagination.total / data.data.payload.pagination.per_page)
 				console.log('data return', teams.value)
     })
 	localPermissions= localPermissions.map(e => e.name)
@@ -186,7 +193,7 @@ const deleteobj = (teamId	) => {
         <div class="pagination-body">
 					<v-pagination
 						v-model="currentPage"
-						:pages="10"
+						:pages="maxPage"
 						:range-size="1"
 						active-color="#FDFDC9"
 						@update:modelValue="onClickHandler"
