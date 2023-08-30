@@ -32,9 +32,9 @@ const formState = reactive({
 const rules = {
 	first_name: {required},
 	last_name: {required},
-	phone: {required},
+	phone: {},
 	user_role: {required},
-	password: {required},
+	password: {},
 }
 
 const v$ = userVuelidate(rules, formState)
@@ -47,7 +47,7 @@ const getUser = (id) => {
                 formState.first_name = res.data.data.first_name;
                 formState.last_name = res.data.data.last_name;
                 formState.phone = res.data.data.phone;
-								formState.user_role = res.data.data.roles[0].id;
+								formState.user_role = res.data.data.roles[0].name;
                 formState.password = res.data.data.password;
             }
         }
@@ -64,12 +64,12 @@ const getAllRoles = () => {
 const edit = async () => {
 	const validateRes = await v$.value.$validate();
 	if (validateRes) {
-		$axios.put('/task/' + id, {
+		$axios.put('/user/' + id, {
 			first_name: formState.first_name,
 			last_name: formState.last_name,
 			phone: formState.phone,
 			password: formState.password,
-
+			roles: formState.user_role
     }).then(
         (data) => {
             router.push('/todo')
@@ -116,7 +116,7 @@ const edit = async () => {
 						<div class="form-item">
                 <label>Role</label>
                 <select class="form-select " v-model="formState.user_role">
-                    <option v-for="role in allRoles" :key="role.id" :value="role.id">
+                    <option v-for="role in allRoles" :key="role.id" :value="role.name">
 													{{ role.name }}
                     </option>
                 </select>
