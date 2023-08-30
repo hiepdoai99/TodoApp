@@ -15,6 +15,7 @@ const teamList = ref([])
 let userlist = ref([])
 let teamlistParse = ref([])
 const users = ref([])
+const usersInProject = ref([])
 const modalActive = ref(null)
 const modalWarningActive = ref(null);
 const beforeDeleteModal = ref(null);
@@ -26,8 +27,6 @@ let userDatas = ref('')
 onMounted(() => {
 		userRoleData = localStorage.getItem('loginRole');
 		userDatas = JSON.parse(localStorage.getItem('user'));
-		console.log('role check', userRoleData)
-		console.log('data user check', userDatas)
     if (id) {
       getProject(id)
     }
@@ -48,7 +47,7 @@ const toggleBeforeDeleteModal = () => {
 };
 
 const showDetail = (id) => {
-	let item = JSON.parse(JSON.stringify(users.value))
+	let item = JSON.parse(JSON.stringify(usersInProject.value))
 	item.forEach(element => {
 		if (element.id === id){
 			userDetail = element
@@ -83,11 +82,11 @@ const deleteTaskRoleCheck = (userId) =>{
 	}
 }
 const deleteUser = () => {
-    $axios.post('/remove-user-team/' + {
-			team_id: id,
+    $axios.post('/remove-user-project/' + {
+			project_id: id,
 			user_id: selectedToDelUserId
 		}).then(res => {
-        getData(id)
+			getProject(id)
     })
 }
 const getUser = () => {
@@ -99,7 +98,6 @@ const getUser = () => {
     } else if (userRoleData === 'TEAMLEADER'){
 			$axios.get('/get-all-user-team').then((data) => {
 					users.value = data.data
-					console.log('users.value',users.value)
 					userlist = JSON.parse(JSON.stringify(users.value))
 					userlist = userlist.map((e)=>{
 						return {
@@ -107,7 +105,7 @@ const getUser = () => {
 							name: e.first_name + e.last_name,
 						}
 					})
-					console.log('userlist',userlist)
+					//console.log('userlist',userlist)
     	})
     } else{
         userlist = [{
@@ -117,10 +115,11 @@ const getUser = () => {
     }
 }
 const getProject = (id) => {
-    $axios.get('/project/' + id).then(
+    $axios.get(`/project/${id}?include=users`).then(
         (res) => {
             if (res) {
                 formState.name = res.data.data.name;
+								usersInProject.value = res.data.data.users;
             }
         }
     )
@@ -222,7 +221,7 @@ const edit = () => {
 									</tr>
 									</thead>
 									<tbody>
-									<tr v-for="user in users" :key="user.id">
+									<tr v-for="user in usersInProject" :key="user.id">
 											<td data-cell="id">{{ user.id }}</td>
 											<td data-cell="name">{{ user.name }}</td>
 											<td data-cell="action">
