@@ -75,19 +75,20 @@ const deleteTaskRoleCheck = (userId) =>{
 
 	if (requiredRole === 'TASK-DELETE'){
 		selectedToDelUserId = userId
-		console.log('selectedToDelUserId',selectedToDelUserId)
 		toggleBeforeDeleteModal()
 	} else {
 		toggleWarningModal()
 	}
 }
 const deleteUser = () => {
-    $axios.post('/remove-user-project/' + {
+    $axios.post('/remove-user-project/', {
 			project_id: id,
 			user_id: selectedToDelUserId
 		}).then(res => {
+			beforeDeleteModal.value = !beforeDeleteModal.value;
 			getProject(id)
     })
+		
 }
 const getUser = () => {
     if(userRoleData === 'ROOT' || userRoleData === 'ADMIN'){
@@ -105,7 +106,6 @@ const getUser = () => {
 							name: e.first_name + e.last_name,
 						}
 					})
-					//console.log('userlist',userlist)
     	})
     } else{
         userlist = [{
@@ -130,7 +130,6 @@ const getTeams = () => {
     $axios.get('/team?include=projects,created_by_user,users&per_page=3&page=1').then((data) => {
 			teamList.value = data.data.data
 			teamlistParse = JSON.parse(JSON.stringify(teamList.value))
-			console.log('team return in project', teamlistParse)
     })
 }
 const formState = reactive({
