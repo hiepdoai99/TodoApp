@@ -96,4 +96,17 @@ class UserController extends Controller
             'totalProject'=>$project,
         ]);
     }
+    public function getAllUserTeam(){
+        $user = auth()->user();
+        $allTeams = [];
+        $teams = $user->teams;
+        foreach ($teams as $team){
+            $allTeams[] = [
+                'id' => $team->id];
+        }
+        $usersInTeams = User::whereHas('teams', function ($query) use ($allTeams) {
+            $query->whereIn('team_id', $allTeams);
+        })->get();
+        return response()->json($usersInTeams);
+    }
 }
