@@ -30,6 +30,7 @@ class UserUpdateAction
      */
     public function execute(User $user, array $dataUser)
     {
+        $au = auth()->user();
         if ('nguyenxuanhiepk49@gmail.com' === $user->email) {
             return $user;
         }
@@ -43,6 +44,10 @@ class UserUpdateAction
                 if (!empty($dataUser['roles'])) {
                     $user->syncRoles((string)RolesEnum::member());
                     $role = Role::findByName((string)RolesEnum::member());
+                    $user->givePermissionTo($role->getAllPermissions());
+                }if($au->hasRoleAdmin()){
+                    $user->assignRole($dataUser['roles']);
+                    $role = Role::findByName($dataUser['roles']);
                     $user->givePermissionTo($role->getAllPermissions());
                 }
                 DB::commit();
