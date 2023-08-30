@@ -182,7 +182,7 @@ const deleteTaskRoleCheck = (userId) =>{
 									</tbody>
 
 							</table>
-					</section>
+						</section>
 
             <div class="form-item">
                 <button v-if="id" @click="edit" class="btn-main" type="button">Update</button>
@@ -356,23 +356,6 @@ tbody tr td p {
 	}
 }
 
-.date-container {
-    display: flex;
-}
-
-.date-container div:first-child {
-    margin-right: 20px;
-}
-
-.date-select {
-    background-color: #FDFDC9;
-    color: black;
-    font-size: 18px;
-    border: none;
-    outline: none;
-    border-radius: 5px;
-}
-
 .form-item textarea {
     width: 70%;
     border-radius: 0px 15px 15px 0px;
@@ -389,29 +372,6 @@ input[type='file'] {
     display: none;
 }
 
-.upload-form-item {
-    width: 100%;
-    display: flex;
-    margin-bottom: 10px;
-    color: white;
-    justify-content: center;
-
-}
-
-.uploadLabel {
-    display: inline-block;
-    text-transform: uppercase;
-    color: #fff;
-    background-color: #1D5D9B;
-    text-align: center;
-    padding: 15px 40px;
-    font-size: 18px;
-    letter-spacing: 1.5px;
-    user-select: none;
-    cursor: pointer;
-    border-radius: 15px;
-}
-
 .errtext {
     background-color: #ebeb39;
     border-radius: 15px;
@@ -422,11 +382,4 @@ input[type='file'] {
     justify-content: center;
 }
 
-
-.imagePreview {
-    width: 100px;
-    height: 100px;
-    background-size: cover;
-    background-position: center center;
-}
 </style>
