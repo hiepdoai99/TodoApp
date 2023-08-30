@@ -18,9 +18,11 @@ let localPermissions = JSON.parse(localStorage.getItem('permissions'))
 const modalActive = ref(null);
 const modalWarningActive = ref(null);
 let canEdit = ref(false);
-let taskdetail = ref()
-const todoList = ref([])
-const input = ref('')
+let taskdetail = ref();
+const todoList = ref([]);
+const payloadData = ref([]);
+let maxPage = 5;
+const input = ref('');
 const currentPage = ref(1);
 let projectIdSelected = ref();
 
@@ -94,7 +96,11 @@ onMounted(() => {
 const getData = (projectId) => {
     $axios.get(`/task?include=user,project,status,assignee,comments&project_id=${projectId}&per_page=1&page=1`).then((data) => {
         todoList.value = data.data.data
+				payloadData.value = data.data.payload.pagination
+				maxPage = Math.round(data.data.payload.pagination.total / data.data.payload.pagination.per_page)
 				console.log('todo value with comments :',  todoList.value)
+				//console.log('payloadData.value :',  payloadData.value)
+				console.log('maxPage :',  maxPage)
     })
 		localPermissions= localPermissions.map(e => e.name)
 		//console.log('permission filtered:', localPermissions)
@@ -218,7 +224,7 @@ watch(input,
 					<div class="pagination-body">
 						<v-pagination
 							v-model="currentPage"
-							:pages="20"
+							:pages="maxPage"
 							:range-size="1"
 							active-color="#FDFDC9"
 							@update:modelValue="onClickHandler"

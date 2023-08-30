@@ -12,11 +12,12 @@ import {
 } from "vue";
 
 const id = route.params.id ?? null;
-
+const allRoles = ref([])
 onMounted(() => {
     if (id) {
 			getUser(id)
     }
+		getAllRoles()
 })
 
 const formState = reactive({
@@ -46,11 +47,18 @@ const getUser = (id) => {
                 formState.first_name = res.data.data.first_name;
                 formState.last_name = res.data.data.last_name;
                 formState.phone = res.data.data.phone;
-								formState.user_role = res.data.data.roles[0].name;
+								formState.user_role = res.data.data.roles[0].id;
                 formState.password = res.data.data.password;
             }
         }
     )
+}
+
+const getAllRoles = () => {
+    $axios.get('/roles').then((data) => {
+			allRoles.value = data.data.data
+			console.log('allRoles',allRoles.value)
+    })
 }
 
 const edit = async () => {
@@ -78,7 +86,7 @@ const edit = async () => {
         <form class="form-container" enctype="multipart/form-data">
 
             <div class="form-item">
-                <label for="exampleFormControlInput1">First name</label>
+                <label>First name</label>
                 <input v-model="formState.first_name" class="form-control" type="text" aria-label=".form-control-lg example">
 
             </div>
@@ -88,7 +96,7 @@ const edit = async () => {
             </div>
 
             <div class="form-item">
-                <label for="exampleFormControlInput1">Last name</label>
+                <label>Last name</label>
                 <input v-model="formState.last_name" class="form-control" type="text" aria-label=".form-control-lg example">
             </div>
 
@@ -97,7 +105,7 @@ const edit = async () => {
             </div>
 
             <div class="form-item">
-                <label for="exampleFormControlInput1">phone</label>
+                <label>phone</label>
                 <input v-model="formState.phone" class="form-control" type="text" aria-label=".form-control-lg example">
             </div>
 
@@ -106,8 +114,12 @@ const edit = async () => {
             </div>
 
 						<div class="form-item">
-                <label for="exampleFormControlInput1">Role</label>
-                <input v-model="formState.user_role" class="form-control" type="text" aria-label=".form-control-lg example">
+                <label>Role</label>
+                <select class="form-select " v-model="formState.user_role">
+                    <option v-for="role in allRoles" :key="role.id" :value="role.id">
+													{{ role.name }}
+                    </option>
+                </select>
             </div>
 
             <div class="errtext" v-for="error in v$.user_role.$errors" :key="error.$uid">
@@ -115,7 +127,7 @@ const edit = async () => {
             </div>
 
             <div class="form-item">
-                <label for="exampleFormControlInput1">password</label>
+                <label>password</label>
                 <input v-model="formState.password" class="form-control" type="text" aria-label=".form-control-lg example">
             </div>
 
