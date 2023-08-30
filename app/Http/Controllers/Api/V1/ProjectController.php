@@ -145,4 +145,22 @@ class ProjectController extends Controller
             return $this->respondSuccess(new ProjectCollection($projects));
         }
     }
+    public function removeUserProject(Request $request){
+        $user = Auth::user();
+        $user_id = $request->user_id ?? null;
+        $project = $request->project_id ?? null;
+        $pro = Project::where('id',$project)->first();
+        if (Auth::user()->hasRoleAdmin() || Auth::user()->hasRoleTeamLeader() || $user->id == $pro->created_by){
+            if ( $user_id ){
+                $up = UserProject::where([
+                    ['project_id',$project],
+                    ['user_id',$user_id]
+                ])->first();
+                if ( $up && $up->delete()) {
+                    return $this->respondOk(__('removeUserInProject.delete_success', ['resource', 'Remove user Project success']));
+                }
+            }
+        }
+        return $this->respondError(__('removeUserInProject.delete_fail',['resource',  '']));
+    }
 }

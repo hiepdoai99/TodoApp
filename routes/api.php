@@ -50,13 +50,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::get('/get-project', [\App\Http\Controllers\Api\V1\ProjectController::class, 'getProject']);
         Route::post('/remove-user-team', [\App\Http\Controllers\Api\V1\TeamController::class, 'removeUserTeam']);
         Route::get('/get-all-user-team', [\App\Http\Controllers\Api\V1\UserController::class, 'getAllUserTeam']);
-
-
-
-//        Route::get('/user', [\App\Http\Controllers\Api\V1\UserController::class, 'index']);
-//        Route::post('/user', [\App\Http\Controllers\Api\V1\UserContrsksller::class, 'store']);
-//        Route::put('/user/{id}', [\App\Http\Controllers\Api\V1\UserController::class, 'update']);
-//        Route::delete('/user/{id}', [\App\Http\Controllers\Api\V1\UserController::class, 'destroy']);
+        Route::post('/remove-user-project', [\App\Http\Controllers\Api\V1\ProjectController::class, 'removeUserProject']);
     });
 });
 
