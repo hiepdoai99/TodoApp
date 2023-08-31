@@ -13,6 +13,7 @@ const route = useRoute()
 let teamDetail = ref()
 let localPermissions = JSON.parse(localStorage.getItem('permissions'))
 const usersOfTeam = ref([])
+const projectsOfTeam = ref([])
 const id = route.params.id ?? null;
 let selectedToDelUserId = ref();
 const modalActive = ref(null);
@@ -38,9 +39,11 @@ const getTeam = (id) => {
 }
 
 const getData = (teamid) => {
-    $axios.get(`/team/${teamid}?include=users`).then((data) => {
+    $axios.get(`/team/${teamid}?include=users,projects`).then((data) => {
         usersOfTeam.value = data.data.data.users
+				projectsOfTeam.value = data.data.data.projects
 				console.log('usersOfTeam :',  usersOfTeam.value)
+				console.log('projectsOfTeam.value :',  projectsOfTeam.value)
     })
 		localPermissions= localPermissions.map(e => e.name)
 }
@@ -158,14 +161,14 @@ const deleteTaskRoleCheck = (userId) =>{
 									<thead>
 									<tr>
 											<th>ID</th>
-											<th>Name</th>
+											<th>Team member</th>
 											<th>Actions</th>
 									</tr>
 									</thead>
 									<tbody>
 									<tr v-for="user in usersOfTeam" :key="user.id">
 											<td data-cell="id">{{ user.id }}</td>
-											<td data-cell="name">{{ user.name }}</td>
+											<td data-cell="Team member">{{ user.name }}</td>
 											<td data-cell="action">
 													<div class="actions-box">
 														<div @click="viewUserRoleCheck(user.id)" class="btn view-btn">
@@ -178,6 +181,24 @@ const deleteTaskRoleCheck = (userId) =>{
 														</div>
 													</div>
 											</td>
+									</tr>
+									</tbody>
+
+							</table>
+						</section>
+
+						<section v-if="id" class="table-body">
+							<table>
+									<thead>
+									<tr>
+											<th>ID</th>
+											<th>Project name</th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr v-for="project in projectsOfTeam" :key="project.id">
+											<td data-cell="id">{{ project.id }}</td>
+											<td data-cell="Team member">{{ project.name }}</td>
 									</tr>
 									</tbody>
 
