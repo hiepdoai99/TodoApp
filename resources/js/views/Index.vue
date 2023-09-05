@@ -36,7 +36,7 @@ const afterReloadTeamsCheck = () =>{
   if( userTeamsDatasLocal !== null){
     store.state.usersTeamData = userTeamsDatasLocal
   }
-  console.log('this tun 2',projectsLocal)
+
   if(projectsLocal !== null){
     projects = projectsLocal
     if(projects.length !== 0){
@@ -52,7 +52,6 @@ const passSelectedTeamId = (id) =>{
   $axios.get(`/get-project?team_id=${id}`).then((data) => {
         projects.value = data.data.data
         localStorage.setItem('projectsFromTeamLocal',(JSON.stringify(data.data.data)))
-        console.log('get projects', projects.value)
         if(projects.value.length !== 0){
           showProjects = true
         }
