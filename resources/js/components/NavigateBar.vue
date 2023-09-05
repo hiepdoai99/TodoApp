@@ -16,6 +16,7 @@ let adminVisible = ref(false);
 let memberVisible = ref(false);
 let teamLeaderVisible = ref(false);
 let loginVisible = ref(true);
+let logoutVisible = ref(false);
 const userNameLocal = JSON.parse(localStorage.getItem('user'))
 
 const openMenu = () => {
@@ -46,14 +47,17 @@ const afterLoginRoleCheck = () =>{
 			adminVisible.value = !adminVisible.value
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
-			teamLeaderVisible.value = !teamLeaderVisible.value	
+			teamLeaderVisible.value = !teamLeaderVisible.value
+			logoutVisible.value = !logoutVisible.value		
 		}else if (roledata === 'TEAMLEADER') {
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
 			teamLeaderVisible.value = !teamLeaderVisible.value
+			logoutVisible.value = !logoutVisible.value	
 		} else if (roledata === 'MEMBER') {
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
+			logoutVisible.value = !logoutVisible.value	
 		}
   });
 }
@@ -105,10 +109,10 @@ const logout = () =>{
 					<li v-show="memberVisible === true || adminVisible === true" class="nav-item">
 						<a class="nav-link" href="#">
 								<span v-if="store.state.userLoginData.first_name !== undefined">
-									WELCOME, {{store.state.userLoginData.first_name}} {{store.state.userLoginData.last_name}}
+									WELCOME! {{ roledata }} user, {{store.state.userLoginData.first_name}} {{store.state.userLoginData.last_name}}
 								</span>
 								<span v-else-if="userNameLocal !== null">
-									WELCOME, {{userNameLocal.first_name || ''}} {{userNameLocal.last_name || ''}}
+									WELCOME! {{ roledata }} user, {{userNameLocal.first_name || ''}} {{userNameLocal.last_name || ''}}
 								</span>
 						</a>
 					</li>
@@ -143,7 +147,7 @@ const logout = () =>{
 									<router-link to="/admin">Admin</router-link>
 							</a>
 					</li>
-					<li class="nav-item">
+					<li v-show="logoutVisible === true" class="nav-item">
 							<a class="nav-link" href="/logout" @click="logout">
 									Logout
 							</a>
