@@ -13,7 +13,7 @@ const route = useRoute()
 const users = ref([])
 const status = ref([])
 const project = ref([])
-
+const currProject = ref([])
 const formState = reactive({
     name: '',
     description: '',
@@ -36,8 +36,7 @@ const rules = {
     end_date: {required}
 }
 
-
-let disableStatus = true
+let projectIdSelected = ref();
 let imgdata = ''
 let userLoginData = JSON.parse(localStorage.getItem('user'))
 
@@ -55,7 +54,6 @@ onMounted(() => {
 const getUser = () => {
     $axios.get('/user').then((data) => {
         users.value = data.data.data
-				console.log('all user data', users.value);
     })
 		formState.assignee_id = userLoginData.id;
 }
@@ -65,9 +63,18 @@ const getStatus = () => {
     })
 }
 const getProject = () => {
+		projectIdSelected = localStorage.getItem('selectedProjectId');
+		formState.project_id = projectIdSelected
+		//currProject
     $axios.get('/project').then((data) => {
         project.value = data.data.data
     })
+
+		$axios.get(`/project/${projectIdSelected}`).then((data) => {
+				currProject.value = data.data.data
+				console.log('currProject.value',currProject.value);
+    })
+
 }
 const v$ = userVuelidate(rules, formState)
 
@@ -149,15 +156,11 @@ const edit = () => {
     )
 }
 
-const checkProjectData = () => {
-		disableStatus = false
-}
-
 </script>
 
 <template>
     <div class="form-register">
-        <h3 class="form-header"> Add Task</h3>
+        <h3 class="form-header"> Add task for: {{ currProject.name }}</h3>
         <form class="form-container" enctype="multipart/form-data">
 
             <div class="form-item">
@@ -172,17 +175,17 @@ const checkProjectData = () => {
 
             <div class="form-item">
                 <label>Description</label>
-                <textarea v-model="formState.description" class="form-control" id="exampleFormControlTextarea1"
-                          rows="3"></textarea>
+                <textarea v-model="formState.description" class="form-control" rows="3">
+								</textarea>
             </div>
 
             <div class="errtext" v-for="error in v$.description.$errors" :key="error.$uid">
                 {{ error.$message }}
             </div>
 
-						<div class="form-item">
+						<!-- <div class="form-item">
                 <label>Project</label>
-                <select @click="checkProjectData" class="form-select " v-model="formState.project_id">
+                <select class="form-select " v-model="formState.project_id" disabled>
                     <option v-for="projects in project" :key="projects.value" :value="projects.id">
                         {{ projects.name }}
                     </option>
@@ -191,25 +194,11 @@ const checkProjectData = () => {
 
             <div class="errtext" v-for="error in v$.project_id.$errors" :key="error.$uid">
                 {{ error.$message }}
-            </div>
-
-            <div class="form-item">
-                <label>Assigner</label>
-                <select class="form-select " v-model="formState.assignee_id" disabled>
-                    <option v-for="assigner in users" :key="assigner.id" :value="assigner.id">
-													{{ assigner.name }}
-                    </option>
-                </select>
-            </div>
-
-            <div class="errtext" v-for="error in v$.assignee_id.$errors" :key="error.$uid">
-                {{ error.$message }}
-            </div>
-
+            </div> -->
 
             <div class="form-item">
                 <label>Assignee</label>
-                <select class="form-select " v-model="formState.user_id" :disabled="disableStatus">
+                <select class="form-select " v-model="formState.user_id" >
                     <option v-for="user in users" :key="user.value" :value="user.id">
                         {{ user.name }}
                     </option>
@@ -219,7 +208,6 @@ const checkProjectData = () => {
             <div class="errtext" v-for="error in v$.user_id.$errors" :key="error.$uid">
                 {{ error.$message }}
             </div>
-
 
             <div class="form-item">
                 <label>Status</label>

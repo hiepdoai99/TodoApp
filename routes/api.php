@@ -24,7 +24,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
 
     Route::group(['middleware' => ['auth:api']], function ($router) {
 
-        Route::apiResource('permissions', \App\Http\Controllers\Api\V1\PermissionController::class)->only('index');
+        Route::apiResource('permissions', \App\Http\Controllers\Api\V1\PermissionController::class);
         Route::post('permissions/refresh', [\App\Http\Controllers\Api\V1\PermissionController::class, 'refresh'])->name('permissions.refresh');
 
         Route::post('/verify-token', [\App\Http\Controllers\Api\Auth\AuthController::class, 'verifyToken']);

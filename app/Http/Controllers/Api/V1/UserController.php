@@ -4,27 +4,15 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Actions\UserRegisterAction;
 use App\Actions\UserUpdateAction;
-use App\Enums\RolesEnum;
-use App\Enums\UserTypesEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UserRequest;
-use App\Http\Resources\ProjectCollection;
-use App\Http\Resources\TeamResource;
 use App\Http\Resources\UserCollection;
-use App\Http\Resources\UserProjectCollection;
 use App\Http\Resources\UserResource;
-use App\Models\Project;
-use App\Models\Role;
-use App\Models\Team;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Spatie\QueryBuilder\QueryBuilder;
-use Spatie\QueryBuilder\AllowedFilter;
 
 
 class UserController extends Controller
@@ -85,16 +73,21 @@ class UserController extends Controller
 
     public function dashboard(Request $request)
     {
-        $user = DB::table('users')->count();
-        $task = DB::table('tasks')->count();
-        $team = DB::table('teams')->count();
-        $project = DB::table('projects')->count();
-        return response()->json([
-            'totalUser' => $user,
-            'totalTeam' => $team,
-            'totalTasks' => $task,
-            'totalProject'=>$project,
-        ]);
+        if (auth()->user()->can('DASHBOARD')) {
+            $user = DB::table('users')->count();
+            $task = DB::table('tasks')->count();
+            $team = DB::table('teams')->count();
+            $project = DB::table('projects')->count();
+            return response()->json([
+                'totalUser' => $user,
+                'totalTeam' => $team,
+                'totalTasks' => $task,
+                'totalProject'=>$project,
+            ]);
+        } else {
+            return $this->respondForbidden('Bạn không có quyền xem ');
+        }
+
     }
     public function getAllUserTeam(){
         $user = auth()->user();

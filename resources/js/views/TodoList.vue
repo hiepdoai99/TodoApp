@@ -30,6 +30,10 @@ const toggleModal = () => {
   modalActive.value = !modalActive.value;
 };
 
+const filterPermissions = () => {
+  localPermissions = localPermissions.map(e => e.name)
+};
+
 const toggleWarningModal = () => {
   modalWarningActive.value = !modalWarningActive.value;
 };
@@ -78,37 +82,44 @@ const viewDetailRoleCheck =(id) =>{
 }
 
 const onClickHandler = (page) => {
-		$axios.get(`/task?include=user,project,status,assignee,comments&project_id=${projectIdSelected}&per_page=1&page=${page}`).then((data) => {
+		$axios.get(`/task?include=user,project,status,assignee,comments&project_id=${projectIdSelected}&per_page=2&page=${page}`).then((data) => {
         todoList.value = data.data.data
     })
   };
 
 onMounted(() => {
+	filterPermissions()
 	window.addEventListener('projectId-added', () => {
     projectIdSelected = localStorage.getItem('selectedProjectId');
 		getData(projectIdSelected)
 		editTaskRoleCheck()
-		
   });
-
+	getSelectedIdlocal()
+	editTaskRoleCheck()
 })
 
+const getSelectedIdlocal = () =>{
+	if(projectIdSelected.value === undefined){
+		projectIdSelected = localStorage.getItem('selectedProjectId');
+		getData(projectIdSelected)
+	}
+
+}
+
 const getData = (projectId) => {
-    $axios.get(`/task?include=user,project,status,assignee,comments&project_id=${projectId}&per_page=1&page=1`).then((data) => {
+    $axios.get(`/task?include=user,project,status,assignee,comments&project_id=${projectId}&per_page=2&page=1`).then((data) => {
         todoList.value = data.data.data
 				payloadData.value = data.data.payload.pagination
-				maxPage = Math.round(data.data.payload.pagination.total / data.data.payload.pagination.per_page)
-				console.log('todo value with comments :',  todoList.value)
-				//console.log('payloadData.value :',  payloadData.value)
+				if(payloadData.value.total !== undefined){
+					maxPage = Math.round(payloadData.value.total / data.data.payload.pagination.per_page)
+				}
 				console.log('maxPage :',  maxPage)
     })
-		localPermissions= localPermissions.map(e => e.name)
-		//console.log('permission filtered:', localPermissions)
 }
 
 const deleteobj = (todoId) => {
     $axios.delete('/task/' + todoId).then(res => {
-        getData()
+        getData(projectIdSelected)
     })
 }
 
@@ -277,15 +288,6 @@ body {
     align-items: center;
 
     transition: .2s;
-}
-
-.task-setting {
-    width: 10vh;
-}
-
-.task-setting span {
-    margin-right: 5px;
-    cursor: pointer;
 }
 
 .table-search-and-add-box {

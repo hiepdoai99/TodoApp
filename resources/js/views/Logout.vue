@@ -19,6 +19,8 @@ onMounted(() => {
             localStorage.removeItem('permissions');
             localStorage.removeItem('loginRole');
             localStorage.removeItem('userTeams');
+            localStorage.removeItem('selectedProjectId');
+			localStorage.removeItem('projectsFromTeamLocal');
             router.push('/login')
         }
 
