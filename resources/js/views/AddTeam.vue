@@ -13,6 +13,7 @@ const route = useRoute()
 let teamDetail = ref()
 let localPermissions = JSON.parse(localStorage.getItem('permissions'))
 const usersOfTeam = ref([])
+const projectsOfTeam = ref([])
 const id = route.params.id ?? null;
 let selectedToDelUserId = ref();
 const modalActive = ref(null);
@@ -38,9 +39,11 @@ const getTeam = (id) => {
 }
 
 const getData = (teamid) => {
-    $axios.get(`/team/${teamid}?include=users`).then((data) => {
+    $axios.get(`/team/${teamid}?include=users,projects`).then((data) => {
         usersOfTeam.value = data.data.data.users
+				projectsOfTeam.value = data.data.data.projects
 				console.log('usersOfTeam :',  usersOfTeam.value)
+				console.log('projectsOfTeam.value :',  projectsOfTeam.value)
     })
 		localPermissions= localPermissions.map(e => e.name)
 }
@@ -158,14 +161,14 @@ const deleteTaskRoleCheck = (userId) =>{
 									<thead>
 									<tr>
 											<th>ID</th>
-											<th>Name</th>
+											<th>Team member</th>
 											<th>Actions</th>
 									</tr>
 									</thead>
 									<tbody>
 									<tr v-for="user in usersOfTeam" :key="user.id">
 											<td data-cell="id">{{ user.id }}</td>
-											<td data-cell="name">{{ user.name }}</td>
+											<td data-cell="Team member">{{ user.name }}</td>
 											<td data-cell="action">
 													<div class="actions-box">
 														<div @click="viewUserRoleCheck(user.id)" class="btn view-btn">
@@ -182,7 +185,25 @@ const deleteTaskRoleCheck = (userId) =>{
 									</tbody>
 
 							</table>
-					</section>
+						</section>
+
+						<section v-if="id" class="table-body">
+							<table>
+									<thead>
+									<tr>
+											<th>ID</th>
+											<th>Project name</th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr v-for="project in projectsOfTeam" :key="project.id">
+											<td data-cell="id">{{ project.id }}</td>
+											<td data-cell="Team member">{{ project.name }}</td>
+									</tr>
+									</tbody>
+
+							</table>
+						</section>
 
             <div class="form-item">
                 <button v-if="id" @click="edit" class="btn-main" type="button">Update</button>
@@ -356,23 +377,6 @@ tbody tr td p {
 	}
 }
 
-.date-container {
-    display: flex;
-}
-
-.date-container div:first-child {
-    margin-right: 20px;
-}
-
-.date-select {
-    background-color: #FDFDC9;
-    color: black;
-    font-size: 18px;
-    border: none;
-    outline: none;
-    border-radius: 5px;
-}
-
 .form-item textarea {
     width: 70%;
     border-radius: 0px 15px 15px 0px;
@@ -389,29 +393,6 @@ input[type='file'] {
     display: none;
 }
 
-.upload-form-item {
-    width: 100%;
-    display: flex;
-    margin-bottom: 10px;
-    color: white;
-    justify-content: center;
-
-}
-
-.uploadLabel {
-    display: inline-block;
-    text-transform: uppercase;
-    color: #fff;
-    background-color: #1D5D9B;
-    text-align: center;
-    padding: 15px 40px;
-    font-size: 18px;
-    letter-spacing: 1.5px;
-    user-select: none;
-    cursor: pointer;
-    border-radius: 15px;
-}
-
 .errtext {
     background-color: #ebeb39;
     border-radius: 15px;
@@ -422,11 +403,4 @@ input[type='file'] {
     justify-content: center;
 }
 
-
-.imagePreview {
-    width: 100px;
-    height: 100px;
-    background-size: cover;
-    background-position: center center;
-}
 </style>

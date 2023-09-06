@@ -43,26 +43,26 @@ class ProjectController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProjectRequest $request)
     {
         $teams = $request->teams ?? null;
         $user = Auth::user();
-        $data = $request->validate([
-            'name' => ['required', 'string'],
-        ]);
-        $data['created_by'] = $user->id;
+        $data = [
+            'name' => $request->input('name'),
+            'created_by' => $user->id,
+        ];
         if($request->user_id){
             $data['created_by'] = $request->user_id;
         }
 
         $project = Project::create($data);
 
-        if($request->user_id){
+        if($request->user_id = $user->id){
             UserProject::create([
                 'project_id' => $project->id,
                 'user_id' => $request->user_id
             ]);
-        }if ($teams) {
+        }if ($teams && ($user->hasRoleAdmin() || $user->hasRoleTeamLeader())) {
             $usersInTeams = User::whereHas('teams', function ($query) use ($teams) {
                 $query->whereIn('team_id', $teams);
             })->pluck('id');

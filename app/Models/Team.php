@@ -12,14 +12,12 @@ class Team extends Model
 
     protected $fillable = [
         'name',
-        'created_by',
     ];
 
     public function getRules()
     {
         return [
             'name' => ['sometimes', 'required', 'string'],
-            'created_by' => ['required', 'integer', 'min:1', 'exists:users,id'],
         ];
     }
     public function users()
@@ -33,6 +31,19 @@ class Team extends Model
     public function created_by_user()
     {
         return $this->belongsTo(User::class,'created_by', 'id');
+    }
+
+    protected static function boot() {
+        parent::boot();
+
+
+        static::creating(function ($team) {
+            // Kiểm tra xem đã có người dùng đăng nhập hay chưa
+            if (auth()->check()) {
+                // Lấy id của người dùng đang đăng nhập và gán cho trường created_by
+                $team->created_by = auth()->id();
+            }
+        });
     }
 
 }

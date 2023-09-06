@@ -38,14 +38,14 @@ class TeamController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TeamRequest $request)
     {
         $user = Auth::user();
 
-        $data = $request->validate([
-            'name' => ['sometimes', 'required', 'string'],
-        ]);
-        $data['created_by'] = $user->id;
+        $data = [
+            'name' => $request->input('name'),
+            'created_by' => $user->id,
+        ];
 
         $team = Team::create($data);
 

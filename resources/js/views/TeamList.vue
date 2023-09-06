@@ -94,7 +94,7 @@ const showDetail = (id) => {
 	// 		teamdetail = element
 	// 	} 
 	// });
-	$axios.get(`/team/${id}?include=projects`).then((data) => {
+	$axios.get(`/team/${id}?include=projects,users`).then((data) => {
 			teamdetail.value = data.data.data
 			console.log('data return from api', teamdetail.value)
     })
@@ -136,8 +136,7 @@ const deleteobj = (teamId	) => {
 										Invite new member
 									</button>
 								</div>
-
-						</div>
+							</div>
             </div>
         </section>
 

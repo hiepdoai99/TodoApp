@@ -8,7 +8,8 @@ let userTeamsData = computed(() => {
 	return store.state.usersTeamData
 })
 let userTeamsDatasLocal = JSON.parse(localStorage.getItem('userTeams'));
-const projects = ref([])
+let projects = ref([])
+let projectsLocal = JSON.parse(localStorage.getItem('projectsFromTeamLocal'));
 let showProjects = ref(false)
 onMounted(()=>{
 	afterReloadTeamsCheck();
@@ -21,25 +22,38 @@ watch(userTeamsData,(newteams)=>{
 })
 
 const projectLengthCheck = ()=>{
-  if(projects.value.length !== 0){
+  if(  userTeamsDatasLocal === null){
+    if(projects.value.length !== 0){
     showProjects = true
-  } else if (projects.value.length === 0){
-    showProjects = false
+    } else if (projects.value.length === 0){
+      showProjects = false
+    }
   }
     
 }
 
 const afterReloadTeamsCheck = () =>{
-  userTeamsData = userTeamsDatasLocal
+  if( userTeamsDatasLocal !== null){
+    store.state.usersTeamData = userTeamsDatasLocal
+  }
+
+  if(projectsLocal !== null){
+    projects = projectsLocal
+    if(projects.length !== 0){
+    showProjects = true
+    } else if (projects.length === 0){
+      showProjects = false
+    }
+  }
+
 };
 
 const passSelectedTeamId = (id) =>{
   $axios.get(`/get-project?team_id=${id}`).then((data) => {
         projects.value = data.data.data
-        console.log('get projects', projects.value)
+        localStorage.setItem('projectsFromTeamLocal',(JSON.stringify(data.data.data)))
         if(projects.value.length !== 0){
           showProjects = true
-          console.log('status',showProjects)
         }
     })
 };

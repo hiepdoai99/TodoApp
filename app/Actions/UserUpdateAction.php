@@ -31,25 +31,36 @@ class UserUpdateAction
     public function execute(User $user, array $dataUser)
     {
         $au = auth()->user();
-        if ('nguyenxuanhiepk49@gmail.com' === $user->email) {
-            return $user;
-        }
         if (!empty($dataUser['password'])) {
             $dataUser['password'] = Hash::make($dataUser['password']);
         }
 
+        if ($au->hasRoleAdmin() && $au->id === $user->id) {
+            return response()->json(['message' => 'không thực hiện được']);
+        }
+
+        if ($au->hasRoleAdmin() && $user->hasRoleRoot()) {
+            return response()->json(['message' => 'không có quyền']);
+        }
+
         DB::beginTransaction();
         try {
-            if($user->fill($dataUser)->save()){
+            if ($au->hasRoleMember() && $au->id === $user->id) {
+                $user->fill($dataUser)->save();
                 if (!empty($dataUser['roles'])) {
                     $user->syncRoles((string)RolesEnum::member());
                     $role = Role::findByName((string)RolesEnum::member());
                     $user->givePermissionTo($role->getAllPermissions());
-                }if($au->hasRoleAdmin()){
-                    $user->assignRole($dataUser['roles']);
-                    $role = Role::findByName($dataUser['roles']);
-                    $user->givePermissionTo($role->getAllPermissions());
                 }
+
+                DB::commit();
+            }
+            if ($au->hasRoleAdmin()) {
+                $user->fill($dataUser)->save();
+                $user->assignRole($dataUser['roles']);
+                $role = Role::findByName($dataUser['roles']);
+                $user->givePermissionTo($role->getAllPermissions());
+
                 DB::commit();
             }
         } catch (\Exception $e) {
