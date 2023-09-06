@@ -52,6 +52,8 @@ use Spatie\Enum\Laravel\Enum;
  * @method static self comment_delete()
  *
  *
+ * @method static self dashboard()
+ *
  * */
 
 final class PermissionsEnum extends Enum

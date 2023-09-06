@@ -13,14 +13,12 @@ class Project extends Model
 
     protected $fillable = [
         'name',
-        'created_by',
     ];
 
     public function getRules()
     {
         return [
             'name' => ['sometimes', 'required', 'string'],
-            'created_by' => ['required', 'integer', 'min:1', 'exists:users,id'],
         ];
     }
     public function users()
@@ -47,6 +45,13 @@ class Project extends Model
 
         static::deleting(function ($project) {
             $project->tasks()->delete();
+        });
+        static::creating(function ($project) {
+            // Kiểm tra xem đã có người dùng đăng nhập hay chưa
+            if (auth()->check()) {
+                // Lấy id của người dùng đang đăng nhập và gán cho trường created_by
+                $project->created_by = auth()->id();
+            }
         });
     }
 }
