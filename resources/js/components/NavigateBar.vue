@@ -70,13 +70,17 @@ const afterReloadRolecheck = () =>{
 			adminVisible.value = !adminVisible.value
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
+			teamLeaderVisible.value = !teamLeaderVisible.value
+			logoutVisible.value = !logoutVisible.value	
 		} else if (roledata === 'TEAMLEADER') {
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
 			teamLeaderVisible.value = !teamLeaderVisible.value
+			logoutVisible.value = !logoutVisible.value	
 		} else if (roledata === 'MEMBER') {
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
+			logoutVisible.value = !logoutVisible.value	
 		}
   };
 
@@ -90,6 +94,7 @@ const logout = () =>{
       localStorage.removeItem('loginRole');
 			localStorage.removeItem('userTeams');
 			localStorage.removeItem('selectedProjectId');
+			localStorage.removeItem('projectsFromTeamLocal');
       router.push('/login')
     }
 }

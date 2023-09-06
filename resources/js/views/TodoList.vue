@@ -88,10 +88,18 @@ onMounted(() => {
     projectIdSelected = localStorage.getItem('selectedProjectId');
 		getData(projectIdSelected)
 		editTaskRoleCheck()
-		
   });
-
+	getSelectedIdlocal()
+	editTaskRoleCheck()
 })
+
+const getSelectedIdlocal = () =>{
+	if(projectIdSelected.value === undefined){
+		projectIdSelected = localStorage.getItem('selectedProjectId');
+		getData(projectIdSelected)
+	}
+
+}
 
 const getData = (projectId) => {
     $axios.get(`/task?include=user,project,status,assignee,comments&project_id=${projectId}&per_page=1&page=1`).then((data) => {
