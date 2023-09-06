@@ -88,12 +88,7 @@ const onClickHandler = (page) => {
   };
 
 const showDetail = (id) => {
-	// let item = JSON.parse(JSON.stringify(teams.value))
-	// item.forEach(element => {
-	// 	if (element.id === id){
-	// 		teamdetail = element
-	// 	} 
-	// });
+
 	$axios.get(`/team/${id}?include=projects,users`).then((data) => {
 			teamdetail.value = data.data.data
 			console.log('data return from api', teamdetail.value)

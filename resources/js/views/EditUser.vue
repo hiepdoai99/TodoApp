@@ -72,7 +72,7 @@ const edit = async () => {
 			roles: formState.user_role
     }).then(
         (data) => {
-            router.push('/todo')
+            router.push('/')
         }
     	)
     }

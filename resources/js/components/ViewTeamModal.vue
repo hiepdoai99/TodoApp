@@ -17,15 +17,19 @@ const props = defineProps({
 				<tr v-if="taskdetail">
 					<td data-cell="id">{{ taskdetail.id }}</td>
 					<td data-cell="name">{{ taskdetail.name }}</td>
-					<td data-cell="Projects">
-						<span v-for="item in taskdetail.projects" :key="item.id">
-							{{ item.name }}
-						</span>
+					<td data-cell="Projects" >
+						<div class="list-box">
+							<span v-for="item in taskdetail.projects" :key="item.id">
+								{{ item.name }}
+							</span>
+						</div>
 					</td>
 					<td data-cell="Users">
-						<span v-for="item in taskdetail.users" :key="item.id">
-							{{ item.name }}
-						</span>
+						<div class="list-box">
+							<span v-for="item in taskdetail.users" :key="item.id">
+								{{ item.name }}
+							</span>
+						</div>					
 					</td>
 				</tr>	
 			</tbody>
@@ -33,6 +37,18 @@ const props = defineProps({
 </template>
 
 <style scoped>
+	.list-box{
+		display: flex;
+	}
+
+	span:last-child::after {
+    content: "";
+	}
+
+	span::after {
+  	content: ", ";
+	}
+
 	th{
 			display: none;
 		}
