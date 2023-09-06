@@ -58,8 +58,8 @@ defineProps({
     padding: 1rem; 
     margin-top: 2rem; 
     align-self: flex-start; 
-    max-width: 912px;
-    min-width: 412px; 
+    max-width: 1080px;
+    min-width: 612px; 
     background-color: #0b4f94; 
     color: white;
   }

@@ -62,11 +62,6 @@ const makeFullScreen =() => {
 }
 
 const sendComment = async () => {
-    //validate first
-		console.log('this run ?')
-    // const validateRes = await v$.value.$validate();
-    // if (validateRes) {
-		
         $axios.post('/comments', {
             content: formState.content,
             user_id: formState.user_id,
@@ -74,10 +69,9 @@ const sendComment = async () => {
 					})
             .then(
             (data) => {
-                router.push('/todo')
+							location.replace('http://127.0.0.1:8000/todo')
             }
         )
-   // }
 }
 </script>
 
@@ -129,12 +123,9 @@ const sendComment = async () => {
 			<div class="padding-box">
 				<div class="form-register">
 					<h3 class="form-header">Comments</h3>
-					<form class="form-container" enctype="multipart/form-data" v-for="comments in taskdetail.comments" :key="comments.id">
-						<!-- <div v-for="comments in taskdetail.comments" :key="comments.id" class="comments-box">
-							<div>{{comments.user.first_name}} said: {{ comments.content }}</div>
-						</div> -->
-							<div class="form-item">
-									<label for="exampleFormControlInput1">{{comments.user.first_name}}'s said</label>
+					<form class="form-container" enctype="multipart/form-data">
+							<div class="form-item" v-for="comments in taskdetail.comments" :key="comments.id">
+									<label>{{comments.user.first_name}}'s said</label>
 									<span class="form-control"> {{ comments.content }}</span>
 							</div>
 					</form>
@@ -145,7 +136,7 @@ const sendComment = async () => {
 					<form class="form-container" enctype="multipart/form-data">
 
 							<div class="form-item">
-									<label for="exampleFormControlInput1">Comments</label>
+									<label>Comments</label>
 									<textarea v-model="formState.content" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
 							</div>
 
@@ -181,6 +172,9 @@ const sendComment = async () => {
 
 		.form-container {
 			width: 100%;
+			max-height: 200px;
+			min-height: 200px;
+			overflow: auto;
 			background-color: #75C2F6;
 			padding: 10px ;
 			box-shadow: none;
