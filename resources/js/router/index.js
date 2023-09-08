@@ -18,7 +18,7 @@ import EditUser from "../views/EditUser.vue";
 import WorkSpace from "../views/WorkSpace.vue";
 import NotFoundPage from "../views/NotFoundPage.vue";
 import { createRouter, createWebHistory } from "vue-router";
-let loginRole = "";
+//let loginRole = "";
 const routerCustom = [
     {
         path: "/login",
@@ -75,7 +75,11 @@ const routerCustom = [
         name: "admin",
         component: AdminPage,
         beforeEnter() {
-            if (loginRole !== "ROOT" || loginRole !== "ADMIN") {
+            const loginRole = localStorage.getItem("loginRole");
+            console.log("loginRole", loginRole);
+            if (loginRole === "ROOT" || loginRole === "ADMIN") {
+                return true;
+            } else {
                 return {
                     name: "notFoundPage",
                 };
@@ -166,7 +170,6 @@ router.beforeEach(async (to, from, next) => {
     document.title = to.meta?.title ? to.meta.title + " - " + appName : appName;
 
     const token = localStorage.getItem("token");
-    loginRole = localStorage.getItem("loginRole");
     const isProtectedRoute = to.name !== "login";
     const register = to.name !== "register";
     const error_mail = to.name !== "error-mail";
