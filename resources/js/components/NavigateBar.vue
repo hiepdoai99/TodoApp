@@ -17,6 +17,7 @@ let memberVisible = ref(false);
 let teamLeaderVisible = ref(false);
 let loginVisible = ref(true);
 let logoutVisible = ref(false);
+let workspaceVisible = ref(false);
 const userNameLocal = JSON.parse(localStorage.getItem('user'))
 
 const openMenu = () => {
@@ -49,15 +50,18 @@ const afterLoginRoleCheck = () =>{
 			loginVisible.value = !loginVisible.value
 			teamLeaderVisible.value = !teamLeaderVisible.value
 			logoutVisible.value = !logoutVisible.value		
+			workspaceVisible.value = !workspaceVisible.value	
 		}else if (roledata === 'TEAMLEADER') {
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
 			teamLeaderVisible.value = !teamLeaderVisible.value
-			logoutVisible.value = !logoutVisible.value	
+			logoutVisible.value = !logoutVisible.value
+			workspaceVisible.value = !workspaceVisible.value		
 		} else if (roledata === 'MEMBER') {
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
-			logoutVisible.value = !logoutVisible.value	
+			logoutVisible.value = !logoutVisible.value
+			workspaceVisible.value = !workspaceVisible.value		
 		}
   });
 }
@@ -71,16 +75,19 @@ const afterReloadRolecheck = () =>{
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
 			teamLeaderVisible.value = !teamLeaderVisible.value
-			logoutVisible.value = !logoutVisible.value	
+			logoutVisible.value = !logoutVisible.value
+			workspaceVisible.value = !workspaceVisible.value		
 		} else if (roledata === 'TEAMLEADER') {
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
 			teamLeaderVisible.value = !teamLeaderVisible.value
-			logoutVisible.value = !logoutVisible.value	
+			logoutVisible.value = !logoutVisible.value
+			workspaceVisible.value = !workspaceVisible.value		
 		} else if (roledata === 'MEMBER') {
 			memberVisible.value = !memberVisible.value
 			loginVisible.value = !loginVisible.value
-			logoutVisible.value = !logoutVisible.value	
+			logoutVisible.value = !logoutVisible.value
+			workspaceVisible.value = !workspaceVisible.value		
 		}
   };
 
@@ -124,6 +131,11 @@ const logout = () =>{
 					<li class="nav-item">
 							<a class="nav-link active" aria-current="page" href="#">
 									<router-link to="/">Home</router-link>
+							</a>
+					</li>
+					<li v-show="workspaceVisible === true" class="nav-item">
+							<a class="nav-link" href="#">
+									<router-link to="/workspace">Workspace</router-link>
 							</a>
 					</li>
 					<li v-show="teamLeaderVisible === true" class="nav-item">

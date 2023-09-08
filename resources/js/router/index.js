@@ -15,7 +15,7 @@ import Test from "../views/Test.vue"
 import Invite from "../views/ConfirmInviteTeam.vue"
 import Logout from "../views/Logout.vue"
 import EditUser from "../views/EditUser.vue"
-
+import WorkSpace from "../views/WorkSpace.vue"
 import { createRouter, createWebHistory } from "vue-router";
 const routerCustom = [{
         path: '/login',
@@ -121,6 +121,11 @@ const routerCustom = [{
         path:'/verify-invite/:id/:slug',
         name: 'verify-invite',
         component: Invite
+    },
+    {
+        path:'/workspace',
+        name: 'workspace',
+        component: WorkSpace
     },
 
 
