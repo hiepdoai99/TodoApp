@@ -60,6 +60,7 @@ const passSelectedTeamId = (id) =>{
 
 const passSelectedProjectId = (id) =>{
   localStorage.setItem('selectedProjectId',id)
+  store.state.selectedProjectId = localStorage.getItem('selectedProjectId')
   window.dispatchEvent(new CustomEvent('projectId-added', {
     detail: {
       storage: localStorage.getItem('selectedProjectId')

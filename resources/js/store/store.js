@@ -16,6 +16,7 @@ const data = createStore({
             usersPermissionData: ref([]),
             usersPermissionDataFiltered: ref([]),
             usersTeamData: ref([]),
+            selectedProjectId: ref(),
         };
     },
 
@@ -36,7 +37,6 @@ const data = createStore({
             const teams = responce.data;
             commit("setData", teams);
         },
-
     },
 });
 export default data;
