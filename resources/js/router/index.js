@@ -1,134 +1,156 @@
-import Login from   '../views/Login.vue'
-import Index from   '../views/Index.vue'
-import Todo from   '../views/TodoList.vue'
-import Register from   '../views/Register.vue'
+import Login from "../views/Login.vue";
+import Index from "../views/Index.vue";
+import Todo from "../views/TodoList.vue";
+import Register from "../views/Register.vue";
 import TodoDetails from "../views/TodoDetails.vue";
 import AddTodo from "../views/AddTodo.vue";
-import TeamList from "../views/TeamList.vue"
-import AdminPage from "../views/AdminPage.vue"
-import Project from "../views/Project.vue"
-import VerifyEmail from "../views/ConfirmMail.vue"
-import ErrorMail from "../views/ErrorMail.vue"
-import AddTeam from "../views/AddTeam.vue"
-import AddProject from "../views/AddProject.vue"
-import Test from "../views/Test.vue"
-import Invite from "../views/ConfirmInviteTeam.vue"
-import Logout from "../views/Logout.vue"
-import EditUser from "../views/EditUser.vue"
-
+import TeamList from "../views/TeamList.vue";
+import AdminPage from "../views/AdminPage.vue";
+import Project from "../views/Project.vue";
+import VerifyEmail from "../views/ConfirmMail.vue";
+import ErrorMail from "../views/ErrorMail.vue";
+import AddTeam from "../views/AddTeam.vue";
+import AddProject from "../views/AddProject.vue";
+import Test from "../views/Test.vue";
+import Invite from "../views/ConfirmInviteTeam.vue";
+import Logout from "../views/Logout.vue";
+import EditUser from "../views/EditUser.vue";
+import WorkSpace from "../views/WorkSpace.vue";
+import NotFoundPage from "../views/NotFoundPage.vue";
 import { createRouter, createWebHistory } from "vue-router";
-const routerCustom = [{
-        path: '/login',
-        name:'login',
-        component: Login
+//let loginRole = "";
+const routerCustom = [
+    {
+        path: "/login",
+        name: "login",
+        component: Login,
     },
     {
-        path:'/register',
-        name: 'register',
-        component: Register
+        path: "/register",
+        name: "register",
+        component: Register,
     },
     {
-        path:'/register/:id/:slug',
-        name: 'invite-register',
-        component: Register
+        path: "/register/:id/:slug",
+        name: "invite-register",
+        component: Register,
     },
     {
-        path: '/',
-        name: 'index',
-        component: Index
+        path: "/",
+        name: "index",
+        component: Index,
     },
     {
-        path: '/logout',
-        name: 'logout',
-        component: Logout
+        path: "/logout",
+        name: "logout",
+        component: Logout,
     },
     {
-        path:'/todo',
-        name: 'todo',
-        component: Todo
+        path: "/todo",
+        name: "todo",
+        component: Todo,
     },
     {
-        path:'/todo/:id',
-        name: 'details',
-        component: TodoDetails
+        path: "/todo/:id",
+        name: "details",
+        component: TodoDetails,
     },
     {
-        path:'/add-todo',
-        name: 'add',
-        component: AddTodo
+        path: "/add-todo",
+        name: "add",
+        component: AddTodo,
     },
     {
-        path:'/edit-todo/:id',
-        name: 'edit',
-        component: AddTodo
+        path: "/edit-todo/:id",
+        name: "edit",
+        component: AddTodo,
     },
     {
-        path:'/team',
-        name: 'team',
-        component: TeamList
+        path: "/team",
+        name: "team",
+        component: TeamList,
     },
     {
-        path:'/admin',
-        name: 'admin',
-        component: AdminPage
+        path: "/admin",
+        name: "admin",
+        component: AdminPage,
+        beforeEnter() {
+            const loginRole = localStorage.getItem("loginRole");
+            console.log("loginRole", loginRole);
+            if (loginRole === "ROOT" || loginRole === "ADMIN") {
+                return true;
+            } else {
+                return {
+                    name: "notFoundPage",
+                };
+            }
+        },
     },
     {
-        path:'/projects',
-        name: 'projects',
-        component: Project
+        path: "/projects",
+        name: "projects",
+        component: Project,
     },
     {
-        path:'/verify-mail/:slug',
-        name: 'verify-mail',
-        component: VerifyEmail
+        path: "/verify-mail/:slug",
+        name: "verify-mail",
+        component: VerifyEmail,
     },
     {
-        path:'/error-mail',
-        name: 'error-mail',
-        component: ErrorMail
+        path: "/error-mail",
+        name: "error-mail",
+        component: ErrorMail,
     },
     {
-        path:'/add-team',
-        name: 'add-team',
-        component: AddTeam
+        path: "/add-team",
+        name: "add-team",
+        component: AddTeam,
     },
     {
-        path:'/edit-team/:id',
-        name: 'edit-team',
-        component: AddTeam
+        path: "/edit-team/:id",
+        name: "edit-team",
+        component: AddTeam,
     },
     {
-        path:'/add-project',
-        name: 'add-project',
-        component: AddProject
+        path: "/add-project",
+        name: "add-project",
+        component: AddProject,
     },
     {
-        path:'/edit-project/:id',
-        name: 'edit-project',
-        component: AddProject
+        path: "/edit-project/:id",
+        name: "edit-project",
+        component: AddProject,
     },
     {
-        path:'/EditUser/:id',
-        name: 'edit-user',
-        component: EditUser
+        path: "/EditUser/:id",
+        name: "edit-user",
+        component: EditUser,
     },
     {
-        path:'/test',
-        name: 'test',
-        component: Test
+        path: "/test",
+        name: "test",
+        component: Test,
     },
     {
-        path:'/verify-invite/:id/:slug',
-        name: 'verify-invite',
-        component: Invite
+        path: "/verify-invite/:id/:slug",
+        name: "verify-invite",
+        component: Invite,
     },
-
-
-]
+    {
+        path: "/workspace",
+        name: "workspace",
+        component: WorkSpace,
+    },
+    {
+        path: "/notFound",
+        name: "notFoundPage",
+        component: NotFoundPage,
+    },
+];
 
 const createCustomRouter = () =>
     createRouter({
-        history: createWebHistory(''),
+        history: createWebHistory(""),
         routes: routerCustom,
         scrollBehavior(to) {
             if (to.hash) {
@@ -139,6 +161,7 @@ const createCustomRouter = () =>
             }
         },
     });
+
 const router = createCustomRouter();
 
 router.beforeEach(async (to, from, next) => {
@@ -146,8 +169,7 @@ router.beforeEach(async (to, from, next) => {
     const appName = "TodoList";
     document.title = to.meta?.title ? to.meta.title + " - " + appName : appName;
 
-
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     const isProtectedRoute = to.name !== "login";
     const register = to.name !== "register";
     const error_mail = to.name !== "error-mail";
@@ -157,11 +179,9 @@ router.beforeEach(async (to, from, next) => {
         next({
             name: "login",
         });
-        return
+        return;
     }
     next();
-
 });
-
 
 export default router;
