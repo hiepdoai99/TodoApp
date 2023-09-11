@@ -3,7 +3,7 @@ import {$axios} from '../utils/request'
 import {useRouter, useRoute} from 'vue-router'
 import BaseModal from '../components/BaseModal.vue'
 import ViewModal from '../components/ViewModal.vue'
-
+import store from "../store/store";
 import VPagination from "@hennge/vue3-pagination"
 import "@hennge/vue3-pagination/dist/vue3-pagination.css"
 import {
@@ -32,6 +32,9 @@ const toggleModal = () => {
 
 const filterPermissions = () => {
   localPermissions = localPermissions.map(e => e.name)
+	store.state.storePermissions = localPermissions
+	//console.log('localPermissions',localPermissions)
+	console.log('store.state.storePermissions',store.state.storePermissions)
 };
 
 const toggleWarningModal = () => {
@@ -204,7 +207,7 @@ watch(input,
 														<div>
 																<router-link v-if="canEdit === true" :to="{name: 'edit', params: { id: todo.id }}" class="btn edit-btn">
 																	<font-awesome-icon :icon="['fas', 'pen-to-square']" />
-																</router-link>
+																</router-link>																
 														</div>
 														<div>
 																<button @click="deleteTaskRoleCheck(todo.id)" class="btn delete-btn">

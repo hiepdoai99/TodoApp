@@ -28,7 +28,10 @@ const routeGuarding = (to) => {
         return store.state.selectedProjectId;
     });
 
-    //console.log("selectedProjectId", selectedProjectId);
+    let storePermissionList = computed(() => {
+        return store.state.storePermissions;
+    });
+    //console.log("storePermissionList", storePermissionList.value);
     if (currRouteName === "admin") {
         if (loginRole === "ROOT" || loginRole === "ADMIN") {
             return true;
@@ -38,7 +41,11 @@ const routeGuarding = (to) => {
             };
         }
     } else if (currRouteName === "team") {
-        if (loginRole === "TEAMLEADER") {
+        if (
+            loginRole === "TEAMLEADER" ||
+            loginRole === "ROOT" ||
+            loginRole === "ADMIN"
+        ) {
             return true;
         } else {
             return {
@@ -53,6 +60,20 @@ const routeGuarding = (to) => {
                 name: "notFoundPage",
             };
         }
+    } else if (currRouteName === "edit") {
+        const requiredRole = storePermissionList.value.find((roles) => {
+            return roles === "TASK-UPDATE";
+        });
+        //console.log("requiredRolerequiredRole", requiredRole);
+        if (requiredRole === "TASK-UPDATE") {
+            return true;
+        } else {
+            return {
+                name: "notFoundPage",
+            };
+        }
+    } else {
+        return true;
     }
 };
 
@@ -102,6 +123,7 @@ const routerCustom = [
         path: "/edit-todo/:id",
         name: "edit",
         component: AddTodo,
+        beforeEnter: [routeGuarding],
     },
     {
         path: "/team",
