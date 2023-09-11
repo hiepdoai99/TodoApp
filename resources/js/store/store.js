@@ -17,6 +17,7 @@ const data = createStore({
             usersPermissionDataFiltered: ref([]),
             usersTeamData: ref([]),
             selectedProjectId: ref(),
+            storePermissions: [],
         };
     },
 

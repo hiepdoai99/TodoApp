@@ -61,10 +61,10 @@ onMounted(() => {
 
 <template>
     <div class="overflow-x-auto">
-        <table class="w-full max-sm:w-[800px]">
+        <table class="">
             <thead class="text-sm font-semibold text-slate-500 bg-slate-50 border-t border-b border-slate-200">
             <tr class="[&amp;>*]:border [&amp;>*]:border-solid">
-                <th class="px-2 py-3 whitespace-nowrap border border-solid font-semibold text-center">Chức năng</th>
+                <th class="px-2 py-3 whitespace-nowrap border border-solid font-semibold text-center">FUNCTIONS</th>
                 <th class="px-2 py-3 whitespace-nowrap border border-solid font-semibold text-center">CREATE</th>
                 <th class="px-2 py-3 whitespace-nowrap border border-solid font-semibold text-center">READ</th>
                 <th class="px-2 py-3 whitespace-nowrap border border-solid font-semibold text-center">UPDATE</th>
@@ -100,6 +100,9 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .overflow-x-auto{
+    table{
+        width: 100%;
+    }
     .role-manager-btn-box{
       align-items: center;
 			width: 100%;
