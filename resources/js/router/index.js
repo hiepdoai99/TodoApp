@@ -27,8 +27,9 @@ const routeGuarding = (to) => {
     let selectedProjectId = computed(() => {
         return store.state.selectedProjectId;
     });
-    console.log("selectedProjectId", typeof selectedProjectId);
-    if (currRouteName === "admin" || currRouteName === "team") {
+
+    //console.log("selectedProjectId", selectedProjectId);
+    if (currRouteName === "admin") {
         if (loginRole === "ROOT" || loginRole === "ADMIN") {
             return true;
         } else {
@@ -36,11 +37,16 @@ const routeGuarding = (to) => {
                 name: "notFoundPage",
             };
         }
+    } else if (currRouteName === "team") {
+        if (loginRole === "TEAMLEADER") {
+            return true;
+        } else {
+            return {
+                name: "notFoundPage",
+            };
+        }
     } else if (currRouteName === "todo") {
-        if (
-            selectedProjectId !== null &&
-            typeof selectedProjectId !== "object"
-        ) {
+        if (selectedProjectId !== null) {
             return true;
         } else {
             return {
