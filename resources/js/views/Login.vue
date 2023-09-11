@@ -42,12 +42,12 @@ const handleLogin = ()=> {
 						$axios.get(`/get-team`).then((data) => {
 								localStorage.setItem('userTeams',(JSON.stringify(data.data)))
 								store.state.usersTeamData = data.data
-								console.log('state teams data',store.state.usersTeamData)
+								
             })
                 router.push('/')
-                console.log('dang nhap thanh cong')
+                
             }if(data.data.status) {
-                console.log(data.data.status.value)
+                
                 router.push('/error-mail')
             }
         }).catch((err) => {

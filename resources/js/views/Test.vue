@@ -8,7 +8,7 @@ onMounted(() => {
         .then(
         (data) => {
             teams.value = data.data
-            console.log(data.data)
+            
         })
 })
 

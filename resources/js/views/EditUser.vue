@@ -43,7 +43,7 @@ const getUser = (id) => {
     $axios.get(`/user/${id}?include=roles`).then(
         (res) => {
             if (res) {
-							console.log('res',res.data.data)
+							
                 formState.first_name = res.data.data.first_name;
                 formState.last_name = res.data.data.last_name;
                 formState.phone = res.data.data.phone;
@@ -57,7 +57,7 @@ const getUser = (id) => {
 const getAllRoles = () => {
     $axios.get('/roles').then((data) => {
 			allRoles.value = data.data.data
-			console.log('allRoles',allRoles.value)
+			
     })
 }
 
