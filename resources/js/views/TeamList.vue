@@ -91,7 +91,7 @@ const showDetail = (id) => {
 
 	$axios.get(`/team/${id}?include=projects,users`).then((data) => {
 			teamdetail.value = data.data.data
-			console.log('data return from api', teamdetail.value)
+			
     })
 };
 
@@ -100,7 +100,7 @@ const getData = () => {
         teams.value = data.data.data
 				payloadData.value = data.data.payload.pagination
 				maxPage = Math.round(data.data.payload.pagination.total / data.data.payload.pagination.per_page)
-				console.log('data return', teams.value)
+				
     })
 	localPermissions= localPermissions.map(e => e.name)
 }

@@ -27,9 +27,9 @@ const toggleModal = () => {
 const getTeams = () => {
     $axios.get('/get-team').then((data) => {
         teams.value = data.data
-				console.log('get team data teamvalue', teams.value)
+				
 				teamsArrayFormData = JSON.parse(JSON.stringify(teams.value))
-				console.log('teamsArrayFormData',teamsArrayFormData)
+				
     })
 }
 
@@ -43,7 +43,7 @@ const getEmails = () => {
 						email: e.email
 					}
 				})
-				console.log('email test filtered',emailArrayFormDataFiltered)
+				
     })
 }
 

@@ -32,7 +32,7 @@ const getTeam = (id) => {
             if (res) {
                 formState.name = res.data.data.name;
 								teamDetail = res.data.data
-								console.log('teamdetail page',teamDetail)
+								
             }
         }
     )
@@ -42,8 +42,6 @@ const getData = (teamid) => {
     $axios.get(`/team/${teamid}?include=users,projects`).then((data) => {
         usersOfTeam.value = data.data.data.users
 				projectsOfTeam.value = data.data.data.projects
-				console.log('usersOfTeam :',  usersOfTeam.value)
-				console.log('projectsOfTeam.value :',  projectsOfTeam.value)
     })
 		localPermissions= localPermissions.map(e => e.name)
 }
@@ -131,7 +129,6 @@ const deleteTaskRoleCheck = (userId) =>{
 
 	if (requiredRole === 'TASK-DELETE'){
 		selectedToDelUserId = userId
-		console.log('selectedToDelUserId',selectedToDelUserId)
 		toggleBeforeDeleteModal()
 	} else {
 		toggleWarningModal()

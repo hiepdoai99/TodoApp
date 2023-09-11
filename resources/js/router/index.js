@@ -18,7 +18,38 @@ import EditUser from "../views/EditUser.vue";
 import WorkSpace from "../views/WorkSpace.vue";
 import NotFoundPage from "../views/NotFoundPage.vue";
 import { createRouter, createWebHistory } from "vue-router";
-//let loginRole = "";
+import store from "../store/store";
+import { computed } from "vue";
+const routeGuarding = (to) => {
+    const currRouteName = to.name;
+    const loginRole = localStorage.getItem("loginRole");
+    //const selectedProjectId = localStorage.getItem("selectedProjectId");
+    let selectedProjectId = computed(() => {
+        return store.state.selectedProjectId;
+    });
+    console.log("selectedProjectId", typeof selectedProjectId);
+    if (currRouteName === "admin" || currRouteName === "team") {
+        if (loginRole === "ROOT" || loginRole === "ADMIN") {
+            return true;
+        } else {
+            return {
+                name: "notFoundPage",
+            };
+        }
+    } else if (currRouteName === "todo") {
+        if (
+            selectedProjectId !== null &&
+            typeof selectedProjectId !== "object"
+        ) {
+            return true;
+        } else {
+            return {
+                name: "notFoundPage",
+            };
+        }
+    }
+};
+
 const routerCustom = [
     {
         path: "/login",
@@ -49,6 +80,7 @@ const routerCustom = [
         path: "/todo",
         name: "todo",
         component: Todo,
+        beforeEnter: [routeGuarding],
     },
     {
         path: "/todo/:id",
@@ -69,22 +101,13 @@ const routerCustom = [
         path: "/team",
         name: "team",
         component: TeamList,
+        beforeEnter: [routeGuarding],
     },
     {
         path: "/admin",
         name: "admin",
         component: AdminPage,
-        beforeEnter() {
-            const loginRole = localStorage.getItem("loginRole");
-            console.log("loginRole", loginRole);
-            if (loginRole === "ROOT" || loginRole === "ADMIN") {
-                return true;
-            } else {
-                return {
-                    name: "notFoundPage",
-                };
-            }
-        },
+        beforeEnter: [routeGuarding],
     },
     {
         path: "/projects",

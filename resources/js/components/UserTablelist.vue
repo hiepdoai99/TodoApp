@@ -95,7 +95,7 @@ const getData = () => {
         users.value = data.data.data
 				payloadData.value = data.data.payload.pagination
 				maxPage = Math.round(data.data.payload.pagination.total / data.data.payload.pagination.per_page)
-				console.log('users ssasds',users.value)
+				
     })
     localPermissions= localPermissions.map(e => e.name)
 }

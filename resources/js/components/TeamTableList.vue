@@ -86,7 +86,7 @@ const getData = () => {
         teams.value = data.data.data
 				payloadData.value = data.data.payload.pagination
 				maxPage = Math.round(data.data.payload.pagination.total / data.data.payload.pagination.per_page)
-				console.log('team table',teams.value)
+				
     })
 		localPermissions= localPermissions.map(e => e.name)
 }

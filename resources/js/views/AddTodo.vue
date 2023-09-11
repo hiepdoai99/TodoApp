@@ -72,7 +72,7 @@ const getProject = () => {
 
 		$axios.get(`/project/${projectIdSelected}`).then((data) => {
 				currProject.value = data.data.data
-				console.log('currProject.value',currProject.value);
+				
     })
 
 }
@@ -105,14 +105,13 @@ const createImage = (file) => {
 
 	reader.onload = (e) => {
 			imgdata = e.target.result;
-			console.log('wat the hail is this',e.target.result);
+			
 	};
 	reader.readAsDataURL(file);
-	console.log('this is reader',reader)
+	
 }
 
 const onImageChange = (e) => {
-	console.log('this run')
 	let files = e.target.files || e.dataTransfer.files;
 	if (!files.length){
 		return;
