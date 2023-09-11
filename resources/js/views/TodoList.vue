@@ -33,8 +33,6 @@ const toggleModal = () => {
 const filterPermissions = () => {
   localPermissions = localPermissions.map(e => e.name)
 	store.state.storePermissions = localPermissions
-	//console.log('localPermissions',localPermissions)
-	console.log('store.state.storePermissions',store.state.storePermissions)
 };
 
 const toggleWarningModal = () => {
