@@ -29,18 +29,18 @@ let storePermissionList = computed(() => {
     return store.state.storePermissions;
 });
 
-// const routeGuardByPermission = (permissionName) => {
-//     const requiredRole = storePermissionList.value.find((roles) => {
-//         return roles === permissionName;
-//     });
-//     if (requiredRole === "TASK") {
-//         return true;
-//     } else {
-//         return {
-//             name: "notFoundPage",
-//         };
-//     }
-// };
+const routeGuardByPermission = (permissionName) => {
+    const requiredRole = storePermissionList.value.find((roles) => {
+        return roles === permissionName;
+    });
+    if (requiredRole === permissionName) {
+        return true;
+    } else {
+        return {
+            name: "notFoundPage",
+        };
+    }
+};
 
 const routeGuarding = (to) => {
     const currRouteName = to.name;
@@ -78,76 +78,22 @@ const routeGuarding = (to) => {
             };
         }
     } else if (currRouteName === "edit") {
-        const requiredRole = storePermissionList.value.find((roles) => {
-            return roles === "TASK-UPDATE";
-        });
-        if (requiredRole === "TASK-UPDATE") {
-            return true;
-        } else {
-            return {
-                name: "notFoundPage",
-            };
-        }
+        return routeGuardByPermission("TASK-UPDATE");
     } else if (currRouteName === "edit-team") {
-        const requiredRole = storePermissionList.value.find((roles) => {
-            return roles === "TEAM-UPDATE";
-        });
-        if (requiredRole === "TEAM-UPDATE") {
-            return true;
-        } else {
-            return {
-                name: "notFoundPage",
-            };
-        }
+        return routeGuardByPermission("TEAM-UPDATE");
     } else if (currRouteName === "add-project") {
-        const requiredRole = storePermissionList.value.find((roles) => {
-            return roles === "PROJECT-CREATE";
-        });
-        if (requiredRole === "PROJECT-CREATE") {
-            return true;
-        } else {
-            return {
-                name: "notFoundPage",
-            };
-        }
+        return routeGuardByPermission("PROJECT-CREATE");
     } else if (currRouteName === "edit-project") {
-        const requiredRole = storePermissionList.value.find((roles) => {
-            return roles === "PROJECT-UPDATE";
-        });
-        if (requiredRole === "PROJECT-UPDATE") {
-            return true;
-        } else {
-            return {
-                name: "notFoundPage",
-            };
-        }
+        return routeGuardByPermission("PROJECT-UPDATE");
     } else if (currRouteName === "edit-user") {
-        const requiredRole = storePermissionList.value.find((roles) => {
-            return roles === "USER-UPDATE";
-        });
-        if (requiredRole === "USER-UPDATE") {
-            return true;
-        } else {
-            return {
-                name: "notFoundPage",
-            };
-        }
+        return routeGuardByPermission("USER-UPDATE");
     } else if (currRouteName === "add-team") {
-        const requiredRole = storePermissionList.value.find((roles) => {
-            return roles === "TEAM-CREATE";
-        });
-        if (requiredRole === "TEAM-CREATE") {
-            return true;
-        } else {
-            return {
-                name: "notFoundPage",
-            };
-        }
+        return routeGuardByPermission("TEAM-CREATE");
     } else {
         return true;
     }
 };
-//add-team
+
 const routerCustom = [
     {
         path: "/login",
