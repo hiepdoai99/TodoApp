@@ -20,15 +20,36 @@ import NotFoundPage from "../views/NotFoundPage.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import store from "../store/store";
 import { computed } from "vue";
+
+let selectedProjectId = computed(() => {
+    return store.state.selectedProjectId;
+});
+
+let storePermissionList = computed(() => {
+    return store.state.storePermissions;
+});
+
+// const routeGuardByPermission = (permissionName) => {
+//     const requiredRole = storePermissionList.value.find((roles) => {
+//         return roles === permissionName;
+//     });
+//     if (requiredRole === "TASK") {
+//         return true;
+//     } else {
+//         return {
+//             name: "notFoundPage",
+//         };
+//     }
+// };
+
 const routeGuarding = (to) => {
     const currRouteName = to.name;
     const loginRole = localStorage.getItem("loginRole");
-    //const selectedProjectId = localStorage.getItem("selectedProjectId");
-    let selectedProjectId = computed(() => {
-        return store.state.selectedProjectId;
-    });
-    console.log("selectedProjectId", typeof selectedProjectId);
-    if (currRouteName === "admin" || currRouteName === "team") {
+    let localPermissions = JSON.parse(localStorage.getItem("permissions"));
+    localPermissions = localPermissions.map((e) => e.name);
+    store.state.storePermissions = localPermissions;
+    console.log("state storePermissions index", store.state.storePermissions);
+    if (currRouteName === "admin") {
         if (loginRole === "ROOT" || loginRole === "ADMIN") {
             return true;
         } else {
@@ -36,10 +57,11 @@ const routeGuarding = (to) => {
                 name: "notFoundPage",
             };
         }
-    } else if (currRouteName === "todo") {
+    } else if (currRouteName === "team") {
         if (
-            selectedProjectId !== null &&
-            typeof selectedProjectId !== "object"
+            loginRole === "TEAMLEADER" ||
+            loginRole === "ROOT" ||
+            loginRole === "ADMIN"
         ) {
             return true;
         } else {
@@ -47,9 +69,85 @@ const routeGuarding = (to) => {
                 name: "notFoundPage",
             };
         }
+    } else if (currRouteName === "todo") {
+        if (selectedProjectId !== null) {
+            return true;
+        } else {
+            return {
+                name: "notFoundPage",
+            };
+        }
+    } else if (currRouteName === "edit") {
+        const requiredRole = storePermissionList.value.find((roles) => {
+            return roles === "TASK-UPDATE";
+        });
+        if (requiredRole === "TASK-UPDATE") {
+            return true;
+        } else {
+            return {
+                name: "notFoundPage",
+            };
+        }
+    } else if (currRouteName === "edit-team") {
+        const requiredRole = storePermissionList.value.find((roles) => {
+            return roles === "TEAM-UPDATE";
+        });
+        if (requiredRole === "TEAM-UPDATE") {
+            return true;
+        } else {
+            return {
+                name: "notFoundPage",
+            };
+        }
+    } else if (currRouteName === "add-project") {
+        const requiredRole = storePermissionList.value.find((roles) => {
+            return roles === "PROJECT-CREATE";
+        });
+        if (requiredRole === "PROJECT-CREATE") {
+            return true;
+        } else {
+            return {
+                name: "notFoundPage",
+            };
+        }
+    } else if (currRouteName === "edit-project") {
+        const requiredRole = storePermissionList.value.find((roles) => {
+            return roles === "PROJECT-UPDATE";
+        });
+        if (requiredRole === "PROJECT-UPDATE") {
+            return true;
+        } else {
+            return {
+                name: "notFoundPage",
+            };
+        }
+    } else if (currRouteName === "edit-user") {
+        const requiredRole = storePermissionList.value.find((roles) => {
+            return roles === "USER-UPDATE";
+        });
+        if (requiredRole === "USER-UPDATE") {
+            return true;
+        } else {
+            return {
+                name: "notFoundPage",
+            };
+        }
+    } else if (currRouteName === "add-team") {
+        const requiredRole = storePermissionList.value.find((roles) => {
+            return roles === "TEAM-CREATE";
+        });
+        if (requiredRole === "TEAM-CREATE") {
+            return true;
+        } else {
+            return {
+                name: "notFoundPage",
+            };
+        }
+    } else {
+        return true;
     }
 };
-
+//add-team
 const routerCustom = [
     {
         path: "/login",
@@ -96,6 +194,7 @@ const routerCustom = [
         path: "/edit-todo/:id",
         name: "edit",
         component: AddTodo,
+        beforeEnter: [routeGuarding],
     },
     {
         path: "/team",
@@ -128,26 +227,31 @@ const routerCustom = [
         path: "/add-team",
         name: "add-team",
         component: AddTeam,
+        beforeEnter: [routeGuarding],
     },
     {
         path: "/edit-team/:id",
         name: "edit-team",
         component: AddTeam,
+        beforeEnter: [routeGuarding],
     },
     {
         path: "/add-project",
         name: "add-project",
         component: AddProject,
+        beforeEnter: [routeGuarding],
     },
     {
         path: "/edit-project/:id",
         name: "edit-project",
         component: AddProject,
+        beforeEnter: [routeGuarding],
     },
     {
         path: "/EditUser/:id",
         name: "edit-user",
         component: EditUser,
+        beforeEnter: [routeGuarding],
     },
     {
         path: "/test",
