@@ -7,8 +7,10 @@ use App\Http\Requests\LoginRequest;
 use App\Models\UserVerify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Mail;
+use GuzzleHttp;
 
 class AuthController extends Controller
 {
@@ -38,7 +40,7 @@ class AuthController extends Controller
                 'status'=> 201,
             ]);
         }
-
+        $this->discord();
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
@@ -62,6 +64,21 @@ class AuthController extends Controller
         auth()->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
+    }
+    public function discord(){
+        $client = new \GuzzleHttp\Client();
+
+        $webhookUrl = 'https://discord.com/api/webhooks/1153956046046511104/Qm6iTt53NsWDrzVDkOGZyHGobOhbTidPj3A4PaNqqq6iz54i3g03PnuJdM5ucg2cJXh0';
+        $user = auth()->user();
+        $data = [
+            'content' => $user->name .'➡️ **Vừa đăng nhập** ',
+        ];
+
+        $response = $client->post( $webhookUrl, [
+            'json' => $data,
+        ]);
+
+        return $response;
     }
 
     /**
